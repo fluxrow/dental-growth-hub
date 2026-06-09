@@ -14,16 +14,420 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      atividades: {
+        Row: {
+          clinic_id: string
+          created_at: string
+          detail: string | null
+          id: string
+          kind: Database["public"]["Enums"]["activity_kind"]
+          patient_id: string | null
+          title: string
+          value: number | null
+        }
+        Insert: {
+          clinic_id: string
+          created_at?: string
+          detail?: string | null
+          id?: string
+          kind: Database["public"]["Enums"]["activity_kind"]
+          patient_id?: string | null
+          title: string
+          value?: number | null
+        }
+        Update: {
+          clinic_id?: string
+          created_at?: string
+          detail?: string | null
+          id?: string
+          kind?: Database["public"]["Enums"]["activity_kind"]
+          patient_id?: string | null
+          title?: string
+          value?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "atividades_clinic_id_fkey"
+            columns: ["clinic_id"]
+            isOneToOne: false
+            referencedRelation: "clinicas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "atividades_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "pacientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clinicas: {
+        Row: {
+          address: string | null
+          city: string | null
+          cnpj: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          logo_url: string | null
+          name: string
+          onboarded: boolean
+          phone: string | null
+          slug: string | null
+          specialties: string[] | null
+          timezone: string | null
+          tone: Database["public"]["Enums"]["clinic_tone"] | null
+          updated_at: string
+          whatsapp_instance: string | null
+          whatsapp_phone: string | null
+          whatsapp_provider: string | null
+        }
+        Insert: {
+          address?: string | null
+          city?: string | null
+          cnpj?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          logo_url?: string | null
+          name: string
+          onboarded?: boolean
+          phone?: string | null
+          slug?: string | null
+          specialties?: string[] | null
+          timezone?: string | null
+          tone?: Database["public"]["Enums"]["clinic_tone"] | null
+          updated_at?: string
+          whatsapp_instance?: string | null
+          whatsapp_phone?: string | null
+          whatsapp_provider?: string | null
+        }
+        Update: {
+          address?: string | null
+          city?: string | null
+          cnpj?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          logo_url?: string | null
+          name?: string
+          onboarded?: boolean
+          phone?: string | null
+          slug?: string | null
+          specialties?: string[] | null
+          timezone?: string | null
+          tone?: Database["public"]["Enums"]["clinic_tone"] | null
+          updated_at?: string
+          whatsapp_instance?: string | null
+          whatsapp_phone?: string | null
+          whatsapp_provider?: string | null
+        }
+        Relationships: []
+      }
+      notificacoes: {
+        Row: {
+          action_url: string | null
+          category: string | null
+          clinic_id: string
+          created_at: string
+          detail: string | null
+          id: string
+          kind: Database["public"]["Enums"]["notif_kind"]
+          patient_id: string | null
+          read: boolean
+          read_at: string | null
+          title: string
+          user_id: string | null
+          value: number | null
+        }
+        Insert: {
+          action_url?: string | null
+          category?: string | null
+          clinic_id: string
+          created_at?: string
+          detail?: string | null
+          id?: string
+          kind: Database["public"]["Enums"]["notif_kind"]
+          patient_id?: string | null
+          read?: boolean
+          read_at?: string | null
+          title: string
+          user_id?: string | null
+          value?: number | null
+        }
+        Update: {
+          action_url?: string | null
+          category?: string | null
+          clinic_id?: string
+          created_at?: string
+          detail?: string | null
+          id?: string
+          kind?: Database["public"]["Enums"]["notif_kind"]
+          patient_id?: string | null
+          read?: boolean
+          read_at?: string | null
+          title?: string
+          user_id?: string | null
+          value?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notificacoes_clinic_id_fkey"
+            columns: ["clinic_id"]
+            isOneToOne: false
+            referencedRelation: "clinicas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notificacoes_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "pacientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      oportunidades: {
+        Row: {
+          clinic_id: string
+          created_at: string
+          id: string
+          lost_reason: string | null
+          name: string
+          next_action: string | null
+          owner_id: string | null
+          patient_id: string | null
+          phone: string | null
+          source: string | null
+          stage: Database["public"]["Enums"]["opportunity_stage"]
+          stage_changed_at: string
+          updated_at: string
+          value: number | null
+        }
+        Insert: {
+          clinic_id: string
+          created_at?: string
+          id?: string
+          lost_reason?: string | null
+          name: string
+          next_action?: string | null
+          owner_id?: string | null
+          patient_id?: string | null
+          phone?: string | null
+          source?: string | null
+          stage?: Database["public"]["Enums"]["opportunity_stage"]
+          stage_changed_at?: string
+          updated_at?: string
+          value?: number | null
+        }
+        Update: {
+          clinic_id?: string
+          created_at?: string
+          id?: string
+          lost_reason?: string | null
+          name?: string
+          next_action?: string | null
+          owner_id?: string | null
+          patient_id?: string | null
+          phone?: string | null
+          source?: string | null
+          stage?: Database["public"]["Enums"]["opportunity_stage"]
+          stage_changed_at?: string
+          updated_at?: string
+          value?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "oportunidades_clinic_id_fkey"
+            columns: ["clinic_id"]
+            isOneToOne: false
+            referencedRelation: "clinicas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "oportunidades_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "pacientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pacientes: {
+        Row: {
+          clinic_id: string
+          created_at: string
+          email: string | null
+          id: string
+          last_visit_at: string | null
+          ltv: number
+          name: string
+          next_action: string | null
+          phone: string | null
+          source: string | null
+          status: Database["public"]["Enums"]["patient_status"]
+          tags: string[] | null
+          updated_at: string
+        }
+        Insert: {
+          clinic_id: string
+          created_at?: string
+          email?: string | null
+          id?: string
+          last_visit_at?: string | null
+          ltv?: number
+          name: string
+          next_action?: string | null
+          phone?: string | null
+          source?: string | null
+          status?: Database["public"]["Enums"]["patient_status"]
+          tags?: string[] | null
+          updated_at?: string
+        }
+        Update: {
+          clinic_id?: string
+          created_at?: string
+          email?: string | null
+          id?: string
+          last_visit_at?: string | null
+          ltv?: number
+          name?: string
+          next_action?: string | null
+          phone?: string | null
+          source?: string | null
+          status?: Database["public"]["Enums"]["patient_status"]
+          tags?: string[] | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pacientes_clinic_id_fkey"
+            columns: ["clinic_id"]
+            isOneToOne: false
+            referencedRelation: "clinicas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          clinic_id: string | null
+          created_at: string
+          email: string | null
+          id: string
+          name: string | null
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          clinic_id?: string | null
+          created_at?: string
+          email?: string | null
+          id: string
+          name?: string | null
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          clinic_id?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          name?: string | null
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_clinic_id_fkey"
+            columns: ["clinic_id"]
+            isOneToOne: false
+            referencedRelation: "clinicas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          clinic_id: string | null
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          clinic_id?: string | null
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          clinic_id?: string | null
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_roles_clinic_id_fkey"
+            columns: ["clinic_id"]
+            isOneToOne: false
+            referencedRelation: "clinicas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      current_clinic_id: { Args: never; Returns: string }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      activity_kind:
+        | "resposta"
+        | "confirmacao"
+        | "falha"
+        | "avaliacao"
+        | "cobranca_enviada"
+        | "cobranca_respondida"
+        | "pagamento_confirmado"
+        | "pagamento_atrasado"
+        | "cobranca_falhou"
+        | "sistema"
+      app_role: "admin" | "recepcao" | "dentista" | "marketing"
+      clinic_tone: "acolhedora" | "institucional" | "descontraida"
+      notif_kind:
+        | "conversa"
+        | "oportunidade"
+        | "cobranca"
+        | "avaliacao"
+        | "sistema"
+        | "financeiro"
+      opportunity_stage:
+        | "novo"
+        | "contato"
+        | "agendada"
+        | "confirmada"
+        | "compareceu"
+        | "tratamento"
+        | "ativo"
+        | "perdida"
+      patient_status: "ativo" | "tratamento" | "inativo" | "recuperado" | "lead"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +554,40 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      activity_kind: [
+        "resposta",
+        "confirmacao",
+        "falha",
+        "avaliacao",
+        "cobranca_enviada",
+        "cobranca_respondida",
+        "pagamento_confirmado",
+        "pagamento_atrasado",
+        "cobranca_falhou",
+        "sistema",
+      ],
+      app_role: ["admin", "recepcao", "dentista", "marketing"],
+      clinic_tone: ["acolhedora", "institucional", "descontraida"],
+      notif_kind: [
+        "conversa",
+        "oportunidade",
+        "cobranca",
+        "avaliacao",
+        "sistema",
+        "financeiro",
+      ],
+      opportunity_stage: [
+        "novo",
+        "contato",
+        "agendada",
+        "confirmada",
+        "compareceu",
+        "tratamento",
+        "ativo",
+        "perdida",
+      ],
+      patient_status: ["ativo", "tratamento", "inativo", "recuperado", "lead"],
+    },
   },
 } as const
