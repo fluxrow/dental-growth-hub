@@ -9,9 +9,11 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as PTokenRouteImport } from './routes/p.$token'
 import { Route as AppRelatoriosRouteImport } from './routes/app.relatorios'
 import { Route as AppPacientesRouteImport } from './routes/app.pacientes'
 import { Route as AppOportunidadesRouteImport } from './routes/app.oportunidades'
@@ -21,7 +23,13 @@ import { Route as AppCobrancasRouteImport } from './routes/app.cobrancas'
 import { Route as AppCampanhasRouteImport } from './routes/app.campanhas'
 import { Route as AppAvaliacoesRouteImport } from './routes/app.avaliacoes'
 import { Route as AppAutomacoesRouteImport } from './routes/app.automacoes'
+import { Route as AppAtividadeRouteImport } from './routes/app.atividade'
 
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppRoute = AppRouteImport.update({
   id: '/app',
   path: '/app',
@@ -36,6 +44,11 @@ const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AppRoute,
+} as any)
+const PTokenRoute = PTokenRouteImport.update({
+  id: '/p/$token',
+  path: '/p/$token',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AppRelatoriosRoute = AppRelatoriosRouteImport.update({
   id: '/relatorios',
@@ -82,10 +95,17 @@ const AppAutomacoesRoute = AppAutomacoesRouteImport.update({
   path: '/automacoes',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAtividadeRoute = AppAtividadeRouteImport.update({
+  id: '/atividade',
+  path: '/atividade',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
+  '/onboarding': typeof OnboardingRoute
+  '/app/atividade': typeof AppAtividadeRoute
   '/app/automacoes': typeof AppAutomacoesRoute
   '/app/avaliacoes': typeof AppAvaliacoesRoute
   '/app/campanhas': typeof AppCampanhasRoute
@@ -95,10 +115,13 @@ export interface FileRoutesByFullPath {
   '/app/oportunidades': typeof AppOportunidadesRoute
   '/app/pacientes': typeof AppPacientesRoute
   '/app/relatorios': typeof AppRelatoriosRoute
+  '/p/$token': typeof PTokenRoute
   '/app/': typeof AppIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/onboarding': typeof OnboardingRoute
+  '/app/atividade': typeof AppAtividadeRoute
   '/app/automacoes': typeof AppAutomacoesRoute
   '/app/avaliacoes': typeof AppAvaliacoesRoute
   '/app/campanhas': typeof AppCampanhasRoute
@@ -108,12 +131,15 @@ export interface FileRoutesByTo {
   '/app/oportunidades': typeof AppOportunidadesRoute
   '/app/pacientes': typeof AppPacientesRoute
   '/app/relatorios': typeof AppRelatoriosRoute
+  '/p/$token': typeof PTokenRoute
   '/app': typeof AppIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
+  '/onboarding': typeof OnboardingRoute
+  '/app/atividade': typeof AppAtividadeRoute
   '/app/automacoes': typeof AppAutomacoesRoute
   '/app/avaliacoes': typeof AppAvaliacoesRoute
   '/app/campanhas': typeof AppCampanhasRoute
@@ -123,6 +149,7 @@ export interface FileRoutesById {
   '/app/oportunidades': typeof AppOportunidadesRoute
   '/app/pacientes': typeof AppPacientesRoute
   '/app/relatorios': typeof AppRelatoriosRoute
+  '/p/$token': typeof PTokenRoute
   '/app/': typeof AppIndexRoute
 }
 export interface FileRouteTypes {
@@ -130,6 +157,8 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/app'
+    | '/onboarding'
+    | '/app/atividade'
     | '/app/automacoes'
     | '/app/avaliacoes'
     | '/app/campanhas'
@@ -139,10 +168,13 @@ export interface FileRouteTypes {
     | '/app/oportunidades'
     | '/app/pacientes'
     | '/app/relatorios'
+    | '/p/$token'
     | '/app/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/onboarding'
+    | '/app/atividade'
     | '/app/automacoes'
     | '/app/avaliacoes'
     | '/app/campanhas'
@@ -152,11 +184,14 @@ export interface FileRouteTypes {
     | '/app/oportunidades'
     | '/app/pacientes'
     | '/app/relatorios'
+    | '/p/$token'
     | '/app'
   id:
     | '__root__'
     | '/'
     | '/app'
+    | '/onboarding'
+    | '/app/atividade'
     | '/app/automacoes'
     | '/app/avaliacoes'
     | '/app/campanhas'
@@ -166,16 +201,26 @@ export interface FileRouteTypes {
     | '/app/oportunidades'
     | '/app/pacientes'
     | '/app/relatorios'
+    | '/p/$token'
     | '/app/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
+  OnboardingRoute: typeof OnboardingRoute
+  PTokenRoute: typeof PTokenRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/app': {
       id: '/app'
       path: '/app'
@@ -196,6 +241,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/app/'
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
+    }
+    '/p/$token': {
+      id: '/p/$token'
+      path: '/p/$token'
+      fullPath: '/p/$token'
+      preLoaderRoute: typeof PTokenRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/app/relatorios': {
       id: '/app/relatorios'
@@ -260,10 +312,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAutomacoesRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/atividade': {
+      id: '/app/atividade'
+      path: '/atividade'
+      fullPath: '/app/atividade'
+      preLoaderRoute: typeof AppAtividadeRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
+  AppAtividadeRoute: typeof AppAtividadeRoute
   AppAutomacoesRoute: typeof AppAutomacoesRoute
   AppAvaliacoesRoute: typeof AppAvaliacoesRoute
   AppCampanhasRoute: typeof AppCampanhasRoute
@@ -277,6 +337,7 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppAtividadeRoute: AppAtividadeRoute,
   AppAutomacoesRoute: AppAutomacoesRoute,
   AppAvaliacoesRoute: AppAvaliacoesRoute,
   AppCampanhasRoute: AppCampanhasRoute,
@@ -294,6 +355,8 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
+  OnboardingRoute: OnboardingRoute,
+  PTokenRoute: PTokenRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

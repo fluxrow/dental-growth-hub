@@ -12,17 +12,19 @@ import {
   Settings,
   ChevronDown,
   Search,
-  Bell,
+  Activity as ActivityIcon,
 } from "lucide-react";
 import type { ReactNode } from "react";
 import { CLINIC, USER } from "@/lib/mock";
 import { cn } from "@/lib/utils";
+import { NotificationsPopover } from "./notifications-popover";
 
 const NAV: { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean }[] = [
   { to: "/app",                label: "Dashboard",    icon: LayoutDashboard, exact: true },
   { to: "/app/oportunidades",  label: "Oportunidades",icon: Target },
   { to: "/app/conversas",      label: "Conversas",    icon: MessagesSquare },
   { to: "/app/pacientes",      label: "Pacientes",    icon: Users },
+  { to: "/app/atividade",      label: "Atividade",    icon: ActivityIcon },
   { to: "/app/campanhas",      label: "Campanhas",    icon: Megaphone },
   { to: "/app/automacoes",     label: "Automações",   icon: Zap },
   { to: "/app/cobrancas",      label: "Cobranças",    icon: Wallet },
@@ -131,9 +133,7 @@ export function AppShell({
               />
             </div>
             <PeriodSelector />
-            <button className="size-8 rounded-md border border-input bg-surface hover:bg-muted flex items-center justify-center">
-              <Bell className="size-3.5" />
-            </button>
+            <NotificationsPopover />
             {actions}
           </div>
         </header>

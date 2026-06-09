@@ -1,7 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useMemo, useState } from "react";
 import { Plus, Filter, LayoutGrid, Rows3 } from "lucide-react";
+
 import { AppShell } from "@/components/app/app-shell";
-import { OPP_STAGES, OPPORTUNITIES } from "@/lib/mock";
+import { OpportunityCardActions } from "@/components/app/opportunity-card-actions";
+import { OPP_STAGES, OPPORTUNITIES, type Opportunity, type OppStage } from "@/lib/mock";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/app/oportunidades")({
@@ -10,6 +13,27 @@ export const Route = createFileRoute("/app/oportunidades")({
 });
 
 function Oportunidades() {
+  const [items, setItems] = useState<Opportunity[]>(OPPORTUNITIES);
+
+  const advance = (id: string) =>
+    setItems((curr) =>
+      curr.map((o) => {
+        if (o.id !== id) return o;
+        const idx = OPP_STAGES.findIndex((s) => s.id === o.stage);
+        const next = OPP_STAGES[idx + 1];
+        return next ? { ...o, stage: next.id as OppStage, daysInStage: 0 } : o;
+      })
+    );
+
+  const lose = (id: string) => setItems((curr) => curr.filter((o) => o.id !== id));
+
+  const byStage = useMemo(() => {
+    const m = new Map<OppStage, Opportunity[]>();
+    OPP_STAGES.forEach((s) => m.set(s.id, []));
+    items.forEach((o) => m.get(o.stage)?.push(o));
+    return m;
+  }, [items]);
+
   return (
     <AppShell
       title="Oportunidades"
@@ -22,6 +46,7 @@ function Oportunidades() {
       flush
     >
       <div className="flex items-center justify-between border-b border-border bg-background px-4 lg:px-6 h-12">
+
         <div className="flex items-center gap-2">
           <button className="inline-flex items-center gap-1.5 h-7 px-2.5 rounded-md border border-input bg-surface text-[12px]">
             <Filter className="size-3.5" /> Filtros
@@ -38,8 +63,8 @@ function Oportunidades() {
       <div className="overflow-x-auto">
         <div className="flex gap-3 p-4 lg:p-6 min-w-max">
           {OPP_STAGES.map((stage) => {
-            const items = OPPORTUNITIES.filter((o) => o.stage === stage.id);
-            const total = items.reduce((s, o) => s + o.value, 0);
+            const stageItems = byStage.get(stage.id) ?? [];
+            const total = stageItems.reduce((s, o) => s + o.value, 0);
             return (
               <div key={stage.id} className="w-[280px] shrink-0">
                 <div className="flex items-center justify-between mb-2 px-1">
@@ -48,19 +73,25 @@ function Oportunidades() {
                       <span className="size-1.5 rounded-full bg-current" />
                       {stage.label}
                     </span>
-                    <span className="text-[11px] text-muted-foreground tabular-nums">{items.length}</span>
+                    <span className="text-[11px] text-muted-foreground tabular-nums">{stageItems.length}</span>
                   </div>
                 </div>
                 <div className="text-[10.5px] text-muted-foreground mb-2 px-1 tabular-nums">
                   R$ {total.toLocaleString("pt-BR")}
                 </div>
                 <div className="space-y-2">
-                  {items.map((o) => (
-                    <div key={o.id} className="rounded-lg border border-border bg-surface p-3 hover:shadow-[0_4px_12px_-6px_oklch(0.55_0.2_275/0.15)] transition-shadow cursor-pointer">
+                  {stageItems.map((o) => (
+                    <div
+                      key={o.id}
+                      className="group rounded-lg border border-border bg-surface p-3 hover:shadow-[0_4px_12px_-6px_oklch(0.55_0.2_275/0.15)] transition-shadow cursor-pointer"
+                    >
                       <div className="flex items-center justify-between gap-2 mb-1.5">
                         <div className="text-[13px] font-medium truncate">{o.name}</div>
-                        <div className="text-[11px] font-semibold tabular-nums text-foreground/80">
-                          R$ {o.value.toLocaleString("pt-BR")}
+                        <div className="flex items-center gap-1">
+                          <div className="text-[11px] font-semibold tabular-nums text-foreground/80">
+                            R$ {o.value.toLocaleString("pt-BR")}
+                          </div>
+                          <OpportunityCardActions opp={o} onAdvance={advance} onLose={lose} />
                         </div>
                       </div>
                       <div className="text-[11.5px] text-muted-foreground truncate mb-2">{o.nextAction}</div>
