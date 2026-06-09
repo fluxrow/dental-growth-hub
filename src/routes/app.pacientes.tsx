@@ -2,6 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Search, Filter, Plus, X, ShieldCheck, ShieldAlert, Clock, MessageCircle } from "lucide-react";
 import { AppShell } from "@/components/app/app-shell";
+import { EmptyState } from "@/components/app/empty-state";
+import { EMPTY_STATES } from "@/lib/empty-states";
+import { useEmptyMode } from "@/hooks/use-empty-mode";
 import { PATIENTS, type Patient } from "@/lib/mock";
 import { cn } from "@/lib/utils";
 
@@ -18,6 +21,14 @@ const STATUS: Record<Patient["status"], { label: string; tone: string }> = {
 };
 
 function Pacientes() {
+  const __empty = useEmptyMode();
+  if (__empty) {
+    return (
+      <AppShell title="Pacientes" subtitle="Base completa da clínica">
+        <EmptyState {...EMPTY_STATES.pacientes} />
+      </AppShell>
+    );
+  }
   const [open, setOpen] = useState<Patient | null>(null);
 
   return (

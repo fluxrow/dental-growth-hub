@@ -1,6 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Plus, Repeat, CalendarCheck, Wallet, Star, MoreVertical } from "lucide-react";
 import { AppShell } from "@/components/app/app-shell";
+import { EmptyState } from "@/components/app/empty-state";
+import { EMPTY_STATES } from "@/lib/empty-states";
+import { useEmptyMode } from "@/hooks/use-empty-mode";
 import { CAMPAIGNS, type CampaignType } from "@/lib/mock";
 import { cn } from "@/lib/utils";
 
@@ -17,6 +20,14 @@ const TYPES: Record<CampaignType, { label: string; icon: typeof Repeat; tone: st
 };
 
 function Campanhas() {
+  const __empty = useEmptyMode();
+  if (__empty) {
+    return (
+      <AppShell title="Campanhas" subtitle="Campanhas e disparos manuais">
+        <EmptyState {...EMPTY_STATES.campanhas} />
+      </AppShell>
+    );
+  }
   const totalSent = CAMPAIGNS.reduce((s, c) => s + c.sent, 0);
   const totalRev = CAMPAIGNS.reduce((s, c) => s + c.revenue, 0);
 

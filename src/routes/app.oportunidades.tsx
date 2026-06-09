@@ -3,6 +3,9 @@ import { useMemo, useState } from "react";
 import { Plus, Filter, LayoutGrid, Rows3 } from "lucide-react";
 
 import { AppShell } from "@/components/app/app-shell";
+import { EmptyState } from "@/components/app/empty-state";
+import { EMPTY_STATES } from "@/lib/empty-states";
+import { useEmptyMode } from "@/hooks/use-empty-mode";
 import { OpportunityCardActions } from "@/components/app/opportunity-card-actions";
 import { OPP_STAGES, OPPORTUNITIES, type Opportunity, type OppStage } from "@/lib/mock";
 import { cn } from "@/lib/utils";
@@ -13,6 +16,14 @@ export const Route = createFileRoute("/app/oportunidades")({
 });
 
 function Oportunidades() {
+  const __empty = useEmptyMode();
+  if (__empty) {
+    return (
+      <AppShell title="Oportunidades" subtitle="Funil de pacientes em potencial">
+        <EmptyState {...EMPTY_STATES.oportunidades} />
+      </AppShell>
+    );
+  }
   const [items, setItems] = useState<Opportunity[]>(OPPORTUNITIES);
 
   const advance = (id: string) =>

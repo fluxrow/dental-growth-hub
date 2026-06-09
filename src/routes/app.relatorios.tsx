@@ -4,6 +4,9 @@ import {
   Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis,
 } from "recharts";
 import { AppShell } from "@/components/app/app-shell";
+import { EmptyState } from "@/components/app/empty-state";
+import { EMPTY_STATES } from "@/lib/empty-states";
+import { useEmptyMode } from "@/hooks/use-empty-mode";
 import { FunnelChart } from "@/components/app/funnel";
 import { ATTENDANCE_RATE, MONTHLY_EVOLUTION, SOURCE_BREAKDOWN } from "@/lib/mock";
 
@@ -13,6 +16,14 @@ export const Route = createFileRoute("/app/relatorios")({
 });
 
 function Relatorios() {
+  const __empty = useEmptyMode();
+  if (__empty) {
+    return (
+      <AppShell title="Relatórios" subtitle="Análises e tendências">
+        <EmptyState {...EMPTY_STATES.relatorios} />
+      </AppShell>
+    );
+  }
   return (
     <AppShell title="Relatórios" subtitle="Painel executivo · visão consolidada da operação">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
