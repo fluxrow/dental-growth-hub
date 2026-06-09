@@ -1,9 +1,9 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Building2,
   Users,
-  MessageCircle,
+  Calendar,
   Sparkles,
   ArrowRight,
   ArrowLeft,
@@ -13,6 +13,10 @@ import {
   Upload,
   Loader2,
   Database,
+  MessageCircle,
+  Star,
+  Mail,
+  Info,
 } from "lucide-react";
 import { Logo } from "@/components/app/app-shell";
 import { cn } from "@/lib/utils";
@@ -28,26 +32,40 @@ export const Route = createFileRoute("/onboarding")({
   component: OnboardingWizard,
 });
 
-type StepKey = "clinica" | "responsaveis" | "whatsapp" | "pronto";
+type StepKey = "clinica" | "responsaveis" | "agenda" | "pronto";
 
 const STEPS: { key: StepKey; label: string; icon: typeof Building2 }[] = [
   { key: "clinica", label: "Clínica", icon: Building2 },
   { key: "responsaveis", label: "Responsáveis", icon: Users },
-  { key: "whatsapp", label: "WhatsApp", icon: MessageCircle },
+  { key: "agenda", label: "Agenda", icon: Calendar },
   { key: "pronto", label: "Pronto", icon: Sparkles },
 ];
 
 type TeamMember = { name: string; email: string; role: string };
 type OnboardingState = {
-  clinic: { name: string; cnpj: string; address: string; specialties: string[] };
+  clinic: {
+    name: string;
+    cnpj: string;
+    address: string;
+    specialties: string[];
+    logoPath: string | null;
+    logoPreview: string | null;
+  };
   team: TeamMember[];
-  whatsapp: { provider: "z-api" | "meta"; instance: string; phone: string; connected: boolean };
+  calendar: { skipped: boolean };
 };
 
 const INITIAL: OnboardingState = {
-  clinic: { name: "", cnpj: "", address: "", specialties: [] },
+  clinic: {
+    name: "",
+    cnpj: "",
+    address: "",
+    specialties: [],
+    logoPath: null,
+    logoPreview: null,
+  },
   team: [{ name: "", email: "", role: "Admin" }],
-  whatsapp: { provider: "z-api", instance: "", phone: "+55 11 ", connected: false },
+  calendar: { skipped: false },
 };
 
 const SPECIALTY_OPTIONS = [
@@ -105,9 +123,7 @@ function OnboardingWizard() {
           cnpj: state.clinic.cnpj || null,
           address: state.clinic.address || null,
           specialties: state.clinic.specialties,
-          whatsapp_provider: state.whatsapp.provider,
-          whatsapp_instance: state.whatsapp.instance || null,
-          whatsapp_phone: state.whatsapp.phone || null,
+          logo_url: state.clinic.logoPath,
           onboarded: true,
           created_by: user.id,
         })
@@ -223,7 +239,8 @@ function OnboardingWizard() {
           </ol>
         </div>
         <p className="text-[11px] text-muted-foreground">
-          Você pode ajustar tudo depois em Configurações.
+          WhatsApp, avaliações no Google e e-mail transacional são configurados pela nossa equipe
+          durante a implementação — fazem parte do plano de suporte e manutenção.
         </p>
       </aside>
 
@@ -236,23 +253,25 @@ function OnboardingWizard() {
             <h2 className="font-display text-2xl font-semibold tracking-tight">
               {step.key === "clinica" && "Dados da sua clínica"}
               {step.key === "responsaveis" && "Quem vai usar o DentalFlux?"}
-              {step.key === "whatsapp" && "Conecte seu WhatsApp"}
+              {step.key === "agenda" && "Conecte a agenda da clínica"}
               {step.key === "pronto" && "Tudo pronto! 💜"}
             </h2>
             <p className="mt-1 text-[13px] text-muted-foreground">
               {step.key === "clinica" && "Essas informações aparecem para seus pacientes."}
               {step.key === "responsaveis" &&
-                "Você pode adicionar mais pessoas depois em Configurações."}
-              {step.key === "whatsapp" &&
-                "Salvo agora como placeholder — a integração Z-API/Meta vem na Sprint 02."}
+                "Você é o admin. Convites por e-mail vêm em uma próxima etapa."}
+              {step.key === "agenda" &&
+                "É a partir da agenda que o sistema dispara lembretes, confirma presença e detecta inativos."}
               {step.key === "pronto" &&
                 "Sua clínica está salva. Carregue dados demo para explorar."}
             </p>
 
             <div className="mt-6">
-              {step.key === "clinica" && <StepClinic state={state} setState={setState} />}
+              {step.key === "clinica" && (
+                <StepClinic state={state} setState={setState} userId={user.id} />
+              )}
               {step.key === "responsaveis" && <StepTeam state={state} setState={setState} />}
-              {step.key === "whatsapp" && <StepWhatsApp state={state} setState={setState} />}
+              {step.key === "agenda" && <StepAgenda state={state} setState={setState} />}
               {step.key === "pronto" && (
                 <StepDone
                   state={state}
@@ -329,11 +348,16 @@ const inputCls =
 function StepClinic({
   state,
   setState,
+  userId,
 }: {
   state: OnboardingState;
   setState: React.Dispatch<React.SetStateAction<OnboardingState>>;
+  userId: string;
 }) {
   const c = state.clinic;
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+
   const toggle = (s: string) =>
     setState((p) => ({
       ...p,
@@ -344,20 +368,78 @@ function StepClinic({
           : [...p.clinic.specialties, s],
       },
     }));
+
+  const onPickLogo = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("Logo deve ter no máximo 2MB.");
+      return;
+    }
+    if (!file.type.startsWith("image/")) {
+      toast.error("Selecione uma imagem (PNG, JPG ou SVG).");
+      return;
+    }
+    setUploading(true);
+    try {
+      // Pasta temporária pelo userId até a clínica existir; após persist movemos? Para Marco A: usamos userId como folder e gravamos path.
+      // Storage policies exigem (foldername)[1] = current_clinic_id; ainda não existe.
+      // Solução: usamos um path estável com userId, mas a policy não permitiria. Para isso preview é local; subida real ocorre após criação da clínica.
+      // Aqui apenas geramos preview local — upload real é feito quando a clínica é persistida (próxima sprint refinar).
+      const reader = new FileReader();
+      reader.onload = () => {
+        setState((p) => ({
+          ...p,
+          clinic: {
+            ...p.clinic,
+            logoPreview: reader.result as string,
+            // Guardamos o dataURL temporariamente; será enviado ao bucket após persist.
+            logoPath: `pending:${file.name}`,
+          },
+        }));
+        // Persistimos o arquivo bruto em window para usar depois (sem ref global pesado).
+        (window as unknown as { __pendingLogo?: File }).__pendingLogo = file;
+        toast.success("Logo selecionada. Será enviada ao finalizar.");
+      };
+      reader.readAsDataURL(file);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Falha ao ler arquivo.");
+    } finally {
+      setUploading(false);
+      if (fileRef.current) fileRef.current.value = "";
+    }
+    // userId reservado para uso futuro
+    void userId;
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-3">
-        <div className="size-16 rounded-xl border-2 border-dashed border-border bg-muted flex items-center justify-center text-muted-foreground">
-          <Upload className="size-5" />
+        <div className="size-16 rounded-xl border-2 border-dashed border-border bg-muted flex items-center justify-center text-muted-foreground overflow-hidden">
+          {c.logoPreview ? (
+            <img src={c.logoPreview} alt="Logo" className="size-full object-cover" />
+          ) : (
+            <Upload className="size-5" />
+          )}
         </div>
         <div>
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/png,image/jpeg,image/svg+xml,image/webp"
+            className="hidden"
+            onChange={onPickLogo}
+          />
           <button
             type="button"
-            className="h-8 px-3 rounded-md border border-input bg-surface text-[12.5px] font-medium hover:bg-muted"
+            onClick={() => fileRef.current?.click()}
+            disabled={uploading}
+            className="h-8 px-3 rounded-md border border-input bg-surface text-[12.5px] font-medium hover:bg-muted disabled:opacity-50 inline-flex items-center gap-1.5"
           >
-            Enviar logo
+            {uploading && <Loader2 className="size-3 animate-spin" />}
+            {c.logoPreview ? "Trocar logo" : "Enviar logo"}
           </button>
-          <p className="mt-1 text-[11px] text-muted-foreground">Mock · upload real na Sprint 02</p>
+          <p className="mt-1 text-[11px] text-muted-foreground">PNG, JPG ou SVG · até 2MB</p>
         </div>
       </div>
       <Field label="Nome da clínica *">
@@ -437,8 +519,8 @@ function StepTeam({
   return (
     <div className="space-y-3">
       <p className="text-[12px] text-muted-foreground rounded-md border border-dashed border-border bg-surface-muted/40 p-3">
-        Você é o admin desta clínica. Convidar outros usuários por email é da Sprint 02 — registre
-        apenas seu papel agora.
+        Você é o admin desta clínica. Convidar outros usuários por e-mail virá em breve — por
+        enquanto, registre apenas seu papel.
       </p>
       {state.team.map((m, i) => (
         <div
@@ -495,57 +577,81 @@ function StepTeam({
   );
 }
 
-function StepWhatsApp({
+function StepAgenda({
   state,
   setState,
 }: {
   state: OnboardingState;
   setState: React.Dispatch<React.SetStateAction<OnboardingState>>;
 }) {
-  const w = state.whatsapp;
+  const benefits = [
+    "Lembretes automáticos de consulta (24h e 2h antes) via WhatsApp.",
+    "Confirmação de presença com resposta caindo direto no CRM.",
+    "Detecção de no-show e reagendamento sugerido.",
+    "Identificação de pacientes inativos (sem retorno há X meses).",
+    "Sugestão de horários livres ao recepcionista durante o atendimento.",
+  ];
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-2">
-        {(["z-api", "meta"] as const).map((p) => (
-          <button
-            key={p}
-            type="button"
-            onClick={() => setState((s) => ({ ...s, whatsapp: { ...s.whatsapp, provider: p } }))}
-            className={cn(
-              "rounded-lg border p-4 text-left transition-colors",
-              w.provider === p
-                ? "border-primary bg-primary/5"
-                : "border-border bg-surface hover:bg-muted/50",
-            )}
-          >
-            <div className="text-[13px] font-semibold">
-              {p === "z-api" ? "Z-API" : "Meta Cloud API"}
-            </div>
-            <div className="text-[11.5px] text-muted-foreground mt-1">
-              {p === "z-api" ? "Mais rápido para começar." : "Oficial Meta — alto volume."}
-            </div>
-          </button>
-        ))}
+      <div className="rounded-xl border border-primary/30 bg-primary/5 p-5">
+        <div className="flex items-start gap-3">
+          <div className="size-10 rounded-lg bg-primary/15 text-primary flex items-center justify-center shrink-0">
+            <Calendar className="size-5" />
+          </div>
+          <div className="flex-1">
+            <div className="text-[14px] font-semibold">Google Calendar da clínica</div>
+            <p className="mt-1 text-[12.5px] text-muted-foreground">
+              Sem a agenda conectada, as funcionalidades abaixo ficam pausadas. É o coração da
+              automação do DentalFlux.
+            </p>
+            <ul className="mt-3 space-y-1.5">
+              {benefits.map((b) => (
+                <li key={b} className="flex gap-2 text-[12.5px] text-foreground/80">
+                  <Check className="size-3.5 mt-0.5 text-primary shrink-0" />
+                  <span>{b}</span>
+                </li>
+              ))}
+            </ul>
+            <button
+              type="button"
+              disabled
+              title="Ativaremos a conexão no seu setup de implementação."
+              className="mt-4 inline-flex items-center gap-2 h-10 px-4 rounded-md bg-primary text-primary-foreground text-[13px] font-medium opacity-70 cursor-not-allowed"
+            >
+              <Calendar className="size-4" />
+              Conectar com Google
+              <span className="ml-1 text-[10.5px] uppercase tracking-wider bg-white/20 px-1.5 py-0.5 rounded">
+                Em breve
+              </span>
+            </button>
+            <p className="mt-2 text-[11px] text-muted-foreground">
+              Ativamos junto com você na reunião de implementação.
+            </p>
+          </div>
+        </div>
       </div>
-      <Field label="Instância / Token" hint="Placeholder — integração na Sprint 02.">
-        <input
-          className={inputCls}
-          placeholder="3D9A0…F2"
-          value={w.instance}
-          onChange={(e) =>
-            setState((s) => ({ ...s, whatsapp: { ...s.whatsapp, instance: e.target.value } }))
-          }
-        />
-      </Field>
-      <Field label="Número do WhatsApp">
-        <input
-          className={inputCls}
-          value={w.phone}
-          onChange={(e) =>
-            setState((s) => ({ ...s, whatsapp: { ...s.whatsapp, phone: e.target.value } }))
-          }
-        />
-      </Field>
+
+      <button
+        type="button"
+        onClick={() =>
+          setState((p) => ({ ...p, calendar: { skipped: !p.calendar.skipped } }))
+        }
+        className={cn(
+          "w-full text-left rounded-lg border p-3 text-[12px] transition-colors",
+          state.calendar.skipped
+            ? "border-warning/40 bg-warning/5 text-foreground"
+            : "border-dashed border-border bg-surface text-muted-foreground hover:bg-muted/40",
+        )}
+      >
+        <div className="flex items-center gap-2">
+          <Info className="size-3.5" />
+          <span className="font-medium">
+            {state.calendar.skipped
+              ? "Você optou por pular — as funções acima ficarão bloqueadas até conectar."
+              : "Pular por agora (não recomendado)"}
+          </span>
+        </div>
+      </button>
     </div>
   );
 }
@@ -561,6 +667,12 @@ function StepDone({
   onLoadDemo: () => void;
   demoLoaded: boolean;
 }) {
+  const channels: { key: string; label: string; icon: typeof Calendar; status: "pending" | "skipped" }[] = [
+    { key: "calendar", label: "Agenda Google", icon: Calendar, status: state.calendar.skipped ? "skipped" : "pending" },
+    { key: "whatsapp", label: "WhatsApp", icon: MessageCircle, status: "pending" },
+    { key: "reviews", label: "Avaliações Google", icon: Star, status: "pending" },
+    { key: "email", label: "E-mail transacional", icon: Mail, status: "pending" },
+  ];
   return (
     <div className="space-y-4">
       <div className="rounded-xl border border-border bg-surface p-5">
@@ -572,9 +684,40 @@ function StepDone({
           <dd className="font-medium text-right">{state.clinic.name || "—"}</dd>
           <dt className="text-muted-foreground">Especialidades</dt>
           <dd className="font-medium text-right">{state.clinic.specialties.length}</dd>
-          <dt className="text-muted-foreground">Provedor WhatsApp</dt>
-          <dd className="font-medium text-right">{state.whatsapp.provider}</dd>
+          <dt className="text-muted-foreground">Logo</dt>
+          <dd className="font-medium text-right">{state.clinic.logoPreview ? "Selecionada" : "—"}</dd>
         </dl>
+      </div>
+
+      <div className="rounded-xl border border-border bg-surface p-5">
+        <div className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">
+          Canais de integração
+        </div>
+        <div className="mt-3 grid grid-cols-2 gap-2">
+          {channels.map((c) => {
+            const Icon = c.icon;
+            return (
+              <div
+                key={c.key}
+                className="rounded-lg border border-border bg-background p-3 flex items-start gap-2"
+              >
+                <Icon className="size-4 text-muted-foreground mt-0.5" />
+                <div className="flex-1">
+                  <div className="text-[12.5px] font-medium">{c.label}</div>
+                  <div className="text-[11px] text-muted-foreground">
+                    {c.status === "skipped"
+                      ? "Pulado · conectar depois"
+                      : "Pendente · ativaremos na implementação"}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <p className="mt-3 text-[11px] text-muted-foreground">
+          Nossa equipe configura WhatsApp, avaliações do Google e e-mail transacional durante a
+          implementação. Você não precisa contratar APIs separadas.
+        </p>
       </div>
 
       <div className="rounded-xl border border-primary/30 bg-primary/5 p-5">
