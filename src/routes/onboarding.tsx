@@ -52,7 +52,7 @@ type OnboardingState = {
     logoPreview: string | null;
   };
   team: TeamMember[];
-  calendar: { skipped: boolean };
+  calendar: { skipped: boolean; connected: boolean; accountEmail: string | null };
 };
 
 const INITIAL: OnboardingState = {
@@ -65,7 +65,7 @@ const INITIAL: OnboardingState = {
     logoPreview: null,
   },
   team: [{ name: "", email: "", role: "Admin" }],
-  calendar: { skipped: false },
+  calendar: { skipped: false, connected: false, accountEmail: null },
 };
 
 const SPECIALTY_OPTIONS = [
