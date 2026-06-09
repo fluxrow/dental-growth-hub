@@ -130,8 +130,10 @@ function AtividadePage() {
           title="Sem atividade ainda"
           description="As respostas, confirmações, cobranças e pagamentos vão aparecer aqui em tempo real."
           steps={[]}
+          primary={{ label: "Voltar ao Dashboard", href: "/app" }}
         />
       )}
+
       <div className="flex flex-wrap items-center gap-1.5 mb-4">
         {ACTIVITY_CATEGORIES.map((c) => {
           const active = filter === c.id;
