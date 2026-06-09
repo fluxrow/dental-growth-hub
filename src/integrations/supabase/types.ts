@@ -62,6 +62,123 @@ export type Database = {
           },
         ]
       }
+      clinic_diagnostics: {
+        Row: {
+          active_patients: number
+          avg_days_stalled: number | null
+          clinic_id: string
+          created_at: string
+          current_avg_rating: number | null
+          health_score: number
+          id: string
+          inactive_ltv_total: number
+          inactive_patients: number
+          inactive_recovery_est: number
+          migration_job_id: string | null
+          overdue_old_value: number
+          overdue_recent_value: number
+          pending_charges_count: number
+          pending_charges_value: number
+          recommended_actions: Json
+          review_eligible_count: number
+          reviews_last_30d: number
+          score_adimplencia: number | null
+          score_engagement: number | null
+          score_funnel: number | null
+          score_reputation: number | null
+          score_retention: number | null
+          snapshot_at: string
+          stalled_opps_count: number
+          stalled_opps_value: number
+          total_patients: number
+          total_recoverable: number
+          treatment_patients: number
+          triggered_by: string
+          upcoming_value: number
+        }
+        Insert: {
+          active_patients?: number
+          avg_days_stalled?: number | null
+          clinic_id: string
+          created_at?: string
+          current_avg_rating?: number | null
+          health_score?: number
+          id?: string
+          inactive_ltv_total?: number
+          inactive_patients?: number
+          inactive_recovery_est?: number
+          migration_job_id?: string | null
+          overdue_old_value?: number
+          overdue_recent_value?: number
+          pending_charges_count?: number
+          pending_charges_value?: number
+          recommended_actions?: Json
+          review_eligible_count?: number
+          reviews_last_30d?: number
+          score_adimplencia?: number | null
+          score_engagement?: number | null
+          score_funnel?: number | null
+          score_reputation?: number | null
+          score_retention?: number | null
+          snapshot_at?: string
+          stalled_opps_count?: number
+          stalled_opps_value?: number
+          total_patients?: number
+          total_recoverable?: number
+          treatment_patients?: number
+          triggered_by: string
+          upcoming_value?: number
+        }
+        Update: {
+          active_patients?: number
+          avg_days_stalled?: number | null
+          clinic_id?: string
+          created_at?: string
+          current_avg_rating?: number | null
+          health_score?: number
+          id?: string
+          inactive_ltv_total?: number
+          inactive_patients?: number
+          inactive_recovery_est?: number
+          migration_job_id?: string | null
+          overdue_old_value?: number
+          overdue_recent_value?: number
+          pending_charges_count?: number
+          pending_charges_value?: number
+          recommended_actions?: Json
+          review_eligible_count?: number
+          reviews_last_30d?: number
+          score_adimplencia?: number | null
+          score_engagement?: number | null
+          score_funnel?: number | null
+          score_reputation?: number | null
+          score_retention?: number | null
+          snapshot_at?: string
+          stalled_opps_count?: number
+          stalled_opps_value?: number
+          total_patients?: number
+          total_recoverable?: number
+          treatment_patients?: number
+          triggered_by?: string
+          upcoming_value?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clinic_diagnostics_clinic_id_fkey"
+            columns: ["clinic_id"]
+            isOneToOne: false
+            referencedRelation: "clinicas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clinic_diagnostics_migration_job_id_fkey"
+            columns: ["migration_job_id"]
+            isOneToOne: false
+            referencedRelation: "migration_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clinicas: {
         Row: {
           address: string | null
@@ -124,6 +241,153 @@ export type Database = {
           whatsapp_provider?: string | null
         }
         Relationships: []
+      }
+      migration_job_rows: {
+        Row: {
+          clinic_id: string
+          created_at: string
+          error_field: string | null
+          error_message: string | null
+          id: string
+          job_id: string
+          normalized: Json | null
+          patient_id: string | null
+          raw_data: Json
+          row_number: number
+          status: string
+        }
+        Insert: {
+          clinic_id: string
+          created_at?: string
+          error_field?: string | null
+          error_message?: string | null
+          id?: string
+          job_id: string
+          normalized?: Json | null
+          patient_id?: string | null
+          raw_data: Json
+          row_number: number
+          status: string
+        }
+        Update: {
+          clinic_id?: string
+          created_at?: string
+          error_field?: string | null
+          error_message?: string | null
+          id?: string
+          job_id?: string
+          normalized?: Json | null
+          patient_id?: string | null
+          raw_data?: Json
+          row_number?: number
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "migration_job_rows_clinic_id_fkey"
+            columns: ["clinic_id"]
+            isOneToOne: false
+            referencedRelation: "clinicas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "migration_job_rows_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "migration_jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "migration_job_rows_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "pacientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      migration_jobs: {
+        Row: {
+          clinic_id: string
+          column_map: Json | null
+          completed_at: string | null
+          created_at: string
+          created_by: string
+          detected_headers: string[] | null
+          duplicate_strategy: string | null
+          error_message: string | null
+          error_rows: number | null
+          id: string
+          imported_rows: number | null
+          preview_data: Json | null
+          progress_pct: number | null
+          skipped_rows: number | null
+          source_filename: string | null
+          source_type: string
+          source_url: string | null
+          started_at: string | null
+          status: string
+          total_rows: number | null
+          updated_at: string
+          validation_report: Json | null
+        }
+        Insert: {
+          clinic_id: string
+          column_map?: Json | null
+          completed_at?: string | null
+          created_at?: string
+          created_by: string
+          detected_headers?: string[] | null
+          duplicate_strategy?: string | null
+          error_message?: string | null
+          error_rows?: number | null
+          id?: string
+          imported_rows?: number | null
+          preview_data?: Json | null
+          progress_pct?: number | null
+          skipped_rows?: number | null
+          source_filename?: string | null
+          source_type: string
+          source_url?: string | null
+          started_at?: string | null
+          status?: string
+          total_rows?: number | null
+          updated_at?: string
+          validation_report?: Json | null
+        }
+        Update: {
+          clinic_id?: string
+          column_map?: Json | null
+          completed_at?: string | null
+          created_at?: string
+          created_by?: string
+          detected_headers?: string[] | null
+          duplicate_strategy?: string | null
+          error_message?: string | null
+          error_rows?: number | null
+          id?: string
+          imported_rows?: number | null
+          preview_data?: Json | null
+          progress_pct?: number | null
+          skipped_rows?: number | null
+          source_filename?: string | null
+          source_type?: string
+          source_url?: string | null
+          started_at?: string | null
+          status?: string
+          total_rows?: number | null
+          updated_at?: string
+          validation_report?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "migration_jobs_clinic_id_fkey"
+            columns: ["clinic_id"]
+            isOneToOne: false
+            referencedRelation: "clinicas"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       notificacoes: {
         Row: {
@@ -193,6 +457,7 @@ export type Database = {
           clinic_id: string
           created_at: string
           id: string
+          lost_at: string | null
           lost_reason: string | null
           name: string
           next_action: string | null
@@ -202,6 +467,7 @@ export type Database = {
           source: string | null
           stage: Database["public"]["Enums"]["opportunity_stage"]
           stage_changed_at: string
+          treatment_value_remaining: number | null
           updated_at: string
           value: number | null
         }
@@ -209,6 +475,7 @@ export type Database = {
           clinic_id: string
           created_at?: string
           id?: string
+          lost_at?: string | null
           lost_reason?: string | null
           name: string
           next_action?: string | null
@@ -218,6 +485,7 @@ export type Database = {
           source?: string | null
           stage?: Database["public"]["Enums"]["opportunity_stage"]
           stage_changed_at?: string
+          treatment_value_remaining?: number | null
           updated_at?: string
           value?: number | null
         }
@@ -225,6 +493,7 @@ export type Database = {
           clinic_id?: string
           created_at?: string
           id?: string
+          lost_at?: string | null
           lost_reason?: string | null
           name?: string
           next_action?: string | null
@@ -234,6 +503,7 @@ export type Database = {
           source?: string | null
           stage?: Database["public"]["Enums"]["opportunity_stage"]
           stage_changed_at?: string
+          treatment_value_remaining?: number | null
           updated_at?: string
           value?: number | null
         }
@@ -260,6 +530,8 @@ export type Database = {
           created_at: string
           email: string | null
           id: string
+          imported_at: string | null
+          imported_from_job: string | null
           last_visit_at: string | null
           ltv: number
           name: string
@@ -269,12 +541,15 @@ export type Database = {
           status: Database["public"]["Enums"]["patient_status"]
           tags: string[] | null
           updated_at: string
+          visit_count: number | null
         }
         Insert: {
           clinic_id: string
           created_at?: string
           email?: string | null
           id?: string
+          imported_at?: string | null
+          imported_from_job?: string | null
           last_visit_at?: string | null
           ltv?: number
           name: string
@@ -284,12 +559,15 @@ export type Database = {
           status?: Database["public"]["Enums"]["patient_status"]
           tags?: string[] | null
           updated_at?: string
+          visit_count?: number | null
         }
         Update: {
           clinic_id?: string
           created_at?: string
           email?: string | null
           id?: string
+          imported_at?: string | null
+          imported_from_job?: string | null
           last_visit_at?: string | null
           ltv?: number
           name?: string
@@ -299,6 +577,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["patient_status"]
           tags?: string[] | null
           updated_at?: string
+          visit_count?: number | null
         }
         Relationships: [
           {
@@ -306,6 +585,13 @@ export type Database = {
             columns: ["clinic_id"]
             isOneToOne: false
             referencedRelation: "clinicas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pacientes_imported_from_job_fkey"
+            columns: ["imported_from_job"]
+            isOneToOne: false
+            referencedRelation: "migration_jobs"
             referencedColumns: ["id"]
           },
         ]
@@ -388,6 +674,48 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      calculate_and_save_diagnostic: {
+        Args: { p_clinic_id: string; p_job_id?: string; p_triggered_by: string }
+        Returns: {
+          active_patients: number
+          avg_days_stalled: number | null
+          clinic_id: string
+          created_at: string
+          current_avg_rating: number | null
+          health_score: number
+          id: string
+          inactive_ltv_total: number
+          inactive_patients: number
+          inactive_recovery_est: number
+          migration_job_id: string | null
+          overdue_old_value: number
+          overdue_recent_value: number
+          pending_charges_count: number
+          pending_charges_value: number
+          recommended_actions: Json
+          review_eligible_count: number
+          reviews_last_30d: number
+          score_adimplencia: number | null
+          score_engagement: number | null
+          score_funnel: number | null
+          score_reputation: number | null
+          score_retention: number | null
+          snapshot_at: string
+          stalled_opps_count: number
+          stalled_opps_value: number
+          total_patients: number
+          total_recoverable: number
+          treatment_patients: number
+          triggered_by: string
+          upcoming_value: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "clinic_diagnostics"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       current_clinic_id: { Args: never; Returns: string }
       has_role: {
         Args: {
