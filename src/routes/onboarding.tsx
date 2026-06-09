@@ -664,7 +664,7 @@ function StepAgenda({
       <button
         type="button"
         onClick={() =>
-          setState((p) => ({ ...p, calendar: { skipped: !p.calendar.skipped } }))
+          setState((p) => ({ ...p, calendar: { ...p.calendar, skipped: !p.calendar.skipped } }))
         }
         className={cn(
           "w-full text-left rounded-lg border p-3 text-[12px] transition-colors",
