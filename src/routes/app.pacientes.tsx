@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Search,
   Filter,
@@ -19,6 +19,10 @@ import { useEmptyMode } from "@/hooks/use-empty-mode";
 import { PATIENTS, type Patient } from "@/lib/mock";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
+import { createPaciente } from "@/lib/pacientes.functions";
+import { useAuth } from "@/hooks/use-auth";
+import { useProfile } from "@/hooks/use-profile";
 
 export const Route = createFileRoute("/app/pacientes")({
   head: () => ({ meta: [{ title: "Pacientes · DentalFlux" }] }),
@@ -36,7 +40,11 @@ const STATUS_LABEL: Record<string, { label: string; tone: string }> = {
 
 function Pacientes() {
   const live = useEmptyMode();
+  const { user } = useAuth();
+  const { data: profileData } = useProfile(user?.id);
+  const queryClient = useQueryClient();
   const [open, setOpen] = useState<PatientRow | null>(null);
+  const [showNew, setShowNew] = useState(false);
 
   const { data: liveData, isLoading } = useQuery({
     queryKey: ["pacientes"],
@@ -89,7 +97,10 @@ function Pacientes() {
       title="Pacientes"
       subtitle={`${rows.length} pacientes · base completa da clínica`}
       actions={
-        <button className="hidden md:inline-flex items-center gap-1.5 h-8 px-3 rounded-md bg-primary text-primary-foreground text-[12.5px] font-medium hover:opacity-90">
+        <button
+          onClick={() => setShowNew(true)}
+          className="hidden md:inline-flex items-center gap-1.5 h-8 px-3 rounded-md bg-primary text-primary-foreground text-[12.5px] font-medium hover:opacity-90"
+        >
           <Plus className="size-3.5" /> Novo paciente
         </button>
       }
@@ -186,6 +197,16 @@ function Pacientes() {
       </div>
 
       {open && <PatientDrawer patient={open} onClose={() => setOpen(null)} />}
+      {showNew && (
+        <NewPatientModal
+          clinicId={profileData?.clinic?.id ?? ""}
+          onClose={() => setShowNew(false)}
+          onCreated={() => {
+            queryClient.invalidateQueries({ queryKey: ["pacientes"] });
+            setShowNew(false);
+          }}
+        />
+      )}
     </AppShell>
   );
 }
@@ -330,6 +351,148 @@ function Stat({ label, value }: { label: string; value: React.ReactNode }) {
     <div className="rounded-lg border border-border bg-background p-3">
       <div className="text-[10.5px] uppercase tracking-wider text-muted-foreground">{label}</div>
       <div className="mt-1 text-[13px] font-medium">{value}</div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// NewPatientModal — P1-3
+// ---------------------------------------------------------------------------
+
+type NewStatus = "lead" | "ativo" | "tratamento" | "inativo";
+
+function NewPatientModal({
+  clinicId,
+  onClose,
+  onCreated,
+}: {
+  clinicId: string;
+  onClose: () => void;
+  onCreated: () => void;
+}) {
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [status, setStatus] = useState<NewStatus>("lead");
+  const [source, setSource] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim()) return;
+    if (!clinicId) {
+      toast.error("Clínica não encontrada — aguarde o carregamento e tente novamente");
+      return;
+    }
+    setSaving(true);
+    try {
+      await createPaciente({
+        data: {
+          clinicId,
+          name: name.trim(),
+          phone: phone.trim() || undefined,
+          status,
+          source: source.trim() || undefined,
+        },
+      });
+      toast.success("Paciente criado com sucesso");
+      onCreated();
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : "Erro ao criar paciente");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-50 bg-foreground/10 backdrop-blur-sm flex items-end sm:items-center justify-center p-4"
+      onClick={onClose}
+    >
+      <div
+        className="w-full max-w-md bg-surface border border-border rounded-xl shadow-xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="h-14 border-b border-border flex items-center justify-between px-5">
+          <div className="text-[14px] font-semibold">Novo paciente</div>
+          <button
+            onClick={onClose}
+            className="size-8 rounded-md hover:bg-muted flex items-center justify-center"
+          >
+            <X className="size-4" />
+          </button>
+        </div>
+        <form onSubmit={handleSubmit} className="p-5 space-y-4">
+          <label className="block">
+            <span className="text-[11.5px] font-medium text-foreground/70 uppercase tracking-wider">
+              Nome *
+            </span>
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              autoFocus
+              placeholder="Nome completo"
+              className="mt-1.5 h-9 w-full rounded-md border border-input bg-background px-3 text-[13px] focus:outline-none focus:ring-2 focus:ring-ring"
+            />
+          </label>
+          <label className="block">
+            <span className="text-[11.5px] font-medium text-foreground/70 uppercase tracking-wider">
+              Telefone
+            </span>
+            <input
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="+55 11 99999-9999"
+              className="mt-1.5 h-9 w-full rounded-md border border-input bg-background px-3 text-[13px] focus:outline-none focus:ring-2 focus:ring-ring"
+            />
+          </label>
+          <div className="grid grid-cols-2 gap-3">
+            <label className="block">
+              <span className="text-[11.5px] font-medium text-foreground/70 uppercase tracking-wider">
+                Status
+              </span>
+              <select
+                value={status}
+                onChange={(e) => setStatus(e.target.value as NewStatus)}
+                className="mt-1.5 h-9 w-full rounded-md border border-input bg-background px-3 text-[13px] focus:outline-none focus:ring-2 focus:ring-ring"
+              >
+                <option value="lead">Lead</option>
+                <option value="ativo">Ativo</option>
+                <option value="tratamento">Em tratamento</option>
+                <option value="inativo">Inativo</option>
+              </select>
+            </label>
+            <label className="block">
+              <span className="text-[11.5px] font-medium text-foreground/70 uppercase tracking-wider">
+                Origem
+              </span>
+              <input
+                value={source}
+                onChange={(e) => setSource(e.target.value)}
+                placeholder="Instagram, Google…"
+                className="mt-1.5 h-9 w-full rounded-md border border-input bg-background px-3 text-[13px] focus:outline-none focus:ring-2 focus:ring-ring"
+              />
+            </label>
+          </div>
+          <div className="flex justify-end gap-2 pt-1">
+            <button
+              type="button"
+              onClick={onClose}
+              className="h-9 px-4 rounded-md border border-input bg-background text-[12.5px] hover:bg-muted"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              disabled={saving || !name.trim()}
+              className="h-9 px-4 rounded-md bg-primary text-primary-foreground text-[12.5px] font-medium hover:opacity-90 disabled:opacity-50 inline-flex items-center gap-1.5"
+            >
+              {saving && <Loader2 className="size-3.5 animate-spin" />}
+              Criar paciente
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
