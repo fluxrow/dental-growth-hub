@@ -1,10 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { CheckCheck } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { Activity as ActivityIcon } from "lucide-react";
+
+import { CheckCheck, Loader2 } from "lucide-react";
 import { AppShell } from "@/components/app/app-shell";
 import { NotificationRow } from "@/components/app/notifications-popover";
-import { ACTIVITY_CATEGORIES, ACTIVITY_FEED, type ActivityCategory } from "@/lib/mock";
+import { ACTIVITY_CATEGORIES, ACTIVITY_FEED, type Activity, type ActivityCategory, type ActivityKind } from "@/lib/mock";
+import { EmptyState } from "@/components/app/empty-state";
 import { markAllRead, useReadIds, useUnreadCount } from "@/hooks/use-notifications";
+import { useEmptyMode } from "@/hooks/use-empty-mode";
+import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/app/atividade")({
@@ -12,17 +18,82 @@ export const Route = createFileRoute("/app/atividade")({
   component: AtividadePage,
 });
 
+const DB_TO_KIND: Record<string, ActivityKind> = {
+  resposta: "resposta",
+  confirmacao: "confirmacao",
+  falha: "falha",
+  avaliacao: "avaliacao",
+  cobranca_enviada: "cobranca-enviada",
+  cobranca_respondida: "cobranca-respondida",
+  pagamento_confirmado: "pagamento-confirmado",
+  pagamento_atrasado: "pagamento-atrasado",
+  cobranca_falhou: "cobranca-falhou",
+  sistema: "sistema",
+};
+
+const KIND_TO_CATEGORY: Record<ActivityKind, ActivityCategory> = {
+  resposta: "respostas", confirmacao: "confirmacoes", falha: "falhas", avaliacao: "avaliacoes",
+  "cobranca-enviada": "financeiro", "cobranca-respondida": "financeiro", "pagamento-confirmado": "financeiro",
+  "pagamento-atrasado": "financeiro", "cobranca-falhou": "financeiro", sistema: "sistema",
+};
+
+function dayLabel(d: Date): string {
+  const diff = Math.floor((Date.now() - d.getTime()) / 86400000);
+  if (diff === 0) return "Hoje";
+  if (diff === 1) return "Ontem";
+  return "Esta semana";
+}
+function relTime(d: Date): string {
+  const m = Math.floor((Date.now() - d.getTime()) / 60000);
+  if (m < 1) return "agora";
+  if (m < 60) return `${m} min`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h} h`;
+  return `${Math.floor(h / 24)}d`;
+}
+
 function AtividadePage() {
+  const live = useEmptyMode();
   const [filter, setFilter] = useState<ActivityCategory | "todas">("todas");
   const [onlyUnread, setOnlyUnread] = useState(false);
   const readIds = useReadIds();
   const unread = useUnreadCount();
 
+  const { data: liveFeed, isLoading } = useQuery({
+    queryKey: ["atividades"],
+    enabled: live,
+    queryFn: async (): Promise<Activity[]> => {
+      const { data, error } = await supabase
+        .from("atividades")
+        .select("id, kind, title, detail, value, created_at")
+        .order("created_at", { ascending: false })
+        .limit(100);
+      if (error) throw error;
+      return (data ?? []).map((a): Activity => {
+        const k = DB_TO_KIND[a.kind] ?? "sistema";
+        const created = new Date(a.created_at!);
+        return {
+          id: a.id,
+          kind: k,
+          category: KIND_TO_CATEGORY[k],
+          title: a.title,
+          detail: a.detail ?? "",
+          value: a.value ? Number(a.value) : undefined,
+          time: relTime(created),
+          dayLabel: dayLabel(created),
+          unread: false,
+        };
+      });
+    },
+  });
+
+  const source: Activity[] = live ? (liveFeed ?? []) : ACTIVITY_FEED;
+
   const filtered = useMemo(() => {
-    let arr = filter === "todas" ? ACTIVITY_FEED : ACTIVITY_FEED.filter((a) => a.category === filter);
+    let arr = filter === "todas" ? source : source.filter((a) => a.category === filter);
     if (onlyUnread) arr = arr.filter((a) => a.unread && !readIds.has(a.id));
     return arr;
-  }, [filter, onlyUnread, readIds]);
+  }, [filter, onlyUnread, readIds, source]);
 
   const grouped = useMemo(() => {
     const m = new Map<string, typeof filtered>();
@@ -33,6 +104,7 @@ function AtividadePage() {
     }
     return Array.from(m.entries());
   }, [filtered]);
+
 
   return (
     <AppShell
@@ -49,11 +121,25 @@ function AtividadePage() {
         </button>
       }
     >
+      {live && isLoading && (
+        <div className="flex items-center justify-center py-10"><Loader2 className="size-5 animate-spin text-muted-foreground" /></div>
+      )}
+      {!isLoading && source.length === 0 && (
+        <EmptyState
+          icon={ActivityIcon}
+          title="Sem atividade ainda"
+          description="As respostas, confirmações, cobranças e pagamentos vão aparecer aqui em tempo real."
+          steps={[]}
+          primary={{ label: "Voltar ao Dashboard", href: "/app" }}
+        />
+      )}
+
       <div className="flex flex-wrap items-center gap-1.5 mb-4">
         {ACTIVITY_CATEGORIES.map((c) => {
           const active = filter === c.id;
           const count =
-            c.id === "todas" ? ACTIVITY_FEED.length : ACTIVITY_FEED.filter((a) => a.category === c.id).length;
+            c.id === "todas" ? source.length : source.filter((a) => a.category === c.id).length;
+
           return (
             <button
               key={c.id}

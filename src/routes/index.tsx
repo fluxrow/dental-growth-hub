@@ -67,11 +67,11 @@ function SiteHeader() {
           <a href="#resultados" className="hover:text-foreground">Resultados</a>
         </nav>
         <div className="flex items-center gap-2">
-          <Link to="/app" className="hidden sm:inline text-[13px] text-muted-foreground hover:text-foreground px-3 py-1.5">
+          <Link to="/auth" className="hidden sm:inline text-[13px] text-muted-foreground hover:text-foreground px-3 py-1.5">
             Entrar
           </Link>
           <Link
-            to="/app"
+            to="/auth"
             className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-md bg-primary text-primary-foreground text-[13px] font-medium hover:opacity-90"
           >
             Começar grátis <ArrowRight className="size-3.5" />
@@ -109,7 +109,7 @@ function Hero() {
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Link
-              to="/app"
+              to="/auth"
               className="inline-flex items-center gap-1.5 h-11 px-5 rounded-md bg-primary text-primary-foreground text-[14px] font-medium hover:opacity-90 shadow-[0_8px_24px_-8px_oklch(0.55_0.2_275/0.4)]"
             >
               Começar gratuitamente <ArrowRight className="size-4" />
@@ -484,7 +484,7 @@ function FinalCta() {
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           <Link
-            to="/app"
+            to="/auth"
             className="inline-flex items-center gap-1.5 h-12 px-6 rounded-md bg-primary text-primary-foreground text-[14.5px] font-medium hover:opacity-90 shadow-[0_8px_24px_-8px_oklch(0.55_0.2_275/0.4)]"
           >
             Começar gratuitamente <ArrowRight className="size-4" />
@@ -518,7 +518,7 @@ function SiteFooter() {
             <div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Produto</div>
             <a href="#funil" className="block text-foreground/80 hover:text-foreground">Funil</a>
             <a href="#beneficios" className="block text-foreground/80 hover:text-foreground">Benefícios</a>
-            <Link to="/app" className="block text-foreground/80 hover:text-foreground">Demonstração</Link>
+            <Link to="/auth" className="block text-foreground/80 hover:text-foreground">Demonstração</Link>
           </div>
           <div className="space-y-2">
             <div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Empresa</div>

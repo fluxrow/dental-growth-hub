@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
-import { Plus, Filter, LayoutGrid, Rows3 } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Plus, Filter, LayoutGrid, Rows3, Loader2 } from "lucide-react";
 
 import { AppShell } from "@/components/app/app-shell";
 import { EmptyState } from "@/components/app/empty-state";
@@ -8,6 +9,7 @@ import { EMPTY_STATES } from "@/lib/empty-states";
 import { useEmptyMode } from "@/hooks/use-empty-mode";
 import { OpportunityCardActions } from "@/components/app/opportunity-card-actions";
 import { OPP_STAGES, OPPORTUNITIES, type Opportunity, type OppStage } from "@/lib/mock";
+import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/app/oportunidades")({
@@ -16,15 +18,36 @@ export const Route = createFileRoute("/app/oportunidades")({
 });
 
 function Oportunidades() {
-  const __empty = useEmptyMode();
-  if (__empty) {
-    return (
-      <AppShell title="Oportunidades" subtitle="Funil de pacientes em potencial">
-        <EmptyState {...EMPTY_STATES.oportunidades} />
-      </AppShell>
-    );
-  }
-  const [items, setItems] = useState<Opportunity[]>(OPPORTUNITIES);
+  const live = useEmptyMode();
+
+  const { data: liveData, isLoading } = useQuery({
+    queryKey: ["oportunidades"],
+    enabled: live,
+    queryFn: async (): Promise<Opportunity[]> => {
+      const { data, error } = await supabase
+        .from("oportunidades")
+        .select("id, name, stage, source, value, next_action, stage_changed_at, phone")
+        .neq("stage", "perdida")
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return (data ?? []).map((o) => ({
+        id: o.id,
+        name: o.name,
+        stage: o.stage as OppStage,
+        source: (o.source ?? "Site") as Opportunity["source"],
+        value: Number(o.value ?? 0),
+        owner: "Você",
+        nextAction: o.next_action ?? "—",
+        daysInStage: o.stage_changed_at ? Math.max(0, Math.floor((Date.now() - new Date(o.stage_changed_at).getTime()) / 86400000)) : 0,
+        phone: o.phone ?? "",
+      }));
+    },
+  });
+
+  const [items, setItems] = useState<Opportunity[]>([]);
+  useEffect(() => {
+    setItems(live ? (liveData ?? []) : OPPORTUNITIES);
+  }, [live, liveData]);
 
   const advance = (id: string) =>
     setItems((curr) =>
@@ -44,6 +67,19 @@ function Oportunidades() {
     items.forEach((o) => m.get(o.stage)?.push(o));
     return m;
   }, [items]);
+
+  if (live && isLoading) {
+    return <AppShell title="Oportunidades"><div className="flex items-center justify-center py-20"><Loader2 className="size-5 animate-spin text-muted-foreground" /></div></AppShell>;
+  }
+
+  if (items.length === 0) {
+    return (
+      <AppShell title="Oportunidades" subtitle="Funil de pacientes em potencial">
+        <EmptyState {...EMPTY_STATES.oportunidades} />
+      </AppShell>
+    );
+  }
+
 
   return (
     <AppShell
