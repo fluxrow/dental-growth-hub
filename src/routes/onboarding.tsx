@@ -906,7 +906,13 @@ function CalendarConnectButton({
         return;
       }
       onConnected(result.email ?? null);
-      toast.success("Google Calendar conectado!");
+      if (expectedEmail && result.email && result.email !== expectedEmail) {
+        toast.warning(
+          `Agenda conectada como ${result.email} (diferente do login ${expectedEmail}).`,
+        );
+      } else {
+        toast.success("Google Calendar conectado!");
+      }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Erro ao conectar");
     } finally {
