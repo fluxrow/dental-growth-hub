@@ -131,7 +131,30 @@ function AuthPage() {
             {mode === "login" ? "Entre para acessar sua clínica" : "14 dias grátis · sem cartão"}
           </p>
 
-          <form onSubmit={submit} className="mt-6 space-y-3">
+          <button
+            type="button"
+            onClick={signInWithGoogle}
+            disabled={googleLoading || loading}
+            className="mt-6 w-full h-10 rounded-md border border-input bg-background text-[13px] font-medium hover:bg-muted inline-flex items-center justify-center gap-2 disabled:opacity-60"
+          >
+            {googleLoading ? (
+              <Loader2 className="size-4 animate-spin" />
+            ) : (
+              <>
+                <GoogleIcon />
+                Continuar com Google
+              </>
+            )}
+          </button>
+
+          <div className="my-4 flex items-center gap-3 text-[11px] uppercase tracking-wider text-muted-foreground">
+            <div className="h-px flex-1 bg-border" />
+            ou
+            <div className="h-px flex-1 bg-border" />
+          </div>
+
+          <form onSubmit={submit} className="space-y-3">
+
             {mode === "signup" && (
               <Field label="Seu nome">
                 <input
