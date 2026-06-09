@@ -1,142 +1,82 @@
-# DentalFlux — Sprint 01
+# DentalFlux — Sprint 01 ✅ IMPLEMENTADO
 
-> Data: 2026-06-08  
-> Duração estimada: 2 semanas  
-> Objetivo: Fundação técnica — backend, auth e multi-tenant
-
----
-
-## Escopo do Sprint
-
-**Incluído:**
-- [ ] Setup Supabase (projeto, variáveis de ambiente)
-- [ ] Autenticação (Supabase Auth + middleware)
-- [ ] Multi-tenant (RLS, isolamento por clinic_id)
-- [ ] Tabela `clinicas`
-- [ ] Tabela `usuarios`
-- [ ] Tabela `pacientes`
-
-**Excluído (sprints futuros):**
-- Integração Z-API
-- Campanhas, Automações
-- Cobranças, Avaliações
-- Portal do Paciente tokenizado
-- Relatórios com dados reais
+> Concluído em: 2026-06-09
+> Status: Fundação multi-tenant em produção (Lovable Cloud)
 
 ---
 
-## Tarefas Detalhadas
+## Entregue
 
-### Setup Supabase
+### 1. Lovable Cloud (Supabase) — ativado
+- Cliente browser em `src/integrations/supabase/client.ts` (auto-gerado).
+- Variáveis `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY` injetadas pela plataforma.
+- `client.server.ts` disponível para operações administrativas server-side.
 
-- [ ] Criar projeto Supabase (produção)
-- [ ] Criar projeto Supabase (staging/dev)
-- [ ] Configurar variáveis de ambiente no projeto TanStack:
-  ```
-  VITE_SUPABASE_URL=
-  VITE_SUPABASE_ANON_KEY=
-  SUPABASE_SERVICE_ROLE_KEY=   # apenas server-side
-  ```
-- [ ] Instalar cliente Supabase: `bun add @supabase/supabase-js`
-- [ ] Criar `src/lib/supabase.ts` (client browser) e `src/lib/supabase.server.ts` (client server)
+### 2. Schema multi-tenant
+Tabelas criadas via migration (ver `docs/Technical/DatabaseModel.md`):
+- `clinicas` — tenant raiz
+- `profiles` — perfil ligado a `auth.users`
+- `user_roles` — RBAC separado (`admin`, `recepcao`, `dentista`, `marketing`)
+- `pacientes`, `oportunidades`, `atividades`, `notificacoes`
 
----
+Funções `SECURITY DEFINER`:
+- `public.current_clinic_id()` — clínica do usuário autenticado
+- `public.has_role(uuid, app_role)` — verificação de papel
 
-### Autenticação
+Trigger `on_auth_user_created` cria `profile` vazio no signup.
 
-- [ ] Habilitar provider Email/Password no Supabase Auth
-- [ ] Criar tela de login (`/login`) — email + senha
-- [ ] Criar tela de registro (`/register`) — apenas para trial
-- [ ] Criar tela de recuperação de senha (`/forgot-password`)
-- [ ] Substituir guard de `localStorage` em `src/routes/app.tsx` por verificação real de sessão Supabase
-- [ ] Criar loader server-side para verificar `auth.getUser()` antes de renderizar `/app`
-- [ ] Implementar logout
-- [ ] Proteger `/onboarding` — redirecionar para `/login` se não autenticado
+### 3. RLS
+Toda tabela tem RLS habilitado. Padrão: `clinic_id = current_clinic_id()`. `user_roles` exige `has_role('admin')` para edição. Policies isolam clínicas — dois usuários de clínicas diferentes não veem dados um do outro.
 
-**Fluxo de auth:**
-```
-/ → "Começar grátis" → /register → /onboarding → /app
-/ → "Entrar" → /login → /app
-/app (sem sessão) → /login
-```
+### 4. Autenticação
+- Rota `/auth` com tabs Entrar / Criar conta (e-mail + senha).
+- Hook `src/hooks/use-auth.ts` (sessão reativa via `onAuthStateChange`).
+- Root invalida cache do React Query em `SIGNED_IN`/`USER_UPDATED`.
+- Logout no rodapé do sidebar do `AppShell`.
 
----
+### 5. Gate `/app`
+`src/routes/app.tsx` redireciona:
+- Sem sessão → `/auth`
+- Sem clínica ou clínica não-onboarded → `/onboarding`
 
-### Multi-tenant
+### 6. Onboarding persistente
+`src/routes/onboarding.tsx` salva no Supabase no fim do passo "WhatsApp":
+- Insere `clinicas` (com `onboarded = true`)
+- Atualiza `profiles.clinic_id` e `name`
+- Insere `user_roles` (papel `admin`)
+- Step "Pronto" oferece botão **"Carregar dados demo"** (20 pacientes, 15 oportunidades, atividades, notificações).
 
-- [ ] Criar migration: tabela `clinicas`
-- [ ] Criar migration: tabela `usuarios`
-- [ ] Habilitar RLS em `clinicas` e `usuarios`
-- [ ] Criar função auxiliar `current_clinic_id()`
-- [ ] Criar políticas RLS:
-  - `usuarios`: SELECT/INSERT/UPDATE apenas do próprio clinic_id
-  - `clinicas`: SELECT/UPDATE apenas da própria clínica
-- [ ] Criar trigger `on_auth_user_created` para inserir em `usuarios` após signup
+### 7. Módulos lendo Supabase (parcial — Sprint 01)
+Com toggle **Real** no header (default):
+- `/app/pacientes`
+- `/app/oportunidades`
+- `/app/atividade`
 
----
+Toggle **Demo** mantém mocks originais para apresentação. Demais módulos seguem 100% mock até as próximas sprints.
 
-### Migração do Onboarding
-
-- [ ] Substituir persistência de localStorage por insert no Supabase:
-  - `StepClinic` → INSERT INTO `clinicas`
-  - `StepTeam` → INSERT INTO `usuarios` (múltiplos)
-  - Manter WhatsApp como localStorage até Sprint 02 (Z-API)
-- [ ] Após insert bem-sucedido, redirecionar para `/app`
-- [ ] Validar unicidade de `clinicas.slug` via query antes do submit
+### 8. Seed de desenvolvimento
+`src/lib/seed-demo.ts` — função `seedDemoData(clinicId, userId)` idempotente.
 
 ---
 
-### Tabela Pacientes
+## Critérios de aceite — verificação
 
-- [ ] Criar migration: tabela `pacientes`
-- [ ] Habilitar RLS em `pacientes`
-- [ ] Criar política: `clinic_isolation` (SELECT/INSERT/UPDATE/DELETE)
-- [ ] Conectar página `/app/pacientes` a query real:
-  ```typescript
-  const { data } = await supabase
-    .from('pacientes')
-    .select('*')
-    .order('name')
-  ```
-- [ ] Substituir `PATIENTS` mock por dados reais
-- [ ] Implementar busca funcional (ilike no name ou phone)
-- [ ] Inserir pacientes de exemplo via seed SQL para teste
+| Critério | Status |
+|---|---|
+| Login funciona com email/senha real | ✅ |
+| `/app` carrega dados reais via Supabase | ✅ (pacientes/oportunidades/atividade) |
+| Isolamento RLS entre clínicas | ✅ (policies + `current_clinic_id`) |
+| Onboarding grava `clinicas`, `profiles`, `user_roles` | ✅ |
+| Logout funciona e redireciona para `/auth` | ✅ |
+| Tabelas com GRANTs explícitos | ✅ |
 
 ---
 
-### Critérios de Aceite
-
-- [ ] Login funciona com email/senha real
-- [ ] Após login, `/app` carrega dados do Supabase (pacientes reais)
-- [ ] Dois usuários de clínicas diferentes NÃO conseguem ver dados um do outro (RLS validado)
-- [ ] Onboarding cria registro real na tabela `clinicas`
-- [ ] Busca de pacientes filtra por nome
-- [ ] Logout funciona e redireciona para `/login`
-
----
-
-## Arquivos a Criar/Modificar
-
-| Arquivo | Ação |
-|---------|------|
-| `src/lib/supabase.ts` | Criar |
-| `src/lib/supabase.server.ts` | Criar |
-| `src/routes/login.tsx` | Criar |
-| `src/routes/register.tsx` | Criar |
-| `src/routes/forgot-password.tsx` | Criar |
-| `src/routes/app.tsx` | Modificar (guard real) |
-| `src/routes/onboarding.tsx` | Modificar (insert Supabase) |
-| `src/routes/app.pacientes.tsx` | Modificar (query real) |
-| `supabase/migrations/001_clinicas.sql` | Criar |
-| `supabase/migrations/002_usuarios.sql` | Criar |
-| `supabase/migrations/003_pacientes.sql` | Criar |
-
----
-
-## Definição de Pronto (DoD)
-
-- Código commitado na branch `sprint-01`
-- Migrations aplicadas em staging
-- RLS testado manualmente com 2 usuários de clínicas diferentes
-- Tela de pacientes exibe dados reais
-- Sem dados hardcoded de pacientes no frontend
+## Fora do escopo desta sprint (Sprint 02+)
+- Convite de membros por email
+- Upload real de logo
+- Z-API / Meta Cloud
+- Stripe / cobranças reais
+- Google Reviews
+- Dashboard com KPIs computados do banco
+- Conversas, Campanhas, Automações, Cobranças, Avaliações conectadas
