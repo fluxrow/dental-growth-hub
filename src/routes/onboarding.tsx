@@ -807,23 +807,50 @@ function CalendarConnectButton({
         toast.error("Salve os dados da clínica antes de conectar a agenda.");
         return;
       }
-      const { connectAppUser } = await import("@/integrations/lovable/appUserConnectorClient");
-      const { startGoogleCalendarConnect, saveGoogleCalendarConnection } = await import(
-        "@/lib/googleCalendar.functions"
+      const { startGoogleCalendarConnect } = await import("@/lib/googleCalendar.functions");
+      const { authorizationUrl } = await startGoogleCalendarConnect({ data: { clinicId: id } });
+
+      const w = 520;
+      const h = 640;
+      const left = window.screenX + (window.outerWidth - w) / 2;
+      const top = window.screenY + (window.outerHeight - h) / 2;
+      const popup = window.open(
+        authorizationUrl,
+        "google-oauth",
+        `width=${w},height=${h},left=${left},top=${top}`,
       );
-      const result = await connectAppUser({
-        connectorId: "google_calendar",
-        gatewayBaseUrl: "https://connector-gateway.lovable.dev",
-        start: (targetOrigin) => startGoogleCalendarConnect({ data: targetOrigin }),
-      });
-      if (!result.success || !result.connectionAPIKey) {
-        toast.error(result.error || "Não foi possível conectar.");
+      if (!popup) {
+        toast.error("Popup bloqueado. Permita popups e tente novamente.");
         return;
       }
-      const saved = await saveGoogleCalendarConnection({
-        data: { clinicId: id, connectionAPIKey: result.connectionAPIKey },
-      });
-      onConnected(saved.accountEmail);
+
+      const result = await new Promise<{ ok: boolean; email?: string | null; error?: string }>(
+        (resolve) => {
+          const onMsg = (ev: MessageEvent) => {
+            if (ev.origin !== window.location.origin) return;
+            const d = ev.data as { type?: string; payload?: typeof result };
+            if (d?.type === "google-oauth-result" && d.payload) {
+              window.removeEventListener("message", onMsg);
+              clearInterval(poll);
+              resolve(d.payload);
+            }
+          };
+          window.addEventListener("message", onMsg);
+          const poll = setInterval(() => {
+            if (popup.closed) {
+              clearInterval(poll);
+              window.removeEventListener("message", onMsg);
+              resolve({ ok: false, error: "popup_closed" });
+            }
+          }, 500);
+        },
+      );
+
+      if (!result.ok) {
+        toast.error("Não foi possível conectar" + (result.error ? `: ${result.error}` : ""));
+        return;
+      }
+      onConnected(result.email ?? null);
       toast.success("Google Calendar conectado!");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Erro ao conectar");
