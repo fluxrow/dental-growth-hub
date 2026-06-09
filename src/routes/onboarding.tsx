@@ -174,7 +174,8 @@ function OnboardingWizard() {
   };
 
   const next = async () => {
-    if (stepIdx === STEPS.length - 2) {
+    // Persist clinic before agenda step so we can save the calendar connection.
+    if (stepIdx === 1 || stepIdx === STEPS.length - 2) {
       const id = await persist();
       if (!id) return;
     }
