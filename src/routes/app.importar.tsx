@@ -403,12 +403,7 @@ function ImportarPage() {
     setSkippedCount(skipped); setErrorCount(errors);
 
     for (const batch of batches) {
-      const jobRowsPayload: Array<{
-        clinic_id: string; job_id: string; row_number: number;
-        raw_data: never; normalized: never;
-        status: "imported" | "skipped" | "error"; patient_id?: string | null;
-        error_message?: string | null;
-      }> = [];
+      const jobRowsPayload: Array<Record<string, unknown>> = [];
 
       for (const n of batch) {
         try {
