@@ -42,7 +42,7 @@ function Pacientes() {
         name: p.name,
         phone: p.phone ?? "",
         status: (p.status === "lead" ? "ativo" : p.status) as Patient["status"],
-        source: p.source ?? "—",
+        source: (p.source ?? "—") as Patient["source"],
         lastVisit: p.last_visit_at ? new Date(p.last_visit_at).toLocaleDateString("pt-BR") : "—",
         nextAction: p.next_action ?? "—",
         ltv: Number(p.ltv ?? 0),
@@ -103,7 +103,7 @@ function Pacientes() {
             </thead>
             <tbody className="divide-y divide-border">
               {PATIENTS.map((p) => {
-                const s = STATUS[p.status];
+                const s = STATUS_LABEL[p.status];
                 return (
                   <tr key={p.id} onClick={() => setOpen(p)} className="hover:bg-muted/40 cursor-pointer">
                     <Td>
@@ -150,7 +150,7 @@ function Td({ children, className }: { children: React.ReactNode; className?: st
 }
 
 function PatientDrawer({ patient, onClose }: { patient: Patient; onClose: () => void }) {
-  const s = STATUS[patient.status];
+  const s = STATUS_LABEL[patient.status];
   const timeline = [
     { t: "Avaliação agendada para 20/06", date: "Hoje, 10:32", icon: Clock },
     { t: "Mensagem WhatsApp enviada (lembrete)", date: "Ontem, 18:00", icon: MessageCircle },
