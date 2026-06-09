@@ -9,38 +9,180 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as AppRelatoriosRouteImport } from './routes/app.relatorios'
+import { Route as AppPacientesRouteImport } from './routes/app.pacientes'
+import { Route as AppOportunidadesRouteImport } from './routes/app.oportunidades'
+import { Route as AppConversasRouteImport } from './routes/app.conversas'
+import { Route as AppConfiguracoesRouteImport } from './routes/app.configuracoes'
+import { Route as AppCobrancasRouteImport } from './routes/app.cobrancas'
+import { Route as AppCampanhasRouteImport } from './routes/app.campanhas'
+import { Route as AppAvaliacoesRouteImport } from './routes/app.avaliacoes'
+import { Route as AppAutomacoesRouteImport } from './routes/app.automacoes'
 
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppRelatoriosRoute = AppRelatoriosRouteImport.update({
+  id: '/relatorios',
+  path: '/relatorios',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPacientesRoute = AppPacientesRouteImport.update({
+  id: '/pacientes',
+  path: '/pacientes',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppOportunidadesRoute = AppOportunidadesRouteImport.update({
+  id: '/oportunidades',
+  path: '/oportunidades',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppConversasRoute = AppConversasRouteImport.update({
+  id: '/conversas',
+  path: '/conversas',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppConfiguracoesRoute = AppConfiguracoesRouteImport.update({
+  id: '/configuracoes',
+  path: '/configuracoes',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCobrancasRoute = AppCobrancasRouteImport.update({
+  id: '/cobrancas',
+  path: '/cobrancas',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCampanhasRoute = AppCampanhasRouteImport.update({
+  id: '/campanhas',
+  path: '/campanhas',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAvaliacoesRoute = AppAvaliacoesRouteImport.update({
+  id: '/avaliacoes',
+  path: '/avaliacoes',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAutomacoesRoute = AppAutomacoesRouteImport.update({
+  id: '/automacoes',
+  path: '/automacoes',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
+  '/app/automacoes': typeof AppAutomacoesRoute
+  '/app/avaliacoes': typeof AppAvaliacoesRoute
+  '/app/campanhas': typeof AppCampanhasRoute
+  '/app/cobrancas': typeof AppCobrancasRoute
+  '/app/configuracoes': typeof AppConfiguracoesRoute
+  '/app/conversas': typeof AppConversasRoute
+  '/app/oportunidades': typeof AppOportunidadesRoute
+  '/app/pacientes': typeof AppPacientesRoute
+  '/app/relatorios': typeof AppRelatoriosRoute
+  '/app/': typeof AppIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/app/automacoes': typeof AppAutomacoesRoute
+  '/app/avaliacoes': typeof AppAvaliacoesRoute
+  '/app/campanhas': typeof AppCampanhasRoute
+  '/app/cobrancas': typeof AppCobrancasRoute
+  '/app/configuracoes': typeof AppConfiguracoesRoute
+  '/app/conversas': typeof AppConversasRoute
+  '/app/oportunidades': typeof AppOportunidadesRoute
+  '/app/pacientes': typeof AppPacientesRoute
+  '/app/relatorios': typeof AppRelatoriosRoute
+  '/app': typeof AppIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
+  '/app/automacoes': typeof AppAutomacoesRoute
+  '/app/avaliacoes': typeof AppAvaliacoesRoute
+  '/app/campanhas': typeof AppCampanhasRoute
+  '/app/cobrancas': typeof AppCobrancasRoute
+  '/app/configuracoes': typeof AppConfiguracoesRoute
+  '/app/conversas': typeof AppConversasRoute
+  '/app/oportunidades': typeof AppOportunidadesRoute
+  '/app/pacientes': typeof AppPacientesRoute
+  '/app/relatorios': typeof AppRelatoriosRoute
+  '/app/': typeof AppIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/app'
+    | '/app/automacoes'
+    | '/app/avaliacoes'
+    | '/app/campanhas'
+    | '/app/cobrancas'
+    | '/app/configuracoes'
+    | '/app/conversas'
+    | '/app/oportunidades'
+    | '/app/pacientes'
+    | '/app/relatorios'
+    | '/app/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/app/automacoes'
+    | '/app/avaliacoes'
+    | '/app/campanhas'
+    | '/app/cobrancas'
+    | '/app/configuracoes'
+    | '/app/conversas'
+    | '/app/oportunidades'
+    | '/app/pacientes'
+    | '/app/relatorios'
+    | '/app'
+  id:
+    | '__root__'
+    | '/'
+    | '/app'
+    | '/app/automacoes'
+    | '/app/avaliacoes'
+    | '/app/campanhas'
+    | '/app/cobrancas'
+    | '/app/configuracoes'
+    | '/app/conversas'
+    | '/app/oportunidades'
+    | '/app/pacientes'
+    | '/app/relatorios'
+    | '/app/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +190,110 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/relatorios': {
+      id: '/app/relatorios'
+      path: '/relatorios'
+      fullPath: '/app/relatorios'
+      preLoaderRoute: typeof AppRelatoriosRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/pacientes': {
+      id: '/app/pacientes'
+      path: '/pacientes'
+      fullPath: '/app/pacientes'
+      preLoaderRoute: typeof AppPacientesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/oportunidades': {
+      id: '/app/oportunidades'
+      path: '/oportunidades'
+      fullPath: '/app/oportunidades'
+      preLoaderRoute: typeof AppOportunidadesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/conversas': {
+      id: '/app/conversas'
+      path: '/conversas'
+      fullPath: '/app/conversas'
+      preLoaderRoute: typeof AppConversasRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/configuracoes': {
+      id: '/app/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/app/configuracoes'
+      preLoaderRoute: typeof AppConfiguracoesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/cobrancas': {
+      id: '/app/cobrancas'
+      path: '/cobrancas'
+      fullPath: '/app/cobrancas'
+      preLoaderRoute: typeof AppCobrancasRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/campanhas': {
+      id: '/app/campanhas'
+      path: '/campanhas'
+      fullPath: '/app/campanhas'
+      preLoaderRoute: typeof AppCampanhasRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/avaliacoes': {
+      id: '/app/avaliacoes'
+      path: '/avaliacoes'
+      fullPath: '/app/avaliacoes'
+      preLoaderRoute: typeof AppAvaliacoesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/automacoes': {
+      id: '/app/automacoes'
+      path: '/automacoes'
+      fullPath: '/app/automacoes'
+      preLoaderRoute: typeof AppAutomacoesRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
+interface AppRouteChildren {
+  AppAutomacoesRoute: typeof AppAutomacoesRoute
+  AppAvaliacoesRoute: typeof AppAvaliacoesRoute
+  AppCampanhasRoute: typeof AppCampanhasRoute
+  AppCobrancasRoute: typeof AppCobrancasRoute
+  AppConfiguracoesRoute: typeof AppConfiguracoesRoute
+  AppConversasRoute: typeof AppConversasRoute
+  AppOportunidadesRoute: typeof AppOportunidadesRoute
+  AppPacientesRoute: typeof AppPacientesRoute
+  AppRelatoriosRoute: typeof AppRelatoriosRoute
+  AppIndexRoute: typeof AppIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppAutomacoesRoute: AppAutomacoesRoute,
+  AppAvaliacoesRoute: AppAvaliacoesRoute,
+  AppCampanhasRoute: AppCampanhasRoute,
+  AppCobrancasRoute: AppCobrancasRoute,
+  AppConfiguracoesRoute: AppConfiguracoesRoute,
+  AppConversasRoute: AppConversasRoute,
+  AppOportunidadesRoute: AppOportunidadesRoute,
+  AppPacientesRoute: AppPacientesRoute,
+  AppRelatoriosRoute: AppRelatoriosRoute,
+  AppIndexRoute: AppIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

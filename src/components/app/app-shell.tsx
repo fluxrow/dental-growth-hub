@@ -18,7 +18,7 @@ import type { ReactNode } from "react";
 import { CLINIC, USER } from "@/lib/mock";
 import { cn } from "@/lib/utils";
 
-const NAV = [
+const NAV: { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean }[] = [
   { to: "/app",                label: "Dashboard",    icon: LayoutDashboard, exact: true },
   { to: "/app/oportunidades",  label: "Oportunidades",icon: Target },
   { to: "/app/conversas",      label: "Conversas",    icon: MessagesSquare },
@@ -29,7 +29,7 @@ const NAV = [
   { to: "/app/avaliacoes",     label: "Avaliações",   icon: Star },
   { to: "/app/relatorios",     label: "Relatórios",   icon: BarChart3 },
   { to: "/app/configuracoes",  label: "Configurações",icon: Settings },
-] as const;
+];
 
 const PERIODS = ["Hoje", "7 dias", "30 dias", "90 dias"] as const;
 
