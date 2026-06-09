@@ -337,6 +337,3 @@ function StepDone({ state }: { state: OnboardingState }) {
     </div>
   );
 }
-
-// Mount-safe noop to ensure useEffect import isn't pruned (kept minimal)
-export function _ensureDeps() { useEffect(() => {}, []); }
