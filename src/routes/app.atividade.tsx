@@ -126,7 +126,7 @@ function AtividadePage() {
       )}
       {!isLoading && source.length === 0 && (
         <EmptyState
-          icon="activity"
+          icon={ActivityIcon}
           title="Sem atividade ainda"
           description="As respostas, confirmações, cobranças e pagamentos vão aparecer aqui em tempo real."
           steps={[]}
