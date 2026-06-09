@@ -123,7 +123,7 @@ function OnboardingWizard() {
           cnpj: state.clinic.cnpj || null,
           address: state.clinic.address || null,
           specialties: state.clinic.specialties,
-          logo_url: state.clinic.logoPath,
+          logo_url: null,
           onboarded: true,
           created_by: user.id,
         })
