@@ -1,10 +1,21 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Plus, Zap, CalendarCheck, Repeat, Wallet, Star, MessageCircle } from "lucide-react";
+import { useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import {
+  Plus,
+  Zap,
+  CalendarCheck,
+  Repeat,
+  Wallet,
+  Star,
+  MessageCircle,
+  Loader2,
+} from "lucide-react";
 import { AppShell } from "@/components/app/app-shell";
-import { EmptyState } from "@/components/app/empty-state";
-import { EMPTY_STATES } from "@/lib/empty-states";
 import { useEmptyMode } from "@/hooks/use-empty-mode";
 import { AUTOMATIONS, type AutomationCategory } from "@/lib/mock";
+import { listAutomacoes, toggleAutomacao, type AutomacaoRow } from "@/lib/automacoes.functions";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/app/automacoes")({
@@ -18,24 +29,105 @@ const CATS: Record<AutomationCategory, { label: string; icon: typeof Zap; tone: 
   cobranca: { label: "Cobranças", icon: Wallet, tone: "bg-warning/15 text-warning-foreground" },
   avaliacao: { label: "Avaliações", icon: Star, tone: "bg-success/10 text-success" },
   "follow-up": {
-    label: "Follow-up orçamento",
+    label: "Follow-up",
     icon: MessageCircle,
     tone: "bg-chart-2/10 text-chart-2",
   },
 };
 
+// Normalised shape used by both mock and live paths
+type AutomacaoDisplay = {
+  id: string;
+  name: string;
+  category: AutomationCategory;
+  triggerLabel: string;
+  enabled: boolean;
+  sent: number;
+  revenue: number;
+  isLive: boolean;
+};
+
+function fromMock(): AutomacaoDisplay[] {
+  return AUTOMATIONS.map((a) => ({
+    id: a.id,
+    name: a.name,
+    category: a.category,
+    triggerLabel: a.trigger,
+    enabled: a.status === "ativa",
+    sent: a.sent,
+    revenue: a.revenue,
+    isLive: false,
+  }));
+}
+
+function fromDB(rows: AutomacaoRow[]): AutomacaoDisplay[] {
+  return rows.map((r) => ({
+    id: r.id,
+    name: r.name,
+    category: ((r.config.category as string) ?? "follow-up") as AutomationCategory,
+    triggerLabel: (r.config.trigger_description as string | undefined) ?? r.name,
+    enabled: r.enabled,
+    sent: r.run_count,
+    revenue: 0,
+    isLive: true,
+  }));
+}
+
 function Automacoes() {
-  const __empty = useEmptyMode();
-  if (__empty) {
+  const live = useEmptyMode();
+  const queryClient = useQueryClient();
+
+  const { data: liveRows, isLoading } = useQuery({
+    queryKey: ["automacoes"],
+    enabled: live,
+    queryFn: () => listAutomacoes(),
+  });
+
+  // Optimistic local toggle state (live mode)
+  const [pendingIds, setPendingIds] = useState<Set<string>>(new Set());
+
+  const handleToggle = (id: string, nextEnabled: boolean): void => {
+    if (!live) return;
+    // Optimistic: flip in cache immediately
+    queryClient.setQueryData<AutomacaoRow[]>(["automacoes"], (prev) =>
+      (prev ?? []).map((r) => (r.id === id ? { ...r, enabled: nextEnabled } : r)),
+    );
+    setPendingIds((s) => new Set(s).add(id));
+    toggleAutomacao({ data: { id, enabled: nextEnabled } })
+      .then(() => {
+        toast.success(nextEnabled ? "Automação ativada" : "Automação pausada");
+        queryClient.invalidateQueries({ queryKey: ["automacoes"] });
+      })
+      .catch((err: unknown) => {
+        // Revert on error
+        queryClient.setQueryData<AutomacaoRow[]>(["automacoes"], (prev) =>
+          prev?.map((r) => (r.id === id ? { ...r, enabled: !nextEnabled } : r)),
+        );
+        toast.error(err instanceof Error ? err.message : "Erro ao alterar automação");
+      })
+      .finally(() =>
+        setPendingIds((s) => {
+          const n = new Set(s);
+          n.delete(id);
+          return n;
+        }),
+      );
+  };
+
+  if (live && isLoading) {
     return (
       <AppShell title="Automações" subtitle="Fluxos automáticos da clínica">
-        <EmptyState {...EMPTY_STATES.automacoes} />
+        <div className="flex items-center justify-center py-20">
+          <Loader2 className="size-5 animate-spin text-muted-foreground" />
+        </div>
       </AppShell>
     );
   }
-  const totalRevenue = AUTOMATIONS.reduce((s, a) => s + a.revenue, 0);
-  const totalSent = AUTOMATIONS.reduce((s, a) => s + a.sent, 0);
-  const totalConv = AUTOMATIONS.reduce((s, a) => s + a.conversion, 0);
+
+  const items: AutomacaoDisplay[] = live ? fromDB(liveRows ?? []) : fromMock();
+  const totalSent = items.reduce((s, a) => s + a.sent, 0);
+  const totalRevenue = items.reduce((s, a) => s + a.revenue, 0);
+  const activeCount = items.filter((a) => a.enabled).length;
 
   return (
     <AppShell
@@ -52,18 +144,21 @@ function Automacoes() {
         <div className="flex items-center gap-2 mb-3">
           <Zap className="size-4 text-primary" />
           <div className="text-[12px] font-semibold uppercase tracking-wider text-primary">
-            Impacto das automações · últimos 30 dias
+            {live ? "Automações configuradas" : "Impacto das automações · últimos 30 dias"}
           </div>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          <Impact label="Mensagens disparadas" value={totalSent.toLocaleString("pt-BR")} />
-          <Impact label="Conversões geradas" value={totalConv.toLocaleString("pt-BR")} />
+          <Impact label="Fluxos ativos" value={`${activeCount} / ${items.length}`} />
+          <Impact
+            label={live ? "Execuções totais" : "Mensagens disparadas"}
+            value={totalSent.toLocaleString("pt-BR")}
+          />
           <Impact
             label="Receita gerada"
-            value={`R$ ${totalRevenue.toLocaleString("pt-BR")}`}
-            highlight
+            value={live ? "—" : `R$ ${totalRevenue.toLocaleString("pt-BR")}`}
+            highlight={!live && totalRevenue > 0}
           />
-          <Impact label="Horas economizadas" value="~84h" />
+          <Impact label="Horas economizadas" value={live ? "—" : "~84h"} />
         </div>
       </div>
 
@@ -71,10 +166,10 @@ function Automacoes() {
       <div className="space-y-5">
         {(Object.keys(CATS) as AutomationCategory[]).map((catId) => {
           const cat = CATS[catId];
-          const items = AUTOMATIONS.filter((a) => a.category === catId);
-          if (items.length === 0) return null;
+          const catItems = items.filter((a) => a.category === catId);
+          if (catItems.length === 0) return null;
           const Icon = cat.icon;
-          const catRevenue = items.reduce((s, a) => s + a.revenue, 0);
+          const catActive = catItems.filter((a) => a.enabled).length;
           return (
             <section
               key={catId}
@@ -90,44 +185,55 @@ function Automacoes() {
                   <div>
                     <div className="text-[14px] font-semibold tracking-tight">{cat.label}</div>
                     <div className="text-[11.5px] text-muted-foreground">
-                      {items.length} automações · receita gerada R${" "}
-                      {catRevenue.toLocaleString("pt-BR")}
+                      {catItems.length} fluxos · {catActive} ativo{catActive !== 1 ? "s" : ""}
                     </div>
                   </div>
                 </div>
-                <button className="text-[12px] text-primary hover:underline">+ Adicionar</button>
               </div>
               <div className="divide-y divide-border">
-                {items.map((a) => (
+                {catItems.map((a) => (
                   <div
                     key={a.id}
                     className="px-4 lg:px-5 py-3.5 grid grid-cols-12 gap-3 items-center hover:bg-muted/30"
                   >
-                    <div className="col-span-12 md:col-span-5">
+                    {/* Name + trigger */}
+                    <div className="col-span-12 md:col-span-6">
                       <div className="flex items-center gap-2.5">
-                        <span
-                          className={cn(
-                            "inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10.5px] font-medium",
-                            a.status === "ativa"
-                              ? "bg-success/10 text-success"
-                              : "bg-muted text-muted-foreground",
-                          )}
-                        >
-                          <span className="size-1.5 rounded-full bg-current" /> {a.status}
-                        </span>
+                        {a.isLive ? (
+                          <ToggleSwitch
+                            enabled={a.enabled}
+                            pending={pendingIds.has(a.id)}
+                            onToggle={() => handleToggle(a.id, !a.enabled)}
+                          />
+                        ) : (
+                          <span
+                            className={cn(
+                              "inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10.5px] font-medium",
+                              a.enabled
+                                ? "bg-success/10 text-success"
+                                : "bg-muted text-muted-foreground",
+                            )}
+                          >
+                            <span className="size-1.5 rounded-full bg-current" />
+                            {a.enabled ? "ativa" : "pausada"}
+                          </span>
+                        )}
                         <div className="text-[13px] font-medium">{a.name}</div>
                       </div>
                       <div className="mt-1 text-[11.5px] text-muted-foreground pl-1">
-                        Gatilho: {a.trigger}
+                        Gatilho: {a.triggerLabel}
                       </div>
                     </div>
-                    <Metric label="Enviadas" value={a.sent.toLocaleString("pt-BR")} />
-                    <Metric label="Resposta" value={`${a.responseRate}%`} />
-                    <Metric label="Conversão" value={a.conversion.toLocaleString("pt-BR")} />
+
+                    {/* Metrics */}
+                    <Metric
+                      label={a.isLive ? "Execuções" : "Enviadas"}
+                      value={a.sent.toLocaleString("pt-BR")}
+                    />
                     <Metric
                       label="Receita"
                       value={a.revenue ? `R$ ${a.revenue.toLocaleString("pt-BR")}` : "—"}
-                      accent={!!a.revenue}
+                      accent={a.revenue > 0}
                     />
                   </div>
                 ))}
@@ -137,6 +243,42 @@ function Automacoes() {
         })}
       </div>
     </AppShell>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Sub-components
+// ---------------------------------------------------------------------------
+
+function ToggleSwitch({
+  enabled,
+  pending,
+  onToggle,
+}: {
+  enabled: boolean;
+  pending: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      disabled={pending}
+      aria-label={enabled ? "Desativar automação" : "Ativar automação"}
+      className={cn(
+        "relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
+        "disabled:opacity-50 disabled:cursor-not-allowed",
+        enabled ? "bg-success" : "bg-muted",
+      )}
+    >
+      <span
+        className={cn(
+          "pointer-events-none inline-block size-4 rounded-full bg-white shadow-sm transition-transform",
+          enabled ? "translate-x-4" : "translate-x-0",
+        )}
+      />
+    </button>
   );
 }
 
@@ -166,7 +308,7 @@ function Impact({
 
 function Metric({ label, value, accent }: { label: string; value: string; accent?: boolean }) {
   return (
-    <div className="col-span-3 md:col-span-1 lg:col-span-1 xl:col-span-1 text-right md:text-left">
+    <div className="col-span-3 md:col-span-2 lg:col-span-2 text-right md:text-left">
       <div className="text-[10.5px] uppercase tracking-wider text-muted-foreground">{label}</div>
       <div className={cn("text-[13px] tabular-nums font-medium", accent && "text-success")}>
         {value}
