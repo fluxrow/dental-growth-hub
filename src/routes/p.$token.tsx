@@ -163,6 +163,7 @@ function PatientPortal() {
           <p className="mt-1">Powered by DentalFlux</p>
         </footer>
       </main>
+      <Toaster position="top-right" />
     </div>
   );
 }
