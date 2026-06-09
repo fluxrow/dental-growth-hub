@@ -48,12 +48,14 @@ export const startGoogleCalendarConnect = createServerFn({ method: "POST" })
     const { createHmac } = await import("crypto");
     const clientId = requireEnv("GOOGLE_OAUTH_CLIENT_ID");
     const clientSecret = requireEnv("GOOGLE_OAUTH_CLIENT_SECRET");
-    const redirectUri = `${resolveRedirectOrigin(data.appOrigin)}/api/public/google/callback`;
+    const redirectOrigin = resolveRedirectOrigin(data.appOrigin);
+    const redirectUri = `${redirectOrigin}/api/public/google/callback`;
     const nonce = Math.random().toString(36).slice(2) + Date.now().toString(36);
     const payload = {
       clinicId: data.clinicId,
       userId: context.userId,
       nonce,
+      redirectOrigin,
       exp: Math.floor(Date.now() / 1000) + 600,
     };
     const b64 = (s: string | Buffer) =>

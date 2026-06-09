@@ -20,6 +20,7 @@ function verifyState(state: string, secret: string): {
   clinicId: string;
   userId: string;
   nonce: string;
+  redirectOrigin?: string;
   exp: number;
 } | null {
   const [data, sig] = state.split(".");
@@ -51,7 +52,12 @@ function htmlResponse(payload: { ok: boolean; email?: string | null; error?: str
 </body></html>`;
   return new Response(body, {
     status: 200,
-    headers: { "content-type": "text/html; charset=utf-8" },
+    headers: {
+      "content-type": "text/html; charset=utf-8",
+      // Preserve window.opener so postMessage works back to the parent popup opener.
+      // Lovable/Cloudflare default to COOP: same-origin which severs window.opener.
+      "cross-origin-opener-policy": "unsafe-none",
+    },
   });
 }
 
@@ -76,7 +82,10 @@ export const Route = createFileRoute("/api/public/google/callback")({
         const stateData = verifyState(state, clientSecret);
         if (!stateData) return htmlResponse({ ok: false, error: "invalid_state" });
 
-        const redirectUri = `${url.origin}/api/public/google/callback`;
+        // Use the same origin that was used to build the auth URL (carried in the signed state),
+        // otherwise Google returns redirect_uri_mismatch when the runtime request.url origin differs
+        // from the browser-facing origin (proxy/preview environments).
+        const redirectUri = `${stateData.redirectOrigin ?? url.origin}/api/public/google/callback`;
 
         const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
           method: "POST",
