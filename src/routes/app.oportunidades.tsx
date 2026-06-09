@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { Plus, Filter, LayoutGrid, Rows3, Loader2 } from "lucide-react";
 
 import { AppShell } from "@/components/app/app-shell";
@@ -10,6 +11,7 @@ import { useEmptyMode } from "@/hooks/use-empty-mode";
 import { OpportunityCardActions } from "@/components/app/opportunity-card-actions";
 import { OPP_STAGES, OPPORTUNITIES, type Opportunity, type OppStage } from "@/lib/mock";
 import { supabase } from "@/integrations/supabase/client";
+import { advanceOportunidade, loseOportunidade } from "@/lib/oportunidades.functions";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/app/oportunidades")({
@@ -49,22 +51,52 @@ function Oportunidades() {
     },
   });
 
+  const queryClient = useQueryClient();
+
   const [items, setItems] = useState<Opportunity[]>([]);
   useEffect(() => {
     setItems(live ? (liveData ?? []) : OPPORTUNITIES);
   }, [live, liveData]);
 
-  const advance = (id: string) =>
+  const advance = (id: string): void => {
+    // Find next stage before optimistic update (reads current items state)
+    const opp = items.find((o) => o.id === id);
+    const idx = opp ? OPP_STAGES.findIndex((s) => s.id === opp.stage) : -1;
+    const next = idx >= 0 ? OPP_STAGES[idx + 1] : undefined;
+
+    // Optimistic local update
     setItems((curr) =>
       curr.map((o) => {
         if (o.id !== id) return o;
-        const idx = OPP_STAGES.findIndex((s) => s.id === o.stage);
-        const next = OPP_STAGES[idx + 1];
-        return next ? { ...o, stage: next.id as OppStage, daysInStage: 0 } : o;
+        const i = OPP_STAGES.findIndex((s) => s.id === o.stage);
+        const n = OPP_STAGES[i + 1];
+        return n ? { ...o, stage: n.id as OppStage, daysInStage: 0 } : o;
       }),
     );
 
-  const lose = (id: string) => setItems((curr) => curr.filter((o) => o.id !== id));
+    if (!live || !next) return;
+
+    // Persist to Supabase and confirm with a refetch
+    advanceOportunidade({ data: { id, nextStage: next.id } })
+      .then(() => queryClient.invalidateQueries({ queryKey: ["oportunidades"] }))
+      .catch((err: unknown) =>
+        toast.error(err instanceof Error ? err.message : "Erro ao avançar etapa"),
+      );
+  };
+
+  const lose = (id: string): void => {
+    // Optimistic local update
+    setItems((curr) => curr.filter((o) => o.id !== id));
+
+    if (!live) return;
+
+    // Persist to Supabase and confirm with a refetch
+    loseOportunidade({ data: { id } })
+      .then(() => queryClient.invalidateQueries({ queryKey: ["oportunidades"] }))
+      .catch((err: unknown) =>
+        toast.error(err instanceof Error ? err.message : "Erro ao marcar como perdida"),
+      );
+  };
 
   const byStage = useMemo(() => {
     const m = new Map<OppStage, Opportunity[]>();
