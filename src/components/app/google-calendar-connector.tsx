@@ -22,6 +22,8 @@ type Status = {
   connectedAt: string | null;
 };
 
+type OAuthResult = { ok: boolean; email?: string | null; error?: string };
+
 export function GoogleCalendarConnector({
   clinicId,
   onEnsureClinic,
@@ -94,10 +96,12 @@ export function GoogleCalendarConnector({
         return;
       }
 
-      const result = await new Promise<{ ok: boolean; email?: string | null; error?: string }>(
+      const result = await new Promise<OAuthResult>(
         (resolve) => {
           let settled = false;
-          const finish = (payload: { ok: boolean; email?: string | null; error?: string }) => {
+          let poll: ReturnType<typeof setInterval>;
+          let timeout: ReturnType<typeof setTimeout>;
+          const finish = (payload: OAuthResult) => {
             if (settled) return;
             settled = true;
             window.removeEventListener("message", onMsg);
@@ -113,12 +117,12 @@ export function GoogleCalendarConnector({
             }
           };
           window.addEventListener("message", onMsg);
-          const poll = setInterval(() => {
+          poll = setInterval(() => {
             if (popup.closed) {
               finish({ ok: false, error: "popup_closed" });
             }
           }, 500);
-          const timeout = setTimeout(() => {
+          timeout = setTimeout(() => {
             try {
               popup.close();
             } catch {
