@@ -165,23 +165,24 @@ export function AppShell({
 }
 
 function EmptyModeToggle() {
-  const empty = useEmptyMode();
+  const live = useEmptyMode();
   return (
     <button
       onClick={toggleEmptyMode}
-      title="Alternar visualização de estados vazios"
+      title={live ? "Mostrar dados de exemplo (mocks)" : "Mostrar dados reais da sua clínica"}
       className={cn(
         "h-8 px-2.5 rounded-md border text-[11.5px] font-medium inline-flex items-center gap-1.5 transition-colors",
-        empty
-          ? "border-primary bg-primary/10 text-primary"
+        live
+          ? "border-success bg-success/10 text-success"
           : "border-input bg-surface text-muted-foreground hover:bg-muted hover:text-foreground"
       )}
     >
-      {empty ? <EyeOff className="size-3.5" /> : <Eye className="size-3.5" />}
-      <span className="hidden md:inline">{empty ? "Vazio" : "Demo"}</span>
+      {live ? <Eye className="size-3.5" /> : <EyeOff className="size-3.5" />}
+      <span className="hidden md:inline">{live ? "Real" : "Demo"}</span>
     </button>
   );
 }
+
 
 function PeriodSelector() {
   return (
