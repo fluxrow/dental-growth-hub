@@ -405,7 +405,7 @@ function ImportarPage() {
     for (const batch of batches) {
       const jobRowsPayload: Array<{
         clinic_id: string; job_id: string; row_number: number;
-        raw_data: unknown; normalized: unknown;
+        raw_data: never; normalized: never;
         status: "imported" | "skipped" | "error"; patient_id?: string | null;
         error_message?: string | null;
       }> = [];
