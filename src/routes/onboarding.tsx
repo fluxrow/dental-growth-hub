@@ -603,9 +603,13 @@ function StepTeam({
 function StepAgenda({
   state,
   setState,
+  clinicId,
+  onEnsureClinic,
 }: {
   state: OnboardingState;
   setState: React.Dispatch<React.SetStateAction<OnboardingState>>;
+  clinicId: string | null;
+  onEnsureClinic: () => Promise<string | null>;
 }) {
   const benefits = [
     "Lembretes automáticos de consulta (24h e 2h antes) via WhatsApp.",
