@@ -1,7 +1,8 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { useState } from "react";
 import { CheckCircle2, Calendar, Clock, MapPin, FileText, Star, MessageSquareText, CalendarCheck, Receipt, CircleDot } from "lucide-react";
-import { getPortalData, OPP_STAGES, type PortalTimelineEvent } from "@/lib/mock";
+import { getPortalData, OPP_STAGES, type PortalData, type PortalTimelineEvent } from "@/lib/mock";
+
 import { BillingCard } from "@/components/portal/billing-card";
 import { BillingHistory } from "@/components/portal/billing-history";
 import { Logo } from "@/components/app/app-shell";
