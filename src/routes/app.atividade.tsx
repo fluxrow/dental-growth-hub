@@ -119,11 +119,23 @@ function AtividadePage() {
         </button>
       }
     >
+      {live && isLoading && (
+        <div className="flex items-center justify-center py-10"><Loader2 className="size-5 animate-spin text-muted-foreground" /></div>
+      )}
+      {!isLoading && source.length === 0 && (
+        <EmptyState
+          icon="activity"
+          title="Sem atividade ainda"
+          description="As respostas, confirmações, cobranças e pagamentos vão aparecer aqui em tempo real."
+          steps={[]}
+        />
+      )}
       <div className="flex flex-wrap items-center gap-1.5 mb-4">
         {ACTIVITY_CATEGORIES.map((c) => {
           const active = filter === c.id;
           const count =
-            c.id === "todas" ? ACTIVITY_FEED.length : ACTIVITY_FEED.filter((a) => a.category === c.id).length;
+            c.id === "todas" ? source.length : source.filter((a) => a.category === c.id).length;
+
           return (
             <button
               key={c.id}
