@@ -25,7 +25,6 @@ function verifyState(
   nonce: string;
   redirectOrigin?: string;
   exp: number;
-  redirectOrigin?: string;
 } | null {
   const [data, sig] = state.split(".");
   if (!data || !sig) return null;
