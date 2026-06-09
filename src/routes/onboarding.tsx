@@ -26,6 +26,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 import { seedDemoData } from "@/lib/seed-demo";
+import { GoogleCalendarConnector } from "@/components/app/google-calendar-connector";
 
 export const Route = createFileRoute("/onboarding")({
   head: () => ({ meta: [{ title: "Configurar clínica · DentalFlux" }] }),
