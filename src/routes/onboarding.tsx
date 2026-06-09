@@ -52,7 +52,7 @@ type OnboardingState = {
     logoPreview: string | null;
   };
   team: TeamMember[];
-  calendar: { skipped: boolean };
+  calendar: { skipped: boolean; connected: boolean; accountEmail: string | null };
 };
 
 const INITIAL: OnboardingState = {
@@ -65,7 +65,7 @@ const INITIAL: OnboardingState = {
     logoPreview: null,
   },
   team: [{ name: "", email: "", role: "Admin" }],
-  calendar: { skipped: false },
+  calendar: { skipped: false, connected: false, accountEmail: null },
 };
 
 const SPECIALTY_OPTIONS = [
@@ -174,7 +174,8 @@ function OnboardingWizard() {
   };
 
   const next = async () => {
-    if (stepIdx === STEPS.length - 2) {
+    // Persist clinic before agenda step so we can save the calendar connection.
+    if (stepIdx === 1 || stepIdx === STEPS.length - 2) {
       const id = await persist();
       if (!id) return;
     }
@@ -287,7 +288,14 @@ function OnboardingWizard() {
                 <StepClinic state={state} setState={setState} userId={user.id} />
               )}
               {step.key === "responsaveis" && <StepTeam state={state} setState={setState} />}
-              {step.key === "agenda" && <StepAgenda state={state} setState={setState} />}
+              {step.key === "agenda" && (
+                <StepAgenda
+                  state={state}
+                  setState={setState}
+                  clinicId={createdClinicId}
+                  onEnsureClinic={persist}
+                />
+              )}
               {step.key === "pronto" && (
                 <StepDone
                   state={state}
@@ -596,9 +604,13 @@ function StepTeam({
 function StepAgenda({
   state,
   setState,
+  clinicId,
+  onEnsureClinic,
 }: {
   state: OnboardingState;
   setState: React.Dispatch<React.SetStateAction<OnboardingState>>;
+  clinicId: string | null;
+  onEnsureClinic: () => Promise<string | null>;
 }) {
   const benefits = [
     "Lembretes automáticos de consulta (24h e 2h antes) via WhatsApp.",
@@ -628,21 +640,24 @@ function StepAgenda({
                 </li>
               ))}
             </ul>
-            <button
-              type="button"
-              disabled
-              title="Ativaremos a conexão no seu setup de implementação."
-              className="mt-4 inline-flex items-center gap-2 h-10 px-4 rounded-md bg-primary text-primary-foreground text-[13px] font-medium opacity-70 cursor-not-allowed"
-            >
-              <Calendar className="size-4" />
-              Conectar com Google
-              <span className="ml-1 text-[10.5px] uppercase tracking-wider bg-white/20 px-1.5 py-0.5 rounded">
-                Em breve
-              </span>
-            </button>
-            <p className="mt-2 text-[11px] text-muted-foreground">
-              Ativamos junto com você na reunião de implementação.
-            </p>
+            <CalendarConnectButton
+              clinicId={clinicId}
+              onEnsureClinic={onEnsureClinic}
+              connected={state.calendar.connected}
+              accountEmail={state.calendar.accountEmail}
+              onConnected={(email) =>
+                setState((p) => ({
+                  ...p,
+                  calendar: { skipped: false, connected: true, accountEmail: email },
+                }))
+              }
+              onDisconnected={() =>
+                setState((p) => ({
+                  ...p,
+                  calendar: { ...p.calendar, connected: false, accountEmail: null },
+                }))
+              }
+            />
           </div>
         </div>
       </div>
@@ -650,7 +665,7 @@ function StepAgenda({
       <button
         type="button"
         onClick={() =>
-          setState((p) => ({ ...p, calendar: { skipped: !p.calendar.skipped } }))
+          setState((p) => ({ ...p, calendar: { ...p.calendar, skipped: !p.calendar.skipped } }))
         }
         className={cn(
           "w-full text-left rounded-lg border p-3 text-[12px] transition-colors",
@@ -764,5 +779,107 @@ function StepDone({
         </div>
       </div>
     </div>
+  );
+}
+
+function CalendarConnectButton({
+  clinicId,
+  onEnsureClinic,
+  connected,
+  accountEmail,
+  onConnected,
+  onDisconnected,
+}: {
+  clinicId: string | null;
+  onEnsureClinic: () => Promise<string | null>;
+  connected: boolean;
+  accountEmail: string | null;
+  onConnected: (email: string | null) => void;
+  onDisconnected: () => void;
+}) {
+  const [busy, setBusy] = useState(false);
+
+  const handleConnect = async () => {
+    setBusy(true);
+    try {
+      const id = clinicId ?? (await onEnsureClinic());
+      if (!id) {
+        toast.error("Salve os dados da clínica antes de conectar a agenda.");
+        return;
+      }
+      const { connectAppUser } = await import("@/integrations/lovable/appUserConnectorClient");
+      const { startGoogleCalendarConnect, saveGoogleCalendarConnection } = await import(
+        "@/lib/googleCalendar.functions"
+      );
+      const result = await connectAppUser({
+        connectorId: "google_calendar",
+        gatewayBaseUrl: "https://connector-gateway.lovable.dev",
+        start: (targetOrigin) => startGoogleCalendarConnect({ data: targetOrigin }),
+      });
+      if (!result.success || !result.connectionAPIKey) {
+        toast.error(result.error || "Não foi possível conectar.");
+        return;
+      }
+      const saved = await saveGoogleCalendarConnection({
+        data: { clinicId: id, connectionAPIKey: result.connectionAPIKey },
+      });
+      onConnected(saved.accountEmail);
+      toast.success("Google Calendar conectado!");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Erro ao conectar");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const handleDisconnect = async () => {
+    if (!clinicId) return;
+    setBusy(true);
+    try {
+      const { disconnectGoogleCalendar } = await import("@/lib/googleCalendar.functions");
+      await disconnectGoogleCalendar({ data: { clinicId } });
+      onDisconnected();
+      toast.success("Conexão removida.");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Erro ao desconectar");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  if (connected) {
+    return (
+      <div className="mt-4">
+        <div className="inline-flex items-center gap-2 h-10 px-4 rounded-md bg-success/10 text-success border border-success/30 text-[13px] font-medium">
+          <Check className="size-4" />
+          Conectado{accountEmail ? ` · ${accountEmail}` : ""}
+        </div>
+        <button
+          type="button"
+          onClick={handleDisconnect}
+          disabled={busy}
+          className="ml-2 inline-flex items-center gap-1.5 h-10 px-3 rounded-md text-[12.5px] text-muted-foreground hover:text-foreground disabled:opacity-50"
+        >
+          {busy ? <Loader2 className="size-3.5 animate-spin" /> : "Desconectar"}
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={handleConnect}
+        disabled={busy}
+        className="mt-4 inline-flex items-center gap-2 h-10 px-4 rounded-md bg-primary text-primary-foreground text-[13px] font-medium hover:opacity-90 disabled:opacity-60"
+      >
+        {busy ? <Loader2 className="size-4 animate-spin" /> : <Calendar className="size-4" />}
+        Conectar com Google
+      </button>
+      <p className="mt-2 text-[11px] text-muted-foreground">
+        Abre um popup do Google para você autorizar acesso à agenda da clínica.
+      </p>
+    </>
   );
 }
