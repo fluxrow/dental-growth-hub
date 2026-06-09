@@ -454,7 +454,7 @@ function ImportarPage() {
       }
 
       if (jobRowsPayload.length) {
-        await supabase.from("migration_job_rows").insert(jobRowsPayload);
+        await supabase.from("migration_job_rows").insert(jobRowsPayload as never);
       }
 
       setImportedCount(imported);
