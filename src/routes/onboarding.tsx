@@ -287,7 +287,14 @@ function OnboardingWizard() {
                 <StepClinic state={state} setState={setState} userId={user.id} />
               )}
               {step.key === "responsaveis" && <StepTeam state={state} setState={setState} />}
-              {step.key === "agenda" && <StepAgenda state={state} setState={setState} />}
+              {step.key === "agenda" && (
+                <StepAgenda
+                  state={state}
+                  setState={setState}
+                  clinicId={createdClinicId}
+                  onEnsureClinic={persist}
+                />
+              )}
               {step.key === "pronto" && (
                 <StepDone
                   state={state}
