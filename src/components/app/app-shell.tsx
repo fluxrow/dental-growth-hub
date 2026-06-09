@@ -137,13 +137,20 @@ export function AppShell({
             </div>
             <button
               onClick={handleLogout}
-              title="Sair"
+              title="Sair (você poderá entrar com outra conta Google na próxima tela)"
               className="size-7 rounded-md hover:bg-sidebar-accent text-muted-foreground hover:text-foreground flex items-center justify-center"
             >
               <LogOut className="size-3.5" />
             </button>
           </div>
+          <Link
+            to="/app/configuracoes"
+            className="mt-2 block text-[11px] text-muted-foreground hover:text-primary"
+          >
+            Gerenciar agenda Google →
+          </Link>
         </div>
+
       </aside>
 
       {/* Main */}
