@@ -22,10 +22,25 @@ function originFromHost(): string {
   return `${proto}://${host}`;
 }
 
+function resolveRedirectOrigin(appOrigin?: string): string {
+  if (appOrigin) {
+    try {
+      const url = new URL(appOrigin);
+      if ((url.protocol === "https:" || url.protocol === "http:") && url.host) {
+        return url.origin;
+      }
+    } catch {
+      // Fall back to the request host below.
+    }
+  }
+
+  return originFromHost();
+}
+
 
 export const startGoogleCalendarConnect = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: { clinicId: string; loginHint?: string }) => {
+  .inputValidator((input: { clinicId: string; loginHint?: string; appOrigin?: string }) => {
     if (!input?.clinicId) throw new Error("clinicId obrigatório");
     return input;
   })
@@ -33,7 +48,7 @@ export const startGoogleCalendarConnect = createServerFn({ method: "POST" })
     const { createHmac } = await import("crypto");
     const clientId = requireEnv("GOOGLE_OAUTH_CLIENT_ID");
     const clientSecret = requireEnv("GOOGLE_OAUTH_CLIENT_SECRET");
-    const redirectUri = `${originFromHost()}/api/public/google/callback`;
+    const redirectUri = `${resolveRedirectOrigin(data.appOrigin)}/api/public/google/callback`;
     const nonce = Math.random().toString(36).slice(2) + Date.now().toString(36);
     const payload = {
       clinicId: data.clinicId,
