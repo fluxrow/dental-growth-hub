@@ -1,8 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { CheckCheck } from "lucide-react";
 import { AppShell } from "@/components/app/app-shell";
 import { NotificationRow } from "@/components/app/notifications-popover";
 import { ACTIVITY_CATEGORIES, ACTIVITY_FEED, type ActivityCategory } from "@/lib/mock";
+import { markAllRead, useReadIds, useUnreadCount } from "@/hooks/use-notifications";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/app/atividade")({
@@ -12,11 +14,15 @@ export const Route = createFileRoute("/app/atividade")({
 
 function AtividadePage() {
   const [filter, setFilter] = useState<ActivityCategory | "todas">("todas");
+  const [onlyUnread, setOnlyUnread] = useState(false);
+  const readIds = useReadIds();
+  const unread = useUnreadCount();
 
-  const filtered = useMemo(
-    () => (filter === "todas" ? ACTIVITY_FEED : ACTIVITY_FEED.filter((a) => a.category === filter)),
-    [filter]
-  );
+  const filtered = useMemo(() => {
+    let arr = filter === "todas" ? ACTIVITY_FEED : ACTIVITY_FEED.filter((a) => a.category === filter);
+    if (onlyUnread) arr = arr.filter((a) => a.unread && !readIds.has(a.id));
+    return arr;
+  }, [filter, onlyUnread, readIds]);
 
   const grouped = useMemo(() => {
     const m = new Map<string, typeof filtered>();
@@ -29,7 +35,20 @@ function AtividadePage() {
   }, [filtered]);
 
   return (
-    <AppShell title="Atividade" subtitle="Tudo o que aconteceu na operação — respostas, confirmações, financeiro e sistema">
+    <AppShell
+      title="Atividade"
+      subtitle="Tudo o que aconteceu na operação — respostas, confirmações, financeiro e sistema"
+      actions={
+        <button
+          onClick={() => markAllRead()}
+          disabled={unread === 0}
+          className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md border border-input bg-surface text-[12px] font-medium hover:bg-muted disabled:opacity-40"
+        >
+          <CheckCheck className="size-3.5" /> Marcar todas como lidas
+          {unread > 0 && <span className="ml-1 rounded-full bg-primary text-primary-foreground text-[10px] px-1.5 py-0.5 tabular-nums">{unread}</span>}
+        </button>
+      }
+    >
       <div className="flex flex-wrap items-center gap-1.5 mb-4">
         {ACTIVITY_CATEGORIES.map((c) => {
           const active = filter === c.id;
@@ -51,6 +70,18 @@ function AtividadePage() {
             </button>
           );
         })}
+        <div className="mx-1.5 h-5 w-px bg-border" />
+        <button
+          onClick={() => setOnlyUnread((v) => !v)}
+          className={cn(
+            "h-7 px-2.5 rounded-full text-[11.5px] font-medium border transition-colors inline-flex items-center gap-1.5",
+            onlyUnread
+              ? "bg-foreground text-background border-foreground"
+              : "border-border bg-surface text-foreground/70 hover:bg-muted"
+          )}
+        >
+          Apenas não lidas
+        </button>
       </div>
 
       <div className="rounded-xl border border-border bg-surface overflow-hidden">
