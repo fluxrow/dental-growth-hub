@@ -1,16 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Check, Plus } from "lucide-react";
+import { Calendar, Check, Plus } from "lucide-react";
 import { AppShell } from "@/components/app/app-shell";
 import { CLINIC, INTEGRATIONS, PLANS, TEAM } from "@/lib/mock";
 import { cn } from "@/lib/utils";
+import { GoogleCalendarConnector } from "@/components/app/google-calendar-connector";
+import { useAuth } from "@/hooks/use-auth";
+import { useProfile } from "@/hooks/use-profile";
+import { Toaster } from "@/components/ui/sonner";
 
 export const Route = createFileRoute("/app/configuracoes")({
   head: () => ({ meta: [{ title: "Configurações · DentalFlux" }] }),
   component: Configuracoes,
 });
 
-const TABS = ["Clínica", "Usuários", "WhatsApp", "Integrações", "Planos"] as const;
+const TABS = ["Clínica", "Agenda", "Usuários", "WhatsApp", "Integrações", "Planos"] as const;
 
 function Configuracoes() {
   const [tab, setTab] = useState<(typeof TABS)[number]>("Clínica");
