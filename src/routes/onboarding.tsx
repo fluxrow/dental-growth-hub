@@ -27,6 +27,7 @@ import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 import { seedDemoData } from "@/lib/seed-demo";
 import { GoogleCalendarConnector } from "@/components/app/google-calendar-connector";
+import { completeOnboarding, setClinicLogoUrl } from "@/lib/onboarding.functions";
 
 export const Route = createFileRoute("/onboarding")({
   head: () => ({ meta: [{ title: "Configurar clínica · DentalFlux" }] }),
@@ -132,72 +133,18 @@ function OnboardingWizard() {
     if (createdClinicId) return createdClinicId;
     setSaving(true);
     try {
-      // Idempotência: se já existe clínica criada por este usuário, reaproveita.
-      const { data: existing } = await supabase
-        .from("clinicas")
-        .select("id")
-        .eq("created_by", user.id)
-        .maybeSingle();
-
-      let clinicId: string;
-      if (existing?.id) {
-        clinicId = existing.id;
-        await supabase
-          .from("clinicas")
-          .update({
-            name: state.clinic.name || "Minha Clínica",
-            cnpj: state.clinic.cnpj || null,
-            address: state.clinic.address || null,
-            specialties: state.clinic.specialties,
-            onboarded: true,
-          })
-          .eq("id", clinicId);
-      } else {
-        const baseSlug =
-          state.clinic.name
-            .toLowerCase()
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .replace(/[^a-z0-9]+/g, "-")
-            .replace(/^-|-$/g, "") || `clinica-${Date.now()}`;
-        const slug = `${baseSlug}-${user.id.slice(0, 6)}-${Date.now().toString(36)}`;
-        const { data: clinic, error: cErr } = await supabase
-          .from("clinicas")
-          .insert({
-            name: state.clinic.name || "Minha Clínica",
-            slug,
-            cnpj: state.clinic.cnpj || null,
-            address: state.clinic.address || null,
-            specialties: state.clinic.specialties,
-            logo_url: null,
-            onboarded: true,
-            created_by: user.id,
-          })
-          .select("id")
-          .single();
-        if (cErr) throw cErr;
-        clinicId = clinic.id;
-      }
-
-      await supabase
-        .from("profiles")
-        .update({
-          clinic_id: clinicId,
-          name: state.team[0]?.name || user.user_metadata?.name || null,
-        })
-        .eq("id", user.id);
-
-      // user_roles tem unique (user_id, role) — ignora se já existe.
-      const { error: roleErr } = await supabase.from("user_roles").insert({
-        user_id: user.id,
-        clinic_id: clinicId,
-        role: "admin",
+      // ── Todas as writes DB via server fn (RLS enforcement no servidor) ──────
+      const { clinicId } = await completeOnboarding({
+        data: {
+          clinicName: state.clinic.name || "Minha Clínica",
+          clinicCnpj: state.clinic.cnpj || null,
+          clinicAddress: state.clinic.address || null,
+          clinicSpecialties: state.clinic.specialties,
+          userName: state.team[0]?.name || user.user_metadata?.name || null,
+        },
       });
-      if (roleErr && !roleErr.message.toLowerCase().includes("duplicate")) {
-        throw roleErr;
-      }
 
-      // Upload da logo (se selecionada)
+      // ── Storage upload permanece client-side (precisa do File object) ────
       const pendingFile = (window as unknown as { __pendingLogo?: File }).__pendingLogo;
       if (pendingFile) {
         const ext = pendingFile.name.split(".").pop()?.toLowerCase() || "png";
@@ -206,7 +153,8 @@ function OnboardingWizard() {
           .from("clinic-logos")
           .upload(path, pendingFile, { upsert: true, contentType: pendingFile.type });
         if (!upErr) {
-          await supabase.from("clinicas").update({ logo_url: path }).eq("id", clinicId);
+          // Persiste o caminho da logo via server fn
+          await setClinicLogoUrl({ data: { clinicId, logoUrl: path } });
         } else {
           toast.error("Logo não pôde ser salva: " + upErr.message);
         }
