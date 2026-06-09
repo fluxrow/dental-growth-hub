@@ -145,6 +145,22 @@ function OnboardingWizard() {
         role: "admin",
       });
 
+      // Upload da logo (se selecionada) — agora o RLS do bucket aceita pois clinic_id existe
+      const pendingFile = (window as unknown as { __pendingLogo?: File }).__pendingLogo;
+      if (pendingFile) {
+        const ext = pendingFile.name.split(".").pop()?.toLowerCase() || "png";
+        const path = `${clinic.id}/logo.${ext}`;
+        const { error: upErr } = await supabase.storage
+          .from("clinic-logos")
+          .upload(path, pendingFile, { upsert: true, contentType: pendingFile.type });
+        if (!upErr) {
+          await supabase.from("clinicas").update({ logo_url: path }).eq("id", clinic.id);
+        } else {
+          toast.error("Logo não pôde ser salva: " + upErr.message);
+        }
+        delete (window as unknown as { __pendingLogo?: File }).__pendingLogo;
+      }
+
       setCreatedClinicId(clinic.id);
       queryClient.invalidateQueries({ queryKey: ["profile"] });
       toast.success("Clínica configurada!");
