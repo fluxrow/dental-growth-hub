@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as PTokenRouteImport } from './routes/p.$token'
 import { Route as AppRelatoriosRouteImport } from './routes/app.relatorios'
 import { Route as AppPacientesRouteImport } from './routes/app.pacientes'
 import { Route as AppOportunidadesRouteImport } from './routes/app.oportunidades'
@@ -21,6 +22,7 @@ import { Route as AppCobrancasRouteImport } from './routes/app.cobrancas'
 import { Route as AppCampanhasRouteImport } from './routes/app.campanhas'
 import { Route as AppAvaliacoesRouteImport } from './routes/app.avaliacoes'
 import { Route as AppAutomacoesRouteImport } from './routes/app.automacoes'
+import { Route as AppAtividadeRouteImport } from './routes/app.atividade'
 
 const AppRoute = AppRouteImport.update({
   id: '/app',
@@ -36,6 +38,11 @@ const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AppRoute,
+} as any)
+const PTokenRoute = PTokenRouteImport.update({
+  id: '/p/$token',
+  path: '/p/$token',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AppRelatoriosRoute = AppRelatoriosRouteImport.update({
   id: '/relatorios',
@@ -82,10 +89,16 @@ const AppAutomacoesRoute = AppAutomacoesRouteImport.update({
   path: '/automacoes',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAtividadeRoute = AppAtividadeRouteImport.update({
+  id: '/atividade',
+  path: '/atividade',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
+  '/app/atividade': typeof AppAtividadeRoute
   '/app/automacoes': typeof AppAutomacoesRoute
   '/app/avaliacoes': typeof AppAvaliacoesRoute
   '/app/campanhas': typeof AppCampanhasRoute
@@ -95,10 +108,12 @@ export interface FileRoutesByFullPath {
   '/app/oportunidades': typeof AppOportunidadesRoute
   '/app/pacientes': typeof AppPacientesRoute
   '/app/relatorios': typeof AppRelatoriosRoute
+  '/p/$token': typeof PTokenRoute
   '/app/': typeof AppIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/app/atividade': typeof AppAtividadeRoute
   '/app/automacoes': typeof AppAutomacoesRoute
   '/app/avaliacoes': typeof AppAvaliacoesRoute
   '/app/campanhas': typeof AppCampanhasRoute
@@ -108,12 +123,14 @@ export interface FileRoutesByTo {
   '/app/oportunidades': typeof AppOportunidadesRoute
   '/app/pacientes': typeof AppPacientesRoute
   '/app/relatorios': typeof AppRelatoriosRoute
+  '/p/$token': typeof PTokenRoute
   '/app': typeof AppIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
+  '/app/atividade': typeof AppAtividadeRoute
   '/app/automacoes': typeof AppAutomacoesRoute
   '/app/avaliacoes': typeof AppAvaliacoesRoute
   '/app/campanhas': typeof AppCampanhasRoute
@@ -123,6 +140,7 @@ export interface FileRoutesById {
   '/app/oportunidades': typeof AppOportunidadesRoute
   '/app/pacientes': typeof AppPacientesRoute
   '/app/relatorios': typeof AppRelatoriosRoute
+  '/p/$token': typeof PTokenRoute
   '/app/': typeof AppIndexRoute
 }
 export interface FileRouteTypes {
@@ -130,6 +148,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/app'
+    | '/app/atividade'
     | '/app/automacoes'
     | '/app/avaliacoes'
     | '/app/campanhas'
@@ -139,10 +158,12 @@ export interface FileRouteTypes {
     | '/app/oportunidades'
     | '/app/pacientes'
     | '/app/relatorios'
+    | '/p/$token'
     | '/app/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/app/atividade'
     | '/app/automacoes'
     | '/app/avaliacoes'
     | '/app/campanhas'
@@ -152,11 +173,13 @@ export interface FileRouteTypes {
     | '/app/oportunidades'
     | '/app/pacientes'
     | '/app/relatorios'
+    | '/p/$token'
     | '/app'
   id:
     | '__root__'
     | '/'
     | '/app'
+    | '/app/atividade'
     | '/app/automacoes'
     | '/app/avaliacoes'
     | '/app/campanhas'
@@ -166,12 +189,14 @@ export interface FileRouteTypes {
     | '/app/oportunidades'
     | '/app/pacientes'
     | '/app/relatorios'
+    | '/p/$token'
     | '/app/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
+  PTokenRoute: typeof PTokenRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -196,6 +221,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/app/'
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
+    }
+    '/p/$token': {
+      id: '/p/$token'
+      path: '/p/$token'
+      fullPath: '/p/$token'
+      preLoaderRoute: typeof PTokenRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/app/relatorios': {
       id: '/app/relatorios'
@@ -260,10 +292,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAutomacoesRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/atividade': {
+      id: '/app/atividade'
+      path: '/atividade'
+      fullPath: '/app/atividade'
+      preLoaderRoute: typeof AppAtividadeRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
+  AppAtividadeRoute: typeof AppAtividadeRoute
   AppAutomacoesRoute: typeof AppAutomacoesRoute
   AppAvaliacoesRoute: typeof AppAvaliacoesRoute
   AppCampanhasRoute: typeof AppCampanhasRoute
@@ -277,6 +317,7 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppAtividadeRoute: AppAtividadeRoute,
   AppAutomacoesRoute: AppAutomacoesRoute,
   AppAvaliacoesRoute: AppAvaliacoesRoute,
   AppCampanhasRoute: AppCampanhasRoute,
@@ -294,7 +335,18 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
+  PTokenRoute: PTokenRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
