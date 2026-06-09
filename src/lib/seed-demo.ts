@@ -69,7 +69,8 @@ export async function seedDemoData(clinicId: string, userId: string): Promise<{ 
   if (oErr) throw oErr;
 
   // Atividades
-  const atividades = [
+  type Kind = "resposta" | "confirmacao" | "falha" | "avaliacao" | "cobranca_enviada" | "cobranca_respondida" | "pagamento_confirmado" | "pagamento_atrasado" | "cobranca_falhou" | "sistema";
+  const atividades: Array<{ kind: Kind; title: string; detail?: string; value?: number }> = [
     { kind: "resposta", title: `${insertedPatients![0].name} respondeu no WhatsApp`, detail: "Confirmou interesse no orçamento" },
     { kind: "confirmacao", title: `${insertedPatients![1].name} confirmou consulta`, detail: "Avaliação amanhã 14h" },
     { kind: "pagamento_confirmado", title: `Pagamento confirmado · ${insertedPatients![2].name}`, value: 450 },
@@ -80,25 +81,34 @@ export async function seedDemoData(clinicId: string, userId: string): Promise<{ 
     { kind: "cobranca_respondida", title: `${insertedPatients![7].name} respondeu sobre pagamento` },
     { kind: "sistema", title: "Automação 'Confirmação 24h' enviou 12 mensagens" },
     { kind: "resposta", title: `${insertedPatients![8].name} respondeu no WhatsApp` },
-  ].map((a, i) => ({
-    ...a,
+  ];
+  const atividadesRows = atividades.map((a, i) => ({
     clinic_id: clinicId,
-    patient_id: insertedPatients![i]?.id,
-    created_at: daysAgo(Math.floor(i / 3)),
-  }));
-  await supabase.from("atividades").insert(atividades);
-
-  // Notificações
-  const notificacoes = atividades.slice(0, 6).map((a) => ({
-    clinic_id: clinicId,
-    user_id: userId,
-    kind: a.kind === "pagamento_confirmado" || a.kind === "cobranca_enviada" || a.kind === "pagamento_atrasado" ? "financeiro" : "sistema",
+    kind: a.kind,
     title: a.title,
     detail: a.detail ?? null,
-    patient_id: a.patient_id,
     value: a.value ?? null,
+    patient_id: insertedPatients![i]?.id ?? null,
+    created_at: daysAgo(Math.floor(i / 3)),
   }));
+  await supabase.from("atividades").insert(atividadesRows);
+
+  // Notificações
+  type NKind = "conversa" | "oportunidade" | "cobranca" | "avaliacao" | "sistema" | "financeiro";
+  const notificacoes = atividadesRows.slice(0, 6).map((a) => {
+    const fin = a.kind === "pagamento_confirmado" || a.kind === "cobranca_enviada" || a.kind === "pagamento_atrasado" || a.kind === "cobranca_falhou";
+    return {
+      clinic_id: clinicId,
+      user_id: userId,
+      kind: (fin ? "financeiro" : "sistema") as NKind,
+      title: a.title,
+      detail: a.detail,
+      patient_id: a.patient_id,
+      value: a.value,
+    };
+  });
   await supabase.from("notificacoes").insert(notificacoes);
 
   return { inserted: true };
 }
+
