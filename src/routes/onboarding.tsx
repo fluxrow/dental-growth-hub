@@ -639,21 +639,24 @@ function StepAgenda({
                 </li>
               ))}
             </ul>
-            <button
-              type="button"
-              disabled
-              title="Ativaremos a conexão no seu setup de implementação."
-              className="mt-4 inline-flex items-center gap-2 h-10 px-4 rounded-md bg-primary text-primary-foreground text-[13px] font-medium opacity-70 cursor-not-allowed"
-            >
-              <Calendar className="size-4" />
-              Conectar com Google
-              <span className="ml-1 text-[10.5px] uppercase tracking-wider bg-white/20 px-1.5 py-0.5 rounded">
-                Em breve
-              </span>
-            </button>
-            <p className="mt-2 text-[11px] text-muted-foreground">
-              Ativamos junto com você na reunião de implementação.
-            </p>
+            <CalendarConnectButton
+              clinicId={clinicId}
+              onEnsureClinic={onEnsureClinic}
+              connected={state.calendar.connected}
+              accountEmail={state.calendar.accountEmail}
+              onConnected={(email) =>
+                setState((p) => ({
+                  ...p,
+                  calendar: { skipped: false, connected: true, accountEmail: email },
+                }))
+              }
+              onDisconnected={() =>
+                setState((p) => ({
+                  ...p,
+                  calendar: { ...p.calendar, connected: false, accountEmail: null },
+                }))
+              }
+            />
           </div>
         </div>
       </div>
