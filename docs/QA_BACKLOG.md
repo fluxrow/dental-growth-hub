@@ -109,6 +109,17 @@
 
 ---
 
+## Bloqueado / aguardando feature
+
+### B-1: `business_hours` JSONB em `clinicas`
+
+- **Proposta Dara**: `ALTER TABLE public.clinicas ADD COLUMN business_hours JSONB DEFAULT NULL`
+- **Motivo do bloqueio**: coluna morta até a feature de automação de confirmação de consulta ser implementada (regra de negócio depende do horário para disparos)
+- **Quando desbloquear**: na sprint que implementar "Confirmar consulta automático"
+- **Estrutura esperada**: `{"seg":{"open":"08:00","close":"19:00"}, ...}`
+
+---
+
 ## P3 — Dívida técnica
 
 ### P3-1: ESLint — 14 erros prettier + 1 exhaustive-deps
@@ -136,12 +147,17 @@
 
 ## Rastreamento de correções
 
-| ID   | Descrição                    | Status                         | Commit          |
-| ---- | ---------------------------- | ------------------------------ | --------------- |
-| P0-1 | OAuth Bug 2 — callback.ts:92 | ⏳ Patch pronto, falta aplicar | —               |
-| P0-2 | TS2307 lovable-cloud-auth-js | ⏳ Pendente                    | —               |
-| Bug1 | COOP header OAuth popup      | ✅ Corrigido                   | (não commitado) |
+| ID   | Descrição                          | Status       | Commit   |
+| ---- | ---------------------------------- | ------------ | -------- |
+| P0-1 | OAuth Bug 2 — callback.ts:92       | ✅ Corrigido | anterior |
+| P0-2 | TS2307 lovable-cloud-auth-js       | ✅ Corrigido | anterior |
+| Bug1 | COOP header OAuth popup            | ✅ Corrigido | anterior |
+| P1-4 | ClinicTab "Salvar" morto           | ✅ Corrigido | 0ef445d  |
+| P3-1 | ESLint prettier + exhaustive-deps  | ✅ Corrigido | anterior |
+| D1   | RLS WITH CHECK clinicas_update_own | ✅ Aplicado  | 7e8891a  |
+| B-1  | business_hours JSONB               | 🚫 Bloqueado | —        |
 
 ---
 
 _Auditoria: 2026-06-09 — 21 issues encontrados (2 P0, 5 P1, 8 P2, 4 P3)_
+_Sessão 2026-06-09: P0-1, P0-2, Bug1, P1-4, P3-1 resolvidos; D1 segurança aplicado_
