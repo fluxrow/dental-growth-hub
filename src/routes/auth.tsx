@@ -19,6 +19,28 @@ function AuthPage() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+
+  const signInWithGoogle = async () => {
+    setGoogleLoading(true);
+    try {
+      const result = await lovable.auth.signInWithOAuth("google", {
+        redirect_uri: window.location.origin,
+      });
+      if (result.error) {
+        toast.error(result.error.message || "Falha ao entrar com Google");
+        setGoogleLoading(false);
+        return;
+      }
+      if (result.redirected) return; // browser is redirecting
+      // Tokens set; redirect to onboarding/app — root listener will route.
+      navigate({ to: "/onboarding", replace: true });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Erro com Google");
+      setGoogleLoading(false);
+    }
+  };
+
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
