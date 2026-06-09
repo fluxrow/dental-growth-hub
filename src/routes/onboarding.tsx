@@ -188,6 +188,7 @@ function OnboardingWizard() {
 
       setCreatedClinicId(clinic.id);
       queryClient.invalidateQueries({ queryKey: ["profile"] });
+      try { localStorage.removeItem(DRAFT_KEY); } catch { /* noop */ }
       toast.success("Clínica configurada!");
       return clinic.id;
     } catch (err) {
