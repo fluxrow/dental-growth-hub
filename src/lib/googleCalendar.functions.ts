@@ -1,6 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
 import { getRequestHost } from "@tanstack/react-start/server";
-import { createHmac } from "crypto";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 const SCOPES = [
@@ -23,20 +22,6 @@ function originFromHost(): string {
   return `${proto}://${host}`;
 }
 
-function b64url(input: string | Buffer): string {
-  return Buffer.from(input)
-    .toString("base64")
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=+$/, "");
-}
-
-export function signState(payload: { clinicId: string; userId: string; nonce: string; exp: number }): string {
-  const secret = requireEnv("GOOGLE_OAUTH_CLIENT_SECRET");
-  const data = b64url(JSON.stringify(payload));
-  const sig = b64url(createHmac("sha256", secret).update(data).digest());
-  return `${data}.${sig}`;
-}
 
 export const startGoogleCalendarConnect = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
