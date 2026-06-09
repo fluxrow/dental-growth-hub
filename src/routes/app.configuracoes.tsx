@@ -68,8 +68,7 @@ function AgendaTab() {
             <div className="text-[14px] font-semibold">Google Calendar da clínica</div>
             <p className="mt-1 text-[12.5px] text-muted-foreground">
               Esta é a agenda usada para lembretes, confirmações e detecção de no-show. Você pode
-              trocar a conta Google ou desconectar a qualquer momento — basta refazer a
-              autorização.
+              trocar a conta Google ou desconectar a qualquer momento — basta refazer a autorização.
             </p>
             <div className="mt-4">
               {clinicId ? (

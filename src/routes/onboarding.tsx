@@ -127,7 +127,6 @@ function OnboardingWizard() {
     }
   }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
 
-
   const persist = async (): Promise<string | null> => {
     if (!user) return null;
     if (createdClinicId) return createdClinicId;
@@ -216,7 +215,11 @@ function OnboardingWizard() {
 
       setCreatedClinicId(clinicId);
       queryClient.invalidateQueries({ queryKey: ["profile"] });
-      try { localStorage.removeItem(DRAFT_KEY); } catch { /* noop */ }
+      try {
+        localStorage.removeItem(DRAFT_KEY);
+      } catch {
+        /* noop */
+      }
       toast.success("Clínica configurada!");
       return clinicId;
     } catch (err) {
@@ -759,8 +762,6 @@ function StepAgenda({
                 }
               />
             </div>
-
-
           </div>
         </div>
       </div>
@@ -801,8 +802,18 @@ function StepDone({
   onLoadDemo: () => void;
   demoLoaded: boolean;
 }) {
-  const channels: { key: string; label: string; icon: typeof Calendar; status: "pending" | "skipped" }[] = [
-    { key: "calendar", label: "Agenda Google", icon: Calendar, status: state.calendar.skipped ? "skipped" : "pending" },
+  const channels: {
+    key: string;
+    label: string;
+    icon: typeof Calendar;
+    status: "pending" | "skipped";
+  }[] = [
+    {
+      key: "calendar",
+      label: "Agenda Google",
+      icon: Calendar,
+      status: state.calendar.skipped ? "skipped" : "pending",
+    },
     { key: "whatsapp", label: "WhatsApp", icon: MessageCircle, status: "pending" },
     { key: "reviews", label: "Avaliações Google", icon: Star, status: "pending" },
     { key: "email", label: "E-mail transacional", icon: Mail, status: "pending" },
@@ -819,7 +830,9 @@ function StepDone({
           <dt className="text-muted-foreground">Especialidades</dt>
           <dd className="font-medium text-right">{state.clinic.specialties.length}</dd>
           <dt className="text-muted-foreground">Logo</dt>
-          <dd className="font-medium text-right">{state.clinic.logoPreview ? "Selecionada" : "—"}</dd>
+          <dd className="font-medium text-right">
+            {state.clinic.logoPreview ? "Selecionada" : "—"}
+          </dd>
         </dl>
       </div>
 
@@ -884,4 +897,3 @@ function StepDone({
     </div>
   );
 }
-

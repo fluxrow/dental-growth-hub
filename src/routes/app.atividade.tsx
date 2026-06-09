@@ -100,7 +100,10 @@ function AtividadePage() {
     },
   });
 
-  const source: Activity[] = live ? (liveFeed ?? []) : ACTIVITY_FEED;
+  const source = useMemo<Activity[]>(
+    () => (live ? (liveFeed ?? []) : ACTIVITY_FEED),
+    [live, liveFeed],
+  );
 
   const filtered = useMemo(() => {
     let arr = filter === "todas" ? source : source.filter((a) => a.category === filter);
