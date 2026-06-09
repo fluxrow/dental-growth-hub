@@ -3,6 +3,9 @@ import { ArrowRight, Clock, MessageCircle, AlertCircle } from "lucide-react";
 import { AppShell } from "@/components/app/app-shell";
 import { KpiCard } from "@/components/app/kpi-card";
 import { FunnelChart } from "@/components/app/funnel";
+import { EmptyState } from "@/components/app/empty-state";
+import { EMPTY_STATES } from "@/lib/empty-states";
+import { useEmptyMode } from "@/hooks/use-empty-mode";
 import { KPIS, FINANCIAL_KPIS, CONVERSATIONS, OPPORTUNITIES } from "@/lib/mock";
 
 export const Route = createFileRoute("/app/")({
@@ -11,8 +14,17 @@ export const Route = createFileRoute("/app/")({
 });
 
 function Dashboard() {
+  const empty = useEmptyMode();
+  if (empty) {
+    return (
+      <AppShell title="Visão geral" subtitle="Configure sua clínica para começar">
+        <EmptyState {...EMPTY_STATES.dashboard} />
+      </AppShell>
+    );
+  }
   const needReply = CONVERSATIONS.filter((c) => c.unread > 0 || c.status === "novo").slice(0, 4);
   const nextActions = OPPORTUNITIES.filter((o) => ["agendada","confirmada","compareceu"].includes(o.stage)).slice(0, 5);
+
 
   return (
     <AppShell title="Visão geral" subtitle="Saúde da operação · últimos 30 dias">

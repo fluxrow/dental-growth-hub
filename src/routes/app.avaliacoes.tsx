@@ -1,6 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Send, Star } from "lucide-react";
 import { AppShell } from "@/components/app/app-shell";
+import { EmptyState } from "@/components/app/empty-state";
+import { EMPTY_STATES } from "@/lib/empty-states";
+import { useEmptyMode } from "@/hooks/use-empty-mode";
 import { KpiCard } from "@/components/app/kpi-card";
 import { ELIGIBLE_FOR_REVIEW, REVIEWS, REVIEW_KPIS } from "@/lib/mock";
 import { cn } from "@/lib/utils";
@@ -11,6 +14,14 @@ export const Route = createFileRoute("/app/avaliacoes")({
 });
 
 function Avaliacoes() {
+  const __empty = useEmptyMode();
+  if (__empty) {
+    return (
+      <AppShell title="Avaliações" subtitle="Reputação no Google">
+        <EmptyState {...EMPTY_STATES.avaliacoes} />
+      </AppShell>
+    );
+  }
   return (
     <AppShell title="Avaliações" subtitle="Reputação no Google · pedidos automáticos pós-atendimento">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">

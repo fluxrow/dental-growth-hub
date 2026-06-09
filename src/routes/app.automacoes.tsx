@@ -1,6 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Plus, Zap, CalendarCheck, Repeat, Wallet, Star, MessageCircle } from "lucide-react";
 import { AppShell } from "@/components/app/app-shell";
+import { EmptyState } from "@/components/app/empty-state";
+import { EMPTY_STATES } from "@/lib/empty-states";
+import { useEmptyMode } from "@/hooks/use-empty-mode";
 import { AUTOMATIONS, type AutomationCategory } from "@/lib/mock";
 import { cn } from "@/lib/utils";
 
@@ -18,6 +21,14 @@ const CATS: Record<AutomationCategory, { label: string; icon: typeof Zap; tone: 
 };
 
 function Automacoes() {
+  const __empty = useEmptyMode();
+  if (__empty) {
+    return (
+      <AppShell title="Automações" subtitle="Fluxos automáticos da clínica">
+        <EmptyState {...EMPTY_STATES.automacoes} />
+      </AppShell>
+    );
+  }
   const totalRevenue = AUTOMATIONS.reduce((s, a) => s + a.revenue, 0);
   const totalSent = AUTOMATIONS.reduce((s, a) => s + a.sent, 0);
   const totalConv = AUTOMATIONS.reduce((s, a) => s + a.conversion, 0);

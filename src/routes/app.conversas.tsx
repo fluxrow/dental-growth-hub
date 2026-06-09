@@ -2,6 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Search, Send, Paperclip, Smile, Phone, MoreVertical, Sparkles, Tag } from "lucide-react";
 import { AppShell } from "@/components/app/app-shell";
+import { EmptyState } from "@/components/app/empty-state";
+import { EMPTY_STATES } from "@/lib/empty-states";
+import { useEmptyMode } from "@/hooks/use-empty-mode";
 import { CONVERSATIONS, OPP_STAGES } from "@/lib/mock";
 import { cn } from "@/lib/utils";
 
@@ -18,6 +21,14 @@ const STATUS_LABEL: Record<string, { label: string; tone: string }> = {
 };
 
 function Conversas() {
+  const __empty = useEmptyMode();
+  if (__empty) {
+    return (
+      <AppShell title="Conversas" subtitle="Inbox unificado">
+        <EmptyState {...EMPTY_STATES.conversas} />
+      </AppShell>
+    );
+  }
   const [activeId, setActiveId] = useState(CONVERSATIONS[0].id);
   const active = CONVERSATIONS.find((c) => c.id === activeId)!;
   const stageLabel = OPP_STAGES.find((s) => s.id === active.stage)?.label ?? active.stage;

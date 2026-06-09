@@ -552,12 +552,63 @@ export type Activity = {
   title: string;
   detail: string;
   patient?: string;
+  patientHref?: string;
+  billingHref?: string;
   value?: number;
   time: string;          // "agora", "12 min", "2 h"
   dayLabel: "Hoje" | "Ontem" | string;
   unread: boolean;
   action?: { label: string; href?: string };
 };
+
+// ─── Tom de voz da clínica (humanização da cobrança) ───────────────────────
+export type ClinicTone = "acolhedora" | "institucional" | "descontraida";
+
+export const CLINIC_TONES: { id: ClinicTone; label: string; hint: string }[] = [
+  { id: "acolhedora",    label: "Acolhedora",     hint: "Próxima, empática, cuidadosa" },
+  { id: "institucional", label: "Institucional",  hint: "Cordial, clara, profissional" },
+  { id: "descontraida",  label: "Descontraída",   hint: "Leve, simpática, próxima do dia-a-dia" },
+];
+
+export function billingMessage(
+  status: PortalBillingStatus,
+  tone: ClinicTone,
+  firstName: string,
+  dueDate: string,
+): string {
+  const M: Record<PortalBillingStatus, Record<ClinicTone, string>> = {
+    "a-vencer": {
+      acolhedora:    `Olá, ${firstName}! Sua próxima parcela vence em ${dueDate}. Se precisar de algum ajuste, conte com a gente — estamos aqui para facilitar.`,
+      institucional: `Prezado(a) ${firstName}, informamos que sua próxima parcela vence em ${dueDate}. Caso necessite reagendar ou alterar a forma de pagamento, estamos à disposição.`,
+      descontraida:  `Oi, ${firstName}! Só passando pra avisar que sua próxima parcela vence em ${dueDate} 😉 Qualquer coisa, é só chamar a gente!`,
+    },
+    "em-dia": {
+      acolhedora:    `Tudo certo por aqui, ${firstName}! Seus pagamentos estão em dia. Obrigado pela confiança em nosso trabalho 💜`,
+      institucional: `${firstName}, seus pagamentos estão em dia. Agradecemos pela pontualidade.`,
+      descontraida:  `Você é um(a) campeão(ã), ${firstName}! Tudo em dia por aqui. Valeu! 🙌`,
+    },
+    vencido: {
+      acolhedora:    `Oi, ${firstName} 💜 Notamos que o pagamento de ${dueDate} ficou em aberto. Sabemos que imprevistos acontecem — vamos juntos encontrar o melhor caminho? Estamos aqui sem pressão.`,
+      institucional: `${firstName}, identificamos um valor em aberto desde ${dueDate}. Para evitar bloqueios no seu plano de tratamento, pedimos a gentileza de entrar em contato para regularizar ou renegociar.`,
+      descontraida:  `Ei, ${firstName}! Parece que o pagamento de ${dueDate} passou batido. Sem estresse — bora ajustar juntos? Chama a gente no zap! 😊`,
+    },
+    pago: {
+      acolhedora:    `Recebido com carinho, ${firstName}! Pagamento confirmado. Obrigado por seguir cuidando do seu sorriso com a gente.`,
+      institucional: `${firstName}, confirmamos o recebimento do seu pagamento. Obrigado.`,
+      descontraida:  `Pagamento na conta, ${firstName}! Tudo certinho por aqui 🎉 Até a próxima!`,
+    },
+  };
+  return M[status][tone];
+}
+
+export function chargeFailedMessage(tone: ClinicTone, firstName: string): string {
+  switch (tone) {
+    case "acolhedora":    return `Olá, ${firstName} 💜 Não conseguimos te enviar uma mensagem pelo WhatsApp. Pode confirmar pra gente se este número segue ativo?`;
+    case "institucional": return `${firstName}, não foi possível concluir o envio da cobrança por WhatsApp. Solicitamos a confirmação do seu canal de contato.`;
+    case "descontraida":  return `Oi, ${firstName}! Sua mensagem deu erro aqui no nosso lado 😅 Esse número ainda é o seu? Confirma pra gente?`;
+  }
+}
+
 
 export const ACTIVITY_FEED: Activity[] = [
   // Hoje
@@ -596,3 +647,11 @@ export const ACTIVITY_CATEGORIES: { id: ActivityCategory | "todas"; label: strin
   { id: "financeiro",   label: "Financeiro" },
   { id: "sistema",      label: "Sistema" },
 ];
+
+// Linka eventos financeiros ao portal do paciente (demo) e ao histórico de cobranças.
+for (const a of ACTIVITY_FEED) {
+  if (a.category === "financeiro") {
+    a.patientHref = "/p/marina-2026";
+    a.billingHref = "/app/cobrancas";
+  }
+}

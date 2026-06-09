@@ -1,6 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Plus, Send } from "lucide-react";
 import { AppShell } from "@/components/app/app-shell";
+import { EmptyState } from "@/components/app/empty-state";
+import { EMPTY_STATES } from "@/lib/empty-states";
+import { useEmptyMode } from "@/hooks/use-empty-mode";
 import { KpiCard } from "@/components/app/kpi-card";
 import { CHARGES, CHARGE_KPIS, type ChargeStatus } from "@/lib/mock";
 import { cn } from "@/lib/utils";
@@ -27,6 +30,14 @@ const TABS: { id: ChargeStatus | "all"; label: string }[] = [
 ];
 
 function Cobrancas() {
+  const __empty = useEmptyMode();
+  if (__empty) {
+    return (
+      <AppShell title="Cobranças" subtitle="Recuperação financeira">
+        <EmptyState {...EMPTY_STATES.cobrancas} />
+      </AppShell>
+    );
+  }
   const counts = TABS.reduce<Record<string, number>>((acc, t) => {
     acc[t.id] = t.id === "all" ? CHARGES.length : CHARGES.filter((c) => c.status === t.id).length;
     return acc;
