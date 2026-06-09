@@ -27,7 +27,6 @@ import { Route as AppCampanhasRouteImport } from './routes/app.campanhas'
 import { Route as AppAvaliacoesRouteImport } from './routes/app.avaliacoes'
 import { Route as AppAutomacoesRouteImport } from './routes/app.automacoes'
 import { Route as AppAtividadeRouteImport } from './routes/app.atividade'
-import { Route as AppDiagnosticoRouteImport } from './routes/app.diagnostico'
 
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
@@ -138,7 +137,6 @@ export interface FileRoutesByFullPath {
   '/app/cobrancas': typeof AppCobrancasRoute
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/conversas': typeof AppConversasRoute
-  '/app/diagnostico': typeof AppDiagnosticoRoute
   '/app/importar': typeof AppImportarRoute
   '/app/oportunidades': typeof AppOportunidadesRoute
   '/app/pacientes': typeof AppPacientesRoute
@@ -158,7 +156,6 @@ export interface FileRoutesByTo {
   '/app/cobrancas': typeof AppCobrancasRoute
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/conversas': typeof AppConversasRoute
-  '/app/diagnostico': typeof AppDiagnosticoRoute
   '/app/importar': typeof AppImportarRoute
   '/app/oportunidades': typeof AppOportunidadesRoute
   '/app/pacientes': typeof AppPacientesRoute
@@ -180,7 +177,6 @@ export interface FileRoutesById {
   '/app/cobrancas': typeof AppCobrancasRoute
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/conversas': typeof AppConversasRoute
-  '/app/diagnostico': typeof AppDiagnosticoRoute
   '/app/importar': typeof AppImportarRoute
   '/app/oportunidades': typeof AppOportunidadesRoute
   '/app/pacientes': typeof AppPacientesRoute
@@ -203,7 +199,6 @@ export interface FileRouteTypes {
     | '/app/cobrancas'
     | '/app/configuracoes'
     | '/app/conversas'
-    | '/app/diagnostico'
     | '/app/importar'
     | '/app/oportunidades'
     | '/app/pacientes'
@@ -223,7 +218,6 @@ export interface FileRouteTypes {
     | '/app/cobrancas'
     | '/app/configuracoes'
     | '/app/conversas'
-    | '/app/diagnostico'
     | '/app/importar'
     | '/app/oportunidades'
     | '/app/pacientes'
@@ -244,7 +238,6 @@ export interface FileRouteTypes {
     | '/app/cobrancas'
     | '/app/configuracoes'
     | '/app/conversas'
-    | '/app/diagnostico'
     | '/app/importar'
     | '/app/oportunidades'
     | '/app/pacientes'
@@ -389,13 +382,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAtividadeRouteImport
       parentRoute: typeof AppRoute
     }
-    '/app/diagnostico': {
-      id: '/app/diagnostico'
-      path: '/diagnostico'
-      fullPath: '/app/diagnostico'
-      preLoaderRoute: typeof AppDiagnosticoRouteImport
-      parentRoute: typeof AppRoute
-    }
   }
 }
 
@@ -408,7 +394,6 @@ interface AppRouteChildren {
   AppCobrancasRoute: typeof AppCobrancasRoute
   AppConfiguracoesRoute: typeof AppConfiguracoesRoute
   AppConversasRoute: typeof AppConversasRoute
-  AppDiagnosticoRoute: typeof AppDiagnosticoRoute
   AppImportarRoute: typeof AppImportarRoute
   AppOportunidadesRoute: typeof AppOportunidadesRoute
   AppPacientesRoute: typeof AppPacientesRoute
@@ -425,7 +410,6 @@ const AppRouteChildren: AppRouteChildren = {
   AppCobrancasRoute: AppCobrancasRoute,
   AppConfiguracoesRoute: AppConfiguracoesRoute,
   AppConversasRoute: AppConversasRoute,
-  AppDiagnosticoRoute: AppDiagnosticoRoute,
   AppImportarRoute: AppImportarRoute,
   AppOportunidadesRoute: AppOportunidadesRoute,
   AppPacientesRoute: AppPacientesRoute,
