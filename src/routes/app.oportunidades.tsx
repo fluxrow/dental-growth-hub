@@ -183,10 +183,33 @@ function Oportunidades() {
                   R$ {total.toLocaleString("pt-BR")}
                 </div>
                 <div className="space-y-2">
-                  {stageItems.map((o) => (
+                  {stageItems.map((o) => {
+                    // Heat map: border color scales with staleness
+                    const urgencyBorder =
+                      o.daysInStage >= 10
+                        ? "border-destructive/60"
+                        : o.daysInStage >= 6
+                          ? "border-orange-400/60"
+                          : o.daysInStage >= 3
+                            ? "border-amber-400/40"
+                            : "border-border";
+                    const urgencyLabel =
+                      o.daysInStage >= 10 ? (
+                        <span className="inline-flex items-center gap-0.5 rounded-full bg-destructive/10 text-destructive px-1.5 py-0.5 text-[9.5px] font-semibold uppercase tracking-wide">
+                          ● Frio
+                        </span>
+                      ) : o.daysInStage >= 6 ? (
+                        <span className="inline-flex items-center gap-0.5 rounded-full bg-orange-500/10 text-orange-600 px-1.5 py-0.5 text-[9.5px] font-semibold uppercase tracking-wide">
+                          Atrasado
+                        </span>
+                      ) : null;
+                    return (
                     <div
                       key={o.id}
-                      className="group rounded-lg border border-border bg-surface p-3 hover:shadow-[0_4px_12px_-6px_oklch(0.55_0.2_275/0.15)] transition-shadow cursor-pointer"
+                      className={cn(
+                        "group rounded-lg border bg-surface p-3 hover:shadow-[0_4px_12px_-6px_oklch(0.55_0.2_275/0.15)] transition-shadow cursor-pointer",
+                        urgencyBorder,
+                      )}
                     >
                       <div className="flex items-center justify-between gap-2 mb-1.5">
                         <div className="text-[13px] font-medium truncate">{o.name}</div>
@@ -201,10 +224,13 @@ function Oportunidades() {
                         {o.nextAction}
                       </div>
                       <div className="flex items-center justify-between gap-2">
-                        <span className="text-[10.5px] inline-flex items-center gap-1 rounded-md bg-muted px-1.5 py-0.5 text-foreground/70">
-                          {o.source}
-                        </span>
-                        <div className="flex items-center gap-1.5">
+                        <div className="flex items-center gap-1.5 min-w-0">
+                          <span className="text-[10.5px] inline-flex items-center gap-1 rounded-md bg-muted px-1.5 py-0.5 text-foreground/70">
+                            {o.source}
+                          </span>
+                          {urgencyLabel}
+                        </div>
+                        <div className="flex items-center gap-1.5 shrink-0">
                           <span className="text-[10.5px] text-muted-foreground tabular-nums">
                             {o.daysInStage}d
                           </span>
@@ -217,7 +243,8 @@ function Oportunidades() {
                         </div>
                       </div>
                     </div>
-                  ))}
+                    );
+                  })}
                   <button className="w-full rounded-lg border border-dashed border-border text-[12px] text-muted-foreground py-2 hover:border-primary/40 hover:text-primary">
                     + Adicionar
                   </button>

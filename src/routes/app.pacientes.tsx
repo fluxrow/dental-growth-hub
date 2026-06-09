@@ -45,6 +45,7 @@ function Pacientes() {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState<PatientRow | null>(null);
   const [showNew, setShowNew] = useState(false);
+  const [q, setQ] = useState("");
 
   const { data: liveData, isLoading } = useQuery({
     queryKey: ["pacientes"],
@@ -73,6 +74,13 @@ function Pacientes() {
   });
 
   const rows: PatientRow[] = live ? (liveData ?? []) : PATIENTS;
+  const filtered = q.trim()
+    ? rows.filter(
+        (p) =>
+          p.name.toLowerCase().includes(q.toLowerCase()) ||
+          p.phone.replace(/\D/g, "").includes(q.replace(/\D/g, "")),
+      )
+    : rows;
 
   if (live && isLoading) {
     return (
@@ -95,7 +103,7 @@ function Pacientes() {
   return (
     <AppShell
       title="Pacientes"
-      subtitle={`${rows.length} pacientes · base completa da clínica`}
+      subtitle={`${rows.length} pacientes · base completa da clínica${q ? ` · ${filtered.length} resultado${filtered.length !== 1 ? "s" : ""}` : ""}`}
       actions={
         <button
           onClick={() => setShowNew(true)}
@@ -110,7 +118,9 @@ function Pacientes() {
           <div className="relative flex-1 max-w-xs">
             <Search className="size-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
             <input
-              placeholder="Buscar paciente…"
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              placeholder="Buscar por nome ou telefone…"
               className="h-8 w-full rounded-md border border-input bg-background pl-8 pr-3 text-[12px] focus:outline-none focus:ring-2 focus:ring-ring"
             />
           </div>
@@ -118,7 +128,7 @@ function Pacientes() {
             <Filter className="size-3.5" /> Filtros
           </button>
           <div className="ml-auto text-[11.5px] text-muted-foreground tabular-nums">
-            {rows.length} resultados
+            {filtered.length} resultado{filtered.length !== 1 ? "s" : ""}
           </div>
         </div>
         <div className="overflow-x-auto">
@@ -135,7 +145,7 @@ function Pacientes() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {rows.map((p) => {
+              {filtered.map((p) => {
                 const s = STATUS_LABEL[p.status];
                 return (
                   <tr
