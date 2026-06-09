@@ -1,6 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
 import { getRequestHost } from "@tanstack/react-start/server";
-import { createHmac } from "crypto";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 const SCOPES = [
@@ -23,20 +22,6 @@ function originFromHost(): string {
   return `${proto}://${host}`;
 }
 
-function b64url(input: string | Buffer): string {
-  return Buffer.from(input)
-    .toString("base64")
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=+$/, "");
-}
-
-export function signState(payload: { clinicId: string; userId: string; nonce: string; exp: number }): string {
-  const secret = requireEnv("GOOGLE_OAUTH_CLIENT_SECRET");
-  const data = b64url(JSON.stringify(payload));
-  const sig = b64url(createHmac("sha256", secret).update(data).digest());
-  return `${data}.${sig}`;
-}
 
 export const startGoogleCalendarConnect = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -45,15 +30,22 @@ export const startGoogleCalendarConnect = createServerFn({ method: "POST" })
     return input;
   })
   .handler(async ({ data, context }) => {
+    const { createHmac } = await import("crypto");
     const clientId = requireEnv("GOOGLE_OAUTH_CLIENT_ID");
+    const clientSecret = requireEnv("GOOGLE_OAUTH_CLIENT_SECRET");
     const redirectUri = `${originFromHost()}/api/public/google/callback`;
     const nonce = Math.random().toString(36).slice(2) + Date.now().toString(36);
-    const state = signState({
+    const payload = {
       clinicId: data.clinicId,
       userId: context.userId,
       nonce,
       exp: Math.floor(Date.now() / 1000) + 600,
-    });
+    };
+    const b64 = (s: string | Buffer) =>
+      Buffer.from(s).toString("base64").replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+    const dataPart = b64(JSON.stringify(payload));
+    const sig = b64(createHmac("sha256", clientSecret).update(dataPart).digest());
+    const state = `${dataPart}.${sig}`;
     const params = new URLSearchParams({
       client_id: clientId,
       redirect_uri: redirectUri,
