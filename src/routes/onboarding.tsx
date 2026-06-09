@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Building2, Users, MessageCircle, Sparkles, ArrowRight, ArrowLeft, Check, Plus, Trash2, Upload } from "lucide-react";
 import { Logo } from "@/components/app/app-shell";
 import { cn } from "@/lib/utils";

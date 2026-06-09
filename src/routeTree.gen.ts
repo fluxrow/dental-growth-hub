@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
@@ -24,6 +25,11 @@ import { Route as AppAvaliacoesRouteImport } from './routes/app.avaliacoes'
 import { Route as AppAutomacoesRouteImport } from './routes/app.automacoes'
 import { Route as AppAtividadeRouteImport } from './routes/app.atividade'
 
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppRoute = AppRouteImport.update({
   id: '/app',
   path: '/app',
@@ -98,6 +104,7 @@ const AppAtividadeRoute = AppAtividadeRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
+  '/onboarding': typeof OnboardingRoute
   '/app/atividade': typeof AppAtividadeRoute
   '/app/automacoes': typeof AppAutomacoesRoute
   '/app/avaliacoes': typeof AppAvaliacoesRoute
@@ -113,6 +120,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/onboarding': typeof OnboardingRoute
   '/app/atividade': typeof AppAtividadeRoute
   '/app/automacoes': typeof AppAutomacoesRoute
   '/app/avaliacoes': typeof AppAvaliacoesRoute
@@ -130,6 +138,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
+  '/onboarding': typeof OnboardingRoute
   '/app/atividade': typeof AppAtividadeRoute
   '/app/automacoes': typeof AppAutomacoesRoute
   '/app/avaliacoes': typeof AppAvaliacoesRoute
@@ -148,6 +157,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/app'
+    | '/onboarding'
     | '/app/atividade'
     | '/app/automacoes'
     | '/app/avaliacoes'
@@ -163,6 +173,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/onboarding'
     | '/app/atividade'
     | '/app/automacoes'
     | '/app/avaliacoes'
@@ -179,6 +190,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/app'
+    | '/onboarding'
     | '/app/atividade'
     | '/app/automacoes'
     | '/app/avaliacoes'
@@ -196,11 +208,19 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
+  OnboardingRoute: typeof OnboardingRoute
   PTokenRoute: typeof PTokenRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/app': {
       id: '/app'
       path: '/app'
@@ -335,6 +355,7 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
+  OnboardingRoute: OnboardingRoute,
   PTokenRoute: PTokenRoute,
 }
 export const routeTree = rootRouteImport
