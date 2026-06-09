@@ -781,3 +781,105 @@ function StepDone({
     </div>
   );
 }
+
+function CalendarConnectButton({
+  clinicId,
+  onEnsureClinic,
+  connected,
+  accountEmail,
+  onConnected,
+  onDisconnected,
+}: {
+  clinicId: string | null;
+  onEnsureClinic: () => Promise<string | null>;
+  connected: boolean;
+  accountEmail: string | null;
+  onConnected: (email: string | null) => void;
+  onDisconnected: () => void;
+}) {
+  const [busy, setBusy] = useState(false);
+
+  const handleConnect = async () => {
+    setBusy(true);
+    try {
+      const id = clinicId ?? (await onEnsureClinic());
+      if (!id) {
+        toast.error("Salve os dados da clínica antes de conectar a agenda.");
+        return;
+      }
+      const { connectAppUser } = await import("@/integrations/lovable/appUserConnectorClient");
+      const { startGoogleCalendarConnect, saveGoogleCalendarConnection } = await import(
+        "@/lib/googleCalendar.functions"
+      );
+      const result = await connectAppUser({
+        connectorId: "google_calendar",
+        gatewayBaseUrl: "https://connector-gateway.lovable.dev",
+        start: (targetOrigin) => startGoogleCalendarConnect({ data: targetOrigin }),
+      });
+      if (!result.success || !result.connectionAPIKey) {
+        toast.error(result.error || "Não foi possível conectar.");
+        return;
+      }
+      const saved = await saveGoogleCalendarConnection({
+        data: { clinicId: id, connectionAPIKey: result.connectionAPIKey },
+      });
+      onConnected(saved.accountEmail);
+      toast.success("Google Calendar conectado!");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Erro ao conectar");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const handleDisconnect = async () => {
+    if (!clinicId) return;
+    setBusy(true);
+    try {
+      const { disconnectGoogleCalendar } = await import("@/lib/googleCalendar.functions");
+      await disconnectGoogleCalendar({ data: { clinicId } });
+      onDisconnected();
+      toast.success("Conexão removida.");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Erro ao desconectar");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  if (connected) {
+    return (
+      <div className="mt-4">
+        <div className="inline-flex items-center gap-2 h-10 px-4 rounded-md bg-success/10 text-success border border-success/30 text-[13px] font-medium">
+          <Check className="size-4" />
+          Conectado{accountEmail ? ` · ${accountEmail}` : ""}
+        </div>
+        <button
+          type="button"
+          onClick={handleDisconnect}
+          disabled={busy}
+          className="ml-2 inline-flex items-center gap-1.5 h-10 px-3 rounded-md text-[12.5px] text-muted-foreground hover:text-foreground disabled:opacity-50"
+        >
+          {busy ? <Loader2 className="size-3.5 animate-spin" /> : "Desconectar"}
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={handleConnect}
+        disabled={busy}
+        className="mt-4 inline-flex items-center gap-2 h-10 px-4 rounded-md bg-primary text-primary-foreground text-[13px] font-medium hover:opacity-90 disabled:opacity-60"
+      >
+        {busy ? <Loader2 className="size-4 animate-spin" /> : <Calendar className="size-4" />}
+        Conectar com Google
+      </button>
+      <p className="mt-2 text-[11px] text-muted-foreground">
+        Abre um popup do Google para você autorizar acesso à agenda da clínica.
+      </p>
+    </>
+  );
+}
