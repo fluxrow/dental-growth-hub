@@ -35,7 +35,7 @@ const ICON_MAP: Record<PortalTimelineEvent["type"], typeof MessageSquareText> = 
 };
 
 function PatientPortal() {
-  const data = Route.useLoaderData();
+  const data = Route.useLoaderData() as PortalData;
   const currentStageIdx = OPP_STAGES.findIndex((s) => s.id === data.treatment.stage);
   const currentStage = OPP_STAGES[currentStageIdx];
 
