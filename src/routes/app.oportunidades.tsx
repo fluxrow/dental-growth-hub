@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Plus, Filter, LayoutGrid, Rows3 } from "lucide-react";
-import { Toaster } from "@/components/ui/sonner";
+
 import { AppShell } from "@/components/app/app-shell";
 import { OpportunityCardActions } from "@/components/app/opportunity-card-actions";
 import { OPP_STAGES, OPPORTUNITIES, type Opportunity, type OppStage } from "@/lib/mock";
@@ -45,8 +45,8 @@ function Oportunidades() {
       }
       flush
     >
-      <Toaster position="top-right" />
       <div className="flex items-center justify-between border-b border-border bg-background px-4 lg:px-6 h-12">
+
         <div className="flex items-center gap-2">
           <button className="inline-flex items-center gap-1.5 h-7 px-2.5 rounded-md border border-input bg-surface text-[12px]">
             <Filter className="size-3.5" /> Filtros
