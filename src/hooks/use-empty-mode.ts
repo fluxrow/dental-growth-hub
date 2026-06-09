@@ -4,8 +4,12 @@ const KEY = "dentalflux:empty-mode";
 const listeners = new Set<() => void>();
 
 function read(): boolean {
-  if (typeof window === "undefined") return false;
-  try { return localStorage.getItem(KEY) === "1"; } catch { return false; }
+  if (typeof window === "undefined") return true;
+  try {
+    const v = localStorage.getItem(KEY);
+    if (v === null) return true; // default: Real mode (Supabase)
+    return v === "1";
+  } catch { return true; }
 }
 
 function subscribe(l: () => void) {
@@ -14,8 +18,9 @@ function subscribe(l: () => void) {
 }
 
 export function useEmptyMode(): boolean {
-  return useSyncExternalStore(subscribe, read, () => false);
+  return useSyncExternalStore(subscribe, read, () => true);
 }
+
 
 export function setEmptyMode(value: boolean) {
   try { localStorage.setItem(KEY, value ? "1" : "0"); } catch {}
