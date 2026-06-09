@@ -136,6 +136,7 @@ export function AppShell({
               />
             </div>
             <PeriodSelector />
+            <EmptyModeToggle />
             <NotificationsPopover />
             {actions}
           </div>
@@ -143,6 +144,25 @@ export function AppShell({
         <main className={cn(flush ? "" : "p-4 lg:p-6", "flex-1 min-w-0")}>{children}</main>
       </div>
     </div>
+  );
+}
+
+function EmptyModeToggle() {
+  const empty = useEmptyMode();
+  return (
+    <button
+      onClick={toggleEmptyMode}
+      title="Alternar visualização de estados vazios"
+      className={cn(
+        "h-8 px-2.5 rounded-md border text-[11.5px] font-medium inline-flex items-center gap-1.5 transition-colors",
+        empty
+          ? "border-primary bg-primary/10 text-primary"
+          : "border-input bg-surface text-muted-foreground hover:bg-muted hover:text-foreground"
+      )}
+    >
+      {empty ? <EyeOff className="size-3.5" /> : <Eye className="size-3.5" />}
+      <span className="hidden md:inline">{empty ? "Vazio" : "Demo"}</span>
+    </button>
   );
 }
 
