@@ -86,7 +86,7 @@ function Pacientes() {
           <button className="inline-flex items-center gap-1.5 h-8 px-2.5 rounded-md border border-input bg-background text-[12px]">
             <Filter className="size-3.5"/> Filtros
           </button>
-          <div className="ml-auto text-[11.5px] text-muted-foreground tabular-nums">{PATIENTS.length} resultados</div>
+          <div className="ml-auto text-[11.5px] text-muted-foreground tabular-nums">{rows.length} resultados</div>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-[13px]">
@@ -102,7 +102,7 @@ function Pacientes() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {PATIENTS.map((p) => {
+              {rows.map((p) => {
                 const s = STATUS_LABEL[p.status];
                 return (
                   <tr key={p.id} onClick={() => setOpen(p)} className="hover:bg-muted/40 cursor-pointer">
