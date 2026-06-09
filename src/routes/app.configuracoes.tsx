@@ -40,13 +40,55 @@ function Configuracoes() {
         </div>
         <div className="p-5">
           {tab === "Clínica" && <ClinicTab />}
+          {tab === "Agenda" && <AgendaTab />}
           {tab === "Usuários" && <UsersTab />}
           {tab === "WhatsApp" && <WhatsTab />}
           {tab === "Integrações" && <IntegrationsTab />}
           {tab === "Planos" && <PlansTab />}
         </div>
       </div>
+      <Toaster position="top-right" />
     </AppShell>
+  );
+}
+
+function AgendaTab() {
+  const { user } = useAuth();
+  const { data } = useProfile(user?.id);
+  const clinicId = data?.profile?.clinic_id ?? null;
+
+  return (
+    <div className="max-w-2xl">
+      <div className="rounded-xl border border-primary/30 bg-primary/5 p-5">
+        <div className="flex items-start gap-3">
+          <div className="size-10 rounded-lg bg-primary/15 text-primary flex items-center justify-center shrink-0">
+            <Calendar className="size-5" />
+          </div>
+          <div className="flex-1">
+            <div className="text-[14px] font-semibold">Google Calendar da clínica</div>
+            <p className="mt-1 text-[12.5px] text-muted-foreground">
+              Esta é a agenda usada para lembretes, confirmações e detecção de no-show. Você pode
+              trocar a conta Google ou desconectar a qualquer momento — basta refazer a
+              autorização.
+            </p>
+            <div className="mt-4">
+              {clinicId ? (
+                <GoogleCalendarConnector clinicId={clinicId} />
+              ) : (
+                <p className="text-[12px] text-muted-foreground">
+                  Termine o onboarding da clínica antes de conectar a agenda.
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="mt-4 rounded-md border border-dashed border-border bg-surface p-3 text-[12px] text-muted-foreground">
+        <strong className="text-foreground">Negou alguma permissão?</strong> Clique em{" "}
+        <em>Conectar com Google</em> novamente e marque <strong>todas</strong> as caixas — ler e
+        criar eventos. Sem isso, lembretes automáticos ficam desativados.
+      </div>
+    </div>
   );
 }
 
