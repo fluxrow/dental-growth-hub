@@ -56,6 +56,15 @@ export function AppShell({
   flush?: boolean;
 }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const { user } = useAuth();
+  const { data } = useProfile(user?.id);
+  const navigate = useNavigate();
+  const clinicName = data?.clinic?.name ?? "Sua clínica";
+  const clinicCity = data?.clinic?.city ?? "";
+  const clinicInitials = clinicName.split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase();
+  const userName = data?.profile?.name ?? user?.email ?? "Usuário";
+  const userInitials = userName.split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase();
+  const handleLogout = async () => { await signOut(); navigate({ to: "/auth", replace: true }); };
 
   return (
     <div className="flex min-h-screen w-full bg-background text-foreground">
@@ -68,11 +77,11 @@ export function AppShell({
         <div className="px-3 py-2">
           <button className="w-full flex items-center gap-2 px-2.5 py-2 rounded-md hover:bg-sidebar-accent text-left">
             <div className="size-7 rounded-md bg-primary/10 text-primary flex items-center justify-center text-[11px] font-semibold">
-              SP
+              {clinicInitials}
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-[13px] font-medium truncate">{CLINIC.name}</div>
-              <div className="text-[11px] text-muted-foreground truncate">{CLINIC.city}</div>
+              <div className="text-[13px] font-medium truncate">{clinicName}</div>
+              <div className="text-[11px] text-muted-foreground truncate">{clinicCity}</div>
             </div>
             <ChevronDown className="size-3.5 text-muted-foreground" />
           </button>
@@ -104,15 +113,19 @@ export function AppShell({
         <div className="border-t border-sidebar-border p-3">
           <div className="flex items-center gap-2.5">
             <div className="size-8 rounded-full bg-gradient-to-br from-primary to-chart-2 flex items-center justify-center text-primary-foreground text-[11px] font-semibold">
-              ML
+              {userInitials}
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-[12px] font-medium truncate">{USER.name}</div>
-              <div className="text-[11px] text-muted-foreground truncate">{USER.role}</div>
+              <div className="text-[12px] font-medium truncate">{userName}</div>
+              <div className="text-[11px] text-muted-foreground truncate">{user?.email}</div>
             </div>
+            <button onClick={handleLogout} title="Sair" className="size-7 rounded-md hover:bg-sidebar-accent text-muted-foreground hover:text-foreground flex items-center justify-center">
+              <LogOut className="size-3.5" />
+            </button>
           </div>
         </div>
       </aside>
+
 
       {/* Main */}
       <div className="flex-1 flex flex-col min-w-0">
