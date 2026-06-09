@@ -75,7 +75,7 @@ export function GoogleCalendarConnector({
       // When switching accounts, don't pass loginHint so Google shows the picker.
       const hint = opts.switchAccount ? undefined : (loginHint ?? undefined);
       const { authorizationUrl } = await startGoogleCalendarConnect({
-        data: { clinicId: id, loginHint: hint },
+        data: { clinicId: id, loginHint: hint, appOrigin: window.location.origin },
       });
 
       const w = 520;
@@ -96,23 +96,36 @@ export function GoogleCalendarConnector({
 
       const result = await new Promise<{ ok: boolean; email?: string | null; error?: string }>(
         (resolve) => {
+          let settled = false;
+          const finish = (payload: { ok: boolean; email?: string | null; error?: string }) => {
+            if (settled) return;
+            settled = true;
+            window.removeEventListener("message", onMsg);
+            clearInterval(poll);
+            clearTimeout(timeout);
+            resolve(payload);
+          };
           const onMsg = (ev: MessageEvent) => {
             if (ev.origin !== window.location.origin) return;
             const d = ev.data as { type?: string; payload?: typeof result };
             if (d?.type === "google-oauth-result" && d.payload) {
-              window.removeEventListener("message", onMsg);
-              clearInterval(poll);
-              resolve(d.payload);
+              finish(d.payload);
             }
           };
           window.addEventListener("message", onMsg);
           const poll = setInterval(() => {
             if (popup.closed) {
-              clearInterval(poll);
-              window.removeEventListener("message", onMsg);
-              resolve({ ok: false, error: "popup_closed" });
+              finish({ ok: false, error: "popup_closed" });
             }
           }, 500);
+          const timeout = setTimeout(() => {
+            try {
+              popup.close();
+            } catch {
+              // ignore
+            }
+            finish({ ok: false, error: "oauth_timeout" });
+          }, 120_000);
         },
       );
 
