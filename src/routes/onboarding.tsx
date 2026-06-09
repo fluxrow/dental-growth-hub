@@ -648,11 +648,51 @@ function StepAgenda({
                 </li>
               ))}
             </ul>
+
+            {isGoogleLogin && !state.calendar.connected && (
+              <div className="mt-4 rounded-lg border border-border bg-background p-3">
+                <div className="text-[12.5px] font-medium">
+                  Você entrou com <span className="text-primary">{loginEmail}</span>
+                </div>
+                <p className="mt-0.5 text-[11.5px] text-muted-foreground">
+                  Usar essa mesma conta como agenda da clínica? (1 clique pra autorizar o Calendar)
+                </p>
+                <div className="mt-2 inline-flex rounded-md border border-border bg-surface p-0.5">
+                  <button
+                    type="button"
+                    onClick={() => setUseLoginAccount(true)}
+                    className={cn(
+                      "px-3 h-7 rounded text-[11.5px] font-medium transition-colors",
+                      useLoginAccount
+                        ? "bg-primary text-primary-foreground"
+                        : "text-muted-foreground hover:text-foreground",
+                    )}
+                  >
+                    Usar esta conta
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setUseLoginAccount(false)}
+                    className={cn(
+                      "px-3 h-7 rounded text-[11.5px] font-medium transition-colors",
+                      !useLoginAccount
+                        ? "bg-primary text-primary-foreground"
+                        : "text-muted-foreground hover:text-foreground",
+                    )}
+                  >
+                    Escolher outra
+                  </button>
+                </div>
+              </div>
+            )}
+
             <CalendarConnectButton
               clinicId={clinicId}
               onEnsureClinic={onEnsureClinic}
               connected={state.calendar.connected}
               accountEmail={state.calendar.accountEmail}
+              loginHint={isGoogleLogin && useLoginAccount ? loginEmail : null}
+              expectedEmail={isGoogleLogin && useLoginAccount ? loginEmail : null}
               onConnected={(email) =>
                 setState((p) => ({
                   ...p,
@@ -666,6 +706,7 @@ function StepAgenda({
                 }))
               }
             />
+
           </div>
         </div>
       </div>
