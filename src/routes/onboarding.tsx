@@ -836,6 +836,8 @@ function CalendarConnectButton({
   onEnsureClinic,
   connected,
   accountEmail,
+  loginHint,
+  expectedEmail,
   onConnected,
   onDisconnected,
 }: {
@@ -843,6 +845,8 @@ function CalendarConnectButton({
   onEnsureClinic: () => Promise<string | null>;
   connected: boolean;
   accountEmail: string | null;
+  loginHint?: string | null;
+  expectedEmail?: string | null;
   onConnected: (email: string | null) => void;
   onDisconnected: () => void;
 }) {
@@ -857,7 +861,9 @@ function CalendarConnectButton({
         return;
       }
       const { startGoogleCalendarConnect } = await import("@/lib/googleCalendar.functions");
-      const { authorizationUrl } = await startGoogleCalendarConnect({ data: { clinicId: id } });
+      const { authorizationUrl } = await startGoogleCalendarConnect({
+        data: { clinicId: id, loginHint: loginHint ?? undefined },
+      });
 
       const w = 520;
       const h = 640;
