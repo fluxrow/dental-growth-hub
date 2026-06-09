@@ -28,6 +28,7 @@ import { Route as AppAvaliacoesRouteImport } from './routes/app.avaliacoes'
 import { Route as AppAutomacoesRouteImport } from './routes/app.automacoes'
 import { Route as AppAtividadeRouteImport } from './routes/app.atividade'
 import { Route as ApiPublicGoogleCallbackRouteImport } from './routes/api/public/google/callback'
+import { Route as ApiWebhooksMetaLeadsRouteImport } from './routes/api/webhooks/meta-leads'
 
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
@@ -124,6 +125,11 @@ const ApiPublicGoogleCallbackRoute = ApiPublicGoogleCallbackRouteImport.update({
   path: '/api/public/google/callback',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiWebhooksMetaLeadsRoute = ApiWebhooksMetaLeadsRouteImport.update({
+  id: '/api/webhooks/meta-leads',
+  path: '/api/webhooks/meta-leads',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -145,6 +151,7 @@ export interface FileRoutesByFullPath {
   '/p/$token': typeof PTokenRoute
   '/app/': typeof AppIndexRoute
   '/api/public/google/callback': typeof ApiPublicGoogleCallbackRoute
+  '/api/webhooks/meta-leads': typeof ApiWebhooksMetaLeadsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -165,6 +172,7 @@ export interface FileRoutesByTo {
   '/p/$token': typeof PTokenRoute
   '/app': typeof AppIndexRoute
   '/api/public/google/callback': typeof ApiPublicGoogleCallbackRoute
+  '/api/webhooks/meta-leads': typeof ApiWebhooksMetaLeadsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -187,6 +195,7 @@ export interface FileRoutesById {
   '/p/$token': typeof PTokenRoute
   '/app/': typeof AppIndexRoute
   '/api/public/google/callback': typeof ApiPublicGoogleCallbackRoute
+  '/api/webhooks/meta-leads': typeof ApiWebhooksMetaLeadsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -210,6 +219,7 @@ export interface FileRouteTypes {
     | '/p/$token'
     | '/app/'
     | '/api/public/google/callback'
+    | '/api/webhooks/meta-leads'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -230,6 +240,7 @@ export interface FileRouteTypes {
     | '/p/$token'
     | '/app'
     | '/api/public/google/callback'
+    | '/api/webhooks/meta-leads'
   id:
     | '__root__'
     | '/'
@@ -251,6 +262,7 @@ export interface FileRouteTypes {
     | '/p/$token'
     | '/app/'
     | '/api/public/google/callback'
+    | '/api/webhooks/meta-leads'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -260,6 +272,7 @@ export interface RootRouteChildren {
   OnboardingRoute: typeof OnboardingRoute
   PTokenRoute: typeof PTokenRoute
   ApiPublicGoogleCallbackRoute: typeof ApiPublicGoogleCallbackRoute
+  ApiWebhooksMetaLeadsRoute: typeof ApiWebhooksMetaLeadsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -397,6 +410,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicGoogleCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/webhooks/meta-leads': {
+      id: '/api/webhooks/meta-leads'
+      path: '/api/webhooks/meta-leads'
+      fullPath: '/api/webhooks/meta-leads'
+      preLoaderRoute: typeof ApiWebhooksMetaLeadsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -441,6 +461,7 @@ const rootRouteChildren: RootRouteChildren = {
   OnboardingRoute: OnboardingRoute,
   PTokenRoute: PTokenRoute,
   ApiPublicGoogleCallbackRoute: ApiPublicGoogleCallbackRoute,
+  ApiWebhooksMetaLeadsRoute: ApiWebhooksMetaLeadsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
