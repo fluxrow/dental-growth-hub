@@ -1,11 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Search, Filter, Plus, X, ShieldCheck, ShieldAlert, Clock, MessageCircle } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { Search, Filter, Plus, X, ShieldCheck, ShieldAlert, Clock, MessageCircle, Loader2 } from "lucide-react";
 import { AppShell } from "@/components/app/app-shell";
 import { EmptyState } from "@/components/app/empty-state";
 import { EMPTY_STATES } from "@/lib/empty-states";
 import { useEmptyMode } from "@/hooks/use-empty-mode";
 import { PATIENTS, type Patient } from "@/lib/mock";
+import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/app/pacientes")({
@@ -13,34 +15,68 @@ export const Route = createFileRoute("/app/pacientes")({
   component: Pacientes,
 });
 
-const STATUS: Record<Patient["status"], { label: string; tone: string }> = {
-  ativo:       { label: "Ativo",       tone: "bg-success/10 text-success" },
-  tratamento:  { label: "Em tratamento", tone: "bg-primary/10 text-primary" },
-  inativo:     { label: "Inativo",     tone: "bg-muted text-muted-foreground" },
-  recuperado:  { label: "Recuperado",  tone: "bg-info/10 text-info" },
+type PatientRow = Patient;
+const STATUS_LABEL: Record<string, { label: string; tone: string }> = {
+  ativo: { label: "Ativo", tone: "bg-success/10 text-success" },
+  tratamento: { label: "Em tratamento", tone: "bg-primary/10 text-primary" },
+  inativo: { label: "Inativo", tone: "bg-muted text-muted-foreground" },
+  recuperado: { label: "Recuperado", tone: "bg-info/10 text-info" },
+  lead: { label: "Lead", tone: "bg-chart-2/10 text-chart-2" },
 };
 
 function Pacientes() {
-  const __empty = useEmptyMode();
-  if (__empty) {
+  const live = useEmptyMode();
+  const [open, setOpen] = useState<PatientRow | null>(null);
+
+  const { data: liveData, isLoading } = useQuery({
+    queryKey: ["pacientes"],
+    enabled: live,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("pacientes")
+        .select("id, name, phone, status, source, last_visit_at, next_action, ltv, tags")
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return (data ?? []).map((p): PatientRow => ({
+        id: p.id,
+        name: p.name,
+        phone: p.phone ?? "",
+        status: (p.status === "lead" ? "ativo" : p.status) as Patient["status"],
+        source: p.source ?? "—",
+        lastVisit: p.last_visit_at ? new Date(p.last_visit_at).toLocaleDateString("pt-BR") : "—",
+        nextAction: p.next_action ?? "—",
+        ltv: Number(p.ltv ?? 0),
+        tags: (p.tags ?? []) as string[],
+        consent: true,
+      }));
+    },
+  });
+
+  const rows: PatientRow[] = live ? (liveData ?? []) : PATIENTS;
+
+  if (live && isLoading) {
+    return <AppShell title="Pacientes"><div className="flex items-center justify-center py-20"><Loader2 className="size-5 animate-spin text-muted-foreground" /></div></AppShell>;
+  }
+
+  if (rows.length === 0) {
     return (
       <AppShell title="Pacientes" subtitle="Base completa da clínica">
         <EmptyState {...EMPTY_STATES.pacientes} />
       </AppShell>
     );
   }
-  const [open, setOpen] = useState<Patient | null>(null);
 
   return (
     <AppShell
       title="Pacientes"
-      subtitle={`${PATIENTS.length} pacientes · base completa da clínica`}
+      subtitle={`${rows.length} pacientes · base completa da clínica`}
       actions={
         <button className="hidden md:inline-flex items-center gap-1.5 h-8 px-3 rounded-md bg-primary text-primary-foreground text-[12.5px] font-medium hover:opacity-90">
           <Plus className="size-3.5"/> Novo paciente
         </button>
       }
     >
+
       <div className="rounded-xl border border-border bg-surface overflow-hidden">
         <div className="flex items-center gap-2 px-4 h-12 border-b border-border">
           <div className="relative flex-1 max-w-xs">
