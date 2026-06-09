@@ -118,18 +118,12 @@ const AppAtividadeRoute = AppAtividadeRouteImport.update({
   path: '/atividade',
   getParentRoute: () => AppRoute,
 } as any)
-const AppDiagnosticoRoute = AppDiagnosticoRouteImport.update({
-  id: '/diagnostico',
-  path: '/diagnostico',
-  getParentRoute: () => AppRoute,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/auth': typeof AuthRoute
   '/onboarding': typeof OnboardingRoute
-  '/app/diagnostico': typeof AppDiagnosticoRoute
   '/app/atividade': typeof AppAtividadeRoute
   '/app/automacoes': typeof AppAutomacoesRoute
   '/app/avaliacoes': typeof AppAvaliacoesRoute
@@ -137,6 +131,7 @@ export interface FileRoutesByFullPath {
   '/app/cobrancas': typeof AppCobrancasRoute
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/conversas': typeof AppConversasRoute
+  '/app/diagnostico': typeof AppDiagnosticoRoute
   '/app/importar': typeof AppImportarRoute
   '/app/oportunidades': typeof AppOportunidadesRoute
   '/app/pacientes': typeof AppPacientesRoute
@@ -148,7 +143,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/onboarding': typeof OnboardingRoute
-  '/app/diagnostico': typeof AppDiagnosticoRoute
   '/app/atividade': typeof AppAtividadeRoute
   '/app/automacoes': typeof AppAutomacoesRoute
   '/app/avaliacoes': typeof AppAvaliacoesRoute
@@ -156,6 +150,7 @@ export interface FileRoutesByTo {
   '/app/cobrancas': typeof AppCobrancasRoute
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/conversas': typeof AppConversasRoute
+  '/app/diagnostico': typeof AppDiagnosticoRoute
   '/app/importar': typeof AppImportarRoute
   '/app/oportunidades': typeof AppOportunidadesRoute
   '/app/pacientes': typeof AppPacientesRoute
@@ -169,7 +164,6 @@ export interface FileRoutesById {
   '/app': typeof AppRouteWithChildren
   '/auth': typeof AuthRoute
   '/onboarding': typeof OnboardingRoute
-  '/app/diagnostico': typeof AppDiagnosticoRoute
   '/app/atividade': typeof AppAtividadeRoute
   '/app/automacoes': typeof AppAutomacoesRoute
   '/app/avaliacoes': typeof AppAvaliacoesRoute
@@ -177,6 +171,7 @@ export interface FileRoutesById {
   '/app/cobrancas': typeof AppCobrancasRoute
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/conversas': typeof AppConversasRoute
+  '/app/diagnostico': typeof AppDiagnosticoRoute
   '/app/importar': typeof AppImportarRoute
   '/app/oportunidades': typeof AppOportunidadesRoute
   '/app/pacientes': typeof AppPacientesRoute
@@ -191,7 +186,6 @@ export interface FileRouteTypes {
     | '/app'
     | '/auth'
     | '/onboarding'
-    | '/app/diagnostico'
     | '/app/atividade'
     | '/app/automacoes'
     | '/app/avaliacoes'
@@ -199,6 +193,7 @@ export interface FileRouteTypes {
     | '/app/cobrancas'
     | '/app/configuracoes'
     | '/app/conversas'
+    | '/app/diagnostico'
     | '/app/importar'
     | '/app/oportunidades'
     | '/app/pacientes'
@@ -210,7 +205,6 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/onboarding'
-    | '/app/diagnostico'
     | '/app/atividade'
     | '/app/automacoes'
     | '/app/avaliacoes'
@@ -218,6 +212,7 @@ export interface FileRouteTypes {
     | '/app/cobrancas'
     | '/app/configuracoes'
     | '/app/conversas'
+    | '/app/diagnostico'
     | '/app/importar'
     | '/app/oportunidades'
     | '/app/pacientes'
@@ -230,7 +225,6 @@ export interface FileRouteTypes {
     | '/app'
     | '/auth'
     | '/onboarding'
-    | '/app/diagnostico'
     | '/app/atividade'
     | '/app/automacoes'
     | '/app/avaliacoes'
@@ -238,6 +232,7 @@ export interface FileRouteTypes {
     | '/app/cobrancas'
     | '/app/configuracoes'
     | '/app/conversas'
+    | '/app/diagnostico'
     | '/app/importar'
     | '/app/oportunidades'
     | '/app/pacientes'
@@ -386,7 +381,6 @@ declare module '@tanstack/react-router' {
 }
 
 interface AppRouteChildren {
-  AppDiagnosticoRoute: typeof AppDiagnosticoRoute
   AppAtividadeRoute: typeof AppAtividadeRoute
   AppAutomacoesRoute: typeof AppAutomacoesRoute
   AppAvaliacoesRoute: typeof AppAvaliacoesRoute
@@ -394,6 +388,7 @@ interface AppRouteChildren {
   AppCobrancasRoute: typeof AppCobrancasRoute
   AppConfiguracoesRoute: typeof AppConfiguracoesRoute
   AppConversasRoute: typeof AppConversasRoute
+  AppDiagnosticoRoute: typeof AppDiagnosticoRoute
   AppImportarRoute: typeof AppImportarRoute
   AppOportunidadesRoute: typeof AppOportunidadesRoute
   AppPacientesRoute: typeof AppPacientesRoute
@@ -402,7 +397,6 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
-  AppDiagnosticoRoute: AppDiagnosticoRoute,
   AppAtividadeRoute: AppAtividadeRoute,
   AppAutomacoesRoute: AppAutomacoesRoute,
   AppAvaliacoesRoute: AppAvaliacoesRoute,
@@ -410,6 +404,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppCobrancasRoute: AppCobrancasRoute,
   AppConfiguracoesRoute: AppConfiguracoesRoute,
   AppConversasRoute: AppConversasRoute,
+  AppDiagnosticoRoute: AppDiagnosticoRoute,
   AppImportarRoute: AppImportarRoute,
   AppOportunidadesRoute: AppOportunidadesRoute,
   AppPacientesRoute: AppPacientesRoute,
@@ -429,13 +424,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
