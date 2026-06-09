@@ -18,6 +18,7 @@ import { Route as PTokenRouteImport } from './routes/p.$token'
 import { Route as AppRelatoriosRouteImport } from './routes/app.relatorios'
 import { Route as AppPacientesRouteImport } from './routes/app.pacientes'
 import { Route as AppOportunidadesRouteImport } from './routes/app.oportunidades'
+import { Route as AppImportarRouteImport } from './routes/app.importar'
 import { Route as AppConversasRouteImport } from './routes/app.conversas'
 import { Route as AppConfiguracoesRouteImport } from './routes/app.configuracoes'
 import { Route as AppCobrancasRouteImport } from './routes/app.cobrancas'
@@ -71,6 +72,11 @@ const AppOportunidadesRoute = AppOportunidadesRouteImport.update({
   path: '/oportunidades',
   getParentRoute: () => AppRoute,
 } as any)
+const AppImportarRoute = AppImportarRouteImport.update({
+  id: '/importar',
+  path: '/importar',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppConversasRoute = AppConversasRouteImport.update({
   id: '/conversas',
   path: '/conversas',
@@ -119,6 +125,7 @@ export interface FileRoutesByFullPath {
   '/app/cobrancas': typeof AppCobrancasRoute
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/conversas': typeof AppConversasRoute
+  '/app/importar': typeof AppImportarRoute
   '/app/oportunidades': typeof AppOportunidadesRoute
   '/app/pacientes': typeof AppPacientesRoute
   '/app/relatorios': typeof AppRelatoriosRoute
@@ -136,6 +143,7 @@ export interface FileRoutesByTo {
   '/app/cobrancas': typeof AppCobrancasRoute
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/conversas': typeof AppConversasRoute
+  '/app/importar': typeof AppImportarRoute
   '/app/oportunidades': typeof AppOportunidadesRoute
   '/app/pacientes': typeof AppPacientesRoute
   '/app/relatorios': typeof AppRelatoriosRoute
@@ -155,6 +163,7 @@ export interface FileRoutesById {
   '/app/cobrancas': typeof AppCobrancasRoute
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/conversas': typeof AppConversasRoute
+  '/app/importar': typeof AppImportarRoute
   '/app/oportunidades': typeof AppOportunidadesRoute
   '/app/pacientes': typeof AppPacientesRoute
   '/app/relatorios': typeof AppRelatoriosRoute
@@ -175,6 +184,7 @@ export interface FileRouteTypes {
     | '/app/cobrancas'
     | '/app/configuracoes'
     | '/app/conversas'
+    | '/app/importar'
     | '/app/oportunidades'
     | '/app/pacientes'
     | '/app/relatorios'
@@ -192,6 +202,7 @@ export interface FileRouteTypes {
     | '/app/cobrancas'
     | '/app/configuracoes'
     | '/app/conversas'
+    | '/app/importar'
     | '/app/oportunidades'
     | '/app/pacientes'
     | '/app/relatorios'
@@ -210,6 +221,7 @@ export interface FileRouteTypes {
     | '/app/cobrancas'
     | '/app/configuracoes'
     | '/app/conversas'
+    | '/app/importar'
     | '/app/oportunidades'
     | '/app/pacientes'
     | '/app/relatorios'
@@ -290,6 +302,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppOportunidadesRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/importar': {
+      id: '/app/importar'
+      path: '/importar'
+      fullPath: '/app/importar'
+      preLoaderRoute: typeof AppImportarRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/conversas': {
       id: '/app/conversas'
       path: '/conversas'
@@ -350,6 +369,7 @@ interface AppRouteChildren {
   AppCobrancasRoute: typeof AppCobrancasRoute
   AppConfiguracoesRoute: typeof AppConfiguracoesRoute
   AppConversasRoute: typeof AppConversasRoute
+  AppImportarRoute: typeof AppImportarRoute
   AppOportunidadesRoute: typeof AppOportunidadesRoute
   AppPacientesRoute: typeof AppPacientesRoute
   AppRelatoriosRoute: typeof AppRelatoriosRoute
@@ -364,6 +384,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppCobrancasRoute: AppCobrancasRoute,
   AppConfiguracoesRoute: AppConfiguracoesRoute,
   AppConversasRoute: AppConversasRoute,
+  AppImportarRoute: AppImportarRoute,
   AppOportunidadesRoute: AppOportunidadesRoute,
   AppPacientesRoute: AppPacientesRoute,
   AppRelatoriosRoute: AppRelatoriosRoute,
