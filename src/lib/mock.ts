@@ -434,3 +434,165 @@ export const PLANS = [
   { id: "pro",      name: "Pro",      price: "R$ 397", per: "/clínica/mês", features: ["Até 1.000 pacientes ativos","Tudo do Starter","Campanhas e cobranças","5 usuários","Relatórios avançados"], highlighted: true },
   { id: "business", name: "Business", price: "R$ 797", per: "/clínica/mês", features: ["Pacientes ilimitados","Tudo do Pro","White-label","Usuários ilimitados","Suporte prioritário","API"], highlighted: false },
 ];
+
+// ─── Portal do Paciente ────────────────────────────────────────────────────
+export type PortalBillingStatus = "em-dia" | "a-vencer" | "vencido" | "pago";
+export type PortalChargeChannel = "WhatsApp" | "Email" | "SMS";
+export type PortalChargeStatus = "enviada" | "lida" | "respondida" | "paga" | "falhou";
+
+export type PortalBilling = {
+  pending: number;
+  dueDate: string;
+  status: PortalBillingStatus;
+  description: string;
+  humanMessage: string;
+  installmentInfo?: string;
+};
+
+export type PortalChargeHistory = {
+  id: string;
+  date: string;
+  channel: PortalChargeChannel;
+  status: PortalChargeStatus;
+  value: number;
+  message: string;
+};
+
+export type PortalTimelineEvent = {
+  id: string;
+  type: "mensagem" | "confirmacao" | "consulta" | "documento" | "cobranca";
+  title: string;
+  description?: string;
+  date: string;
+};
+
+export type PortalData = {
+  token: string;
+  clinic: { name: string; city: string };
+  patient: { name: string; firstName: string; phone: string };
+  treatment: {
+    stage: OppStage;
+    progress: number; // 0-100
+    nextAppointment?: { date: string; time: string; dentist: string; room: string };
+  };
+  billing: PortalBilling;
+  billingHistory: PortalChargeHistory[];
+  timeline: PortalTimelineEvent[];
+  documents: { id: string; name: string; type: string; date: string }[];
+};
+
+export const PORTAL_DATA: Record<string, PortalData> = {
+  "marina-2026": {
+    token: "marina-2026",
+    clinic: { name: CLINIC.name, city: CLINIC.city },
+    patient: { name: "Marina Costa Silva", firstName: "Marina", phone: "+55 11 98765-4321" },
+    treatment: {
+      stage: "tratamento",
+      progress: 62,
+      nextAppointment: {
+        date: "18 de junho, quinta-feira",
+        time: "14:30",
+        dentist: "Dra. Marina Lopes",
+        room: "Sala 2",
+      },
+    },
+    billing: {
+      pending: 1890,
+      dueDate: "15/06/2026",
+      status: "a-vencer",
+      description: "Implante dentário — parcela 3 de 5",
+      installmentInfo: "Parcela 3/5 do plano de tratamento",
+      humanMessage:
+        "Olá Marina! Identificamos que sua próxima parcela vence em breve. Estamos à disposição para ajustar a melhor forma de pagamento, é só nos chamar pelo WhatsApp.",
+    },
+    billingHistory: [
+      { id: "h1", date: "08/06/2026 09:12", channel: "WhatsApp", status: "lida",       value: 1890, message: "Olá Marina, sua parcela 3/5 vence em 15/06. Posso te ajudar com o pagamento?" },
+      { id: "h2", date: "12/05/2026 10:00", channel: "WhatsApp", status: "paga",       value: 1890, message: "Parcela 2/5 — link de pagamento enviado." },
+      { id: "h3", date: "12/04/2026 10:00", channel: "WhatsApp", status: "paga",       value: 1890, message: "Parcela 1/5 — link de pagamento enviado." },
+      { id: "h4", date: "01/04/2026 14:30", channel: "Email",    status: "respondida", value: 0,    message: "Plano de tratamento e orçamento detalhado." },
+    ],
+    timeline: [
+      { id: "t1", type: "consulta",    title: "Sessão de tratamento concluída",   description: "Dra. Marina Lopes · 60 min", date: "01/06/2026" },
+      { id: "t2", type: "confirmacao", title: "Consulta confirmada por WhatsApp", date: "31/05/2026" },
+      { id: "t3", type: "mensagem",    title: "Você recebeu orientações pré-consulta", date: "30/05/2026" },
+      { id: "t4", type: "cobranca",    title: "Parcela 2/5 paga",                 description: "R$ 1.890,00 · PIX",         date: "12/05/2026" },
+      { id: "t5", type: "documento",   title: "Plano de tratamento aprovado",     date: "01/04/2026" },
+    ],
+    documents: [
+      { id: "d1", name: "Plano de tratamento.pdf",    type: "Orçamento",     date: "01/04/2026" },
+      { id: "d2", name: "Termo de consentimento.pdf", type: "Documento",     date: "01/04/2026" },
+      { id: "d3", name: "Radiografia panorâmica.jpg", type: "Exame",         date: "28/03/2026" },
+    ],
+  },
+};
+
+export function getPortalData(token: string): PortalData | null {
+  return PORTAL_DATA[token] ?? PORTAL_DATA["marina-2026"]; // fallback para demo
+}
+
+// ─── Atividade / Notificações ──────────────────────────────────────────────
+export type ActivityKind =
+  | "resposta"
+  | "confirmacao"
+  | "falha"
+  | "avaliacao"
+  | "cobranca-enviada"
+  | "cobranca-respondida"
+  | "pagamento-confirmado"
+  | "pagamento-atrasado"
+  | "cobranca-falhou"
+  | "sistema";
+
+export type ActivityCategory = "respostas" | "confirmacoes" | "falhas" | "avaliacoes" | "financeiro" | "sistema";
+
+export type Activity = {
+  id: string;
+  kind: ActivityKind;
+  category: ActivityCategory;
+  title: string;
+  detail: string;
+  patient?: string;
+  value?: number;
+  time: string;          // "agora", "12 min", "2 h"
+  dayLabel: "Hoje" | "Ontem" | string;
+  unread: boolean;
+  action?: { label: string; href?: string };
+};
+
+export const ACTIVITY_FEED: Activity[] = [
+  // Hoje
+  { id: "n1", kind: "resposta",            category: "respostas",    title: "Nova resposta no WhatsApp", detail: "“Quanto custa o clareamento?”", patient: "Carolina Ribeiro", time: "agora",   dayLabel: "Hoje", unread: true, action: { label: "Abrir conversa", href: "/app/conversas" } },
+  { id: "n2", kind: "confirmacao",         category: "confirmacoes", title: "Consulta confirmada",       detail: "Avaliação amanhã 10:00",        patient: "Bruno Carvalho",    time: "12 min",  dayLabel: "Hoje", unread: true, action: { label: "Ver paciente",   href: "/app/pacientes" } },
+  { id: "n3", kind: "pagamento-confirmado",category: "financeiro",   title: "Pagamento confirmado",      detail: "PIX recebido",                  patient: "Patrícia Lima",     value: 350,  time: "28 min", dayLabel: "Hoje", unread: true,  action: { label: "Ver cobrança",   href: "/app/cobrancas" } },
+  { id: "n4", kind: "cobranca-enviada",    category: "financeiro",   title: "Cobrança enviada",          detail: "Parcela 3/5 — vence 15/06",     patient: "Marcelo Pinto",     value: 1890, time: "1 h",    dayLabel: "Hoje", unread: false, action: { label: "Ver cobrança",   href: "/app/cobrancas" } },
+  { id: "n5", kind: "avaliacao",           category: "avaliacoes",   title: "Nova avaliação 5 estrelas", detail: "“Atendimento impecável!”",      patient: "Eduardo Tavares",   time: "2 h",    dayLabel: "Hoje", unread: false, action: { label: "Ver avaliação",  href: "/app/avaliacoes" } },
+  { id: "n6", kind: "cobranca-respondida", category: "financeiro",   title: "Cobrança respondida",       detail: "“Posso pagar até sexta”",       patient: "Camila Vasconcelos", value: 840, time: "3 h",    dayLabel: "Hoje", unread: false, action: { label: "Abrir conversa", href: "/app/conversas" } },
+  { id: "n7", kind: "falha",               category: "falhas",       title: "Falha no follow-up",        detail: "Número não recebe WhatsApp",    patient: "Lucas Borges",      time: "4 h",    dayLabel: "Hoje", unread: false, action: { label: "Ver paciente",   href: "/app/pacientes" } },
+  { id: "n8", kind: "cobranca-falhou",     category: "financeiro",   title: "Falha no envio da cobrança",detail: "Z-API: timeout",                patient: "Roberto Cunha",     value: 320,  time: "5 h",    dayLabel: "Hoje", unread: false, action: { label: "Tentar novamente" } },
+
+  // Ontem
+  { id: "n9",  kind: "pagamento-atrasado",  category: "financeiro",   title: "Pagamento atrasado",        detail: "11 dias em atraso",             patient: "Lucas Borges",      value: 280, time: "ontem", dayLabel: "Ontem", unread: false, action: { label: "Ver cobrança",   href: "/app/cobrancas" } },
+  { id: "n10", kind: "confirmacao",         category: "confirmacoes", title: "Consulta confirmada",       detail: "Manutenção dia 20 ok",          patient: "Renato Siqueira",   time: "ontem", dayLabel: "Ontem", unread: false, action: { label: "Ver paciente",   href: "/app/pacientes" } },
+  { id: "n11", kind: "pagamento-confirmado",category: "financeiro",   title: "Pagamento confirmado",      detail: "Cartão de crédito",             patient: "Renato Siqueira",   value: 280, time: "ontem", dayLabel: "Ontem", unread: false, action: { label: "Ver cobrança",   href: "/app/cobrancas" } },
+  { id: "n12", kind: "resposta",            category: "respostas",    title: "Resposta recebida",         detail: "“Vou pensar e te aviso”",       patient: "Sofia Cardoso",     time: "ontem", dayLabel: "Ontem", unread: false, action: { label: "Abrir conversa", href: "/app/conversas" } },
+  { id: "n13", kind: "avaliacao",           category: "avaliacoes",   title: "Avaliação 5 estrelas",      detail: "“Equipe atenciosa, recomendo!”", patient: "Beatriz Nogueira",  time: "ontem", dayLabel: "Ontem", unread: false, action: { label: "Ver avaliação",  href: "/app/avaliacoes" } },
+  { id: "n14", kind: "cobranca-enviada",    category: "financeiro",   title: "Cobrança enviada",          detail: "Restauração — parcela 1/2",     patient: "Sofia Cardoso",     value: 620, time: "ontem", dayLabel: "Ontem", unread: false, action: { label: "Ver cobrança",   href: "/app/cobrancas" } },
+
+  // Esta semana
+  { id: "n15", kind: "pagamento-atrasado",  category: "financeiro",   title: "Pagamento atrasado",        detail: "8 dias em atraso",              patient: "Helena Marques",    value: 420, time: "2d", dayLabel: "Esta semana", unread: false, action: { label: "Ver cobrança",   href: "/app/cobrancas" } },
+  { id: "n16", kind: "cobranca-respondida", category: "financeiro",   title: "Cobrança respondida",       detail: "“Vou pagar amanhã”",            patient: "Marcelo Pinto",     value: 1890,time: "2d", dayLabel: "Esta semana", unread: false, action: { label: "Abrir conversa", href: "/app/conversas" } },
+  { id: "n17", kind: "sistema",             category: "sistema",      title: "Automação atualizada",      detail: "“Reativar 6+ meses” agora envia às 10h", time: "3d", dayLabel: "Esta semana", unread: false },
+  { id: "n18", kind: "confirmacao",         category: "confirmacoes", title: "Consulta confirmada",       detail: "Confirmada automaticamente",    patient: "Patrícia Lima",     time: "3d", dayLabel: "Esta semana", unread: false },
+  { id: "n19", kind: "falha",               category: "falhas",       title: "Falha de follow-up",        detail: "Mensagem não entregue (bloqueio)", patient: "Lucas Borges",   time: "4d", dayLabel: "Esta semana", unread: false },
+  { id: "n20", kind: "pagamento-confirmado",category: "financeiro",   title: "Pagamento confirmado",      detail: "Boleto liquidado",              patient: "Fernanda Rocha",    value: 520, time: "5d", dayLabel: "Esta semana", unread: false },
+];
+
+export const ACTIVITY_CATEGORIES: { id: ActivityCategory | "todas"; label: string }[] = [
+  { id: "todas",        label: "Todas" },
+  { id: "respostas",    label: "Respostas" },
+  { id: "confirmacoes", label: "Confirmações" },
+  { id: "falhas",       label: "Falhas" },
+  { id: "avaliacoes",   label: "Avaliações" },
+  { id: "financeiro",   label: "Financeiro" },
+  { id: "sistema",      label: "Sistema" },
+];
