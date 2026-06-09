@@ -13,11 +13,14 @@ import {
   ChevronDown,
   Search,
   Activity as ActivityIcon,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import type { ReactNode } from "react";
 import { CLINIC, USER } from "@/lib/mock";
 import { cn } from "@/lib/utils";
 import { NotificationsPopover } from "./notifications-popover";
+import { useEmptyMode, toggleEmptyMode } from "@/hooks/use-empty-mode";
 
 const NAV: { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean }[] = [
   { to: "/app",                label: "Dashboard",    icon: LayoutDashboard, exact: true },
