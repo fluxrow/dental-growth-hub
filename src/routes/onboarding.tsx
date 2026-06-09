@@ -133,64 +133,92 @@ function OnboardingWizard() {
     if (createdClinicId) return createdClinicId;
     setSaving(true);
     try {
-      const slug =
-        state.clinic.name
-          .toLowerCase()
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "")
-          .replace(/[^a-z0-9]+/g, "-")
-          .replace(/^-|-$/g, "") || `clinica-${Date.now()}`;
-      const { data: clinic, error: cErr } = await supabase
+      // Idempotência: se já existe clínica criada por este usuário, reaproveita.
+      const { data: existing } = await supabase
         .from("clinicas")
-        .insert({
-          name: state.clinic.name || "Minha Clínica",
-          slug: `${slug}-${user.id.slice(0, 6)}`,
-          cnpj: state.clinic.cnpj || null,
-          address: state.clinic.address || null,
-          specialties: state.clinic.specialties,
-          logo_url: null,
-          onboarded: true,
-          created_by: user.id,
-        })
         .select("id")
-        .single();
-      if (cErr) throw cErr;
+        .eq("created_by", user.id)
+        .maybeSingle();
+
+      let clinicId: string;
+      if (existing?.id) {
+        clinicId = existing.id;
+        await supabase
+          .from("clinicas")
+          .update({
+            name: state.clinic.name || "Minha Clínica",
+            cnpj: state.clinic.cnpj || null,
+            address: state.clinic.address || null,
+            specialties: state.clinic.specialties,
+            onboarded: true,
+          })
+          .eq("id", clinicId);
+      } else {
+        const baseSlug =
+          state.clinic.name
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-|-$/g, "") || `clinica-${Date.now()}`;
+        const slug = `${baseSlug}-${user.id.slice(0, 6)}-${Date.now().toString(36)}`;
+        const { data: clinic, error: cErr } = await supabase
+          .from("clinicas")
+          .insert({
+            name: state.clinic.name || "Minha Clínica",
+            slug,
+            cnpj: state.clinic.cnpj || null,
+            address: state.clinic.address || null,
+            specialties: state.clinic.specialties,
+            logo_url: null,
+            onboarded: true,
+            created_by: user.id,
+          })
+          .select("id")
+          .single();
+        if (cErr) throw cErr;
+        clinicId = clinic.id;
+      }
 
       await supabase
         .from("profiles")
         .update({
-          clinic_id: clinic.id,
+          clinic_id: clinicId,
           name: state.team[0]?.name || user.user_metadata?.name || null,
         })
         .eq("id", user.id);
 
-      await supabase.from("user_roles").insert({
+      // user_roles tem unique (user_id, role) — ignora se já existe.
+      const { error: roleErr } = await supabase.from("user_roles").insert({
         user_id: user.id,
-        clinic_id: clinic.id,
+        clinic_id: clinicId,
         role: "admin",
       });
+      if (roleErr && !roleErr.message.toLowerCase().includes("duplicate")) {
+        throw roleErr;
+      }
 
-      // Upload da logo (se selecionada) — agora o RLS do bucket aceita pois clinic_id existe
+      // Upload da logo (se selecionada)
       const pendingFile = (window as unknown as { __pendingLogo?: File }).__pendingLogo;
       if (pendingFile) {
         const ext = pendingFile.name.split(".").pop()?.toLowerCase() || "png";
-        const path = `${clinic.id}/logo.${ext}`;
+        const path = `${clinicId}/logo.${ext}`;
         const { error: upErr } = await supabase.storage
           .from("clinic-logos")
           .upload(path, pendingFile, { upsert: true, contentType: pendingFile.type });
         if (!upErr) {
-          await supabase.from("clinicas").update({ logo_url: path }).eq("id", clinic.id);
+          await supabase.from("clinicas").update({ logo_url: path }).eq("id", clinicId);
         } else {
           toast.error("Logo não pôde ser salva: " + upErr.message);
         }
         delete (window as unknown as { __pendingLogo?: File }).__pendingLogo;
       }
 
-      setCreatedClinicId(clinic.id);
+      setCreatedClinicId(clinicId);
       queryClient.invalidateQueries({ queryKey: ["profile"] });
       try { localStorage.removeItem(DRAFT_KEY); } catch { /* noop */ }
       toast.success("Clínica configurada!");
-      return clinic.id;
+      return clinicId;
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Erro ao salvar");
       return null;
