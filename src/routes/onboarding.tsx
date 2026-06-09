@@ -242,7 +242,7 @@ function OnboardingWizard() {
         <div>
           <div className="flex items-center gap-2">
             <Logo />
-            <span className="font-display font-semibold tracking-tight">DentalFlux</span>
+            <span className="font-display font-semibold tracking-tight">Dr.Flux</span>
           </div>
           <h1 className="mt-10 font-display text-3xl font-semibold tracking-tight">
             Vamos configurar sua clínica.
@@ -295,7 +295,7 @@ function OnboardingWizard() {
             </div>
             <h2 className="font-display text-2xl font-semibold tracking-tight">
               {step.key === "clinica" && "Dados da sua clínica"}
-              {step.key === "responsaveis" && "Quem vai usar o DentalFlux?"}
+              {step.key === "responsaveis" && "Quem vai usar o Dr.Flux?"}
               {step.key === "agenda" && "Conecte a agenda da clínica"}
               {step.key === "pronto" && "Tudo pronto! 💜"}
             </h2>
