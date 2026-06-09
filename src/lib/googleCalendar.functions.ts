@@ -40,7 +40,7 @@ export function signState(payload: { clinicId: string; userId: string; nonce: st
 
 export const startGoogleCalendarConnect = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: { clinicId: string }) => {
+  .inputValidator((input: { clinicId: string; loginHint?: string }) => {
     if (!input?.clinicId) throw new Error("clinicId obrigatório");
     return input;
   })
@@ -64,6 +64,7 @@ export const startGoogleCalendarConnect = createServerFn({ method: "POST" })
       scope: SCOPES.join(" "),
       state,
     });
+    if (data.loginHint) params.set("login_hint", data.loginHint);
     return {
       authorizationUrl: `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`,
     };

@@ -2,10 +2,24 @@
 
 Cada clínica conecta a própria agenda do Google via OAuth 2.0 direto (Google Cloud Console).
 
+## Login com Google + reuso para a Agenda
+
+Usuários podem entrar no DrFlux com **Sign in with Google** (botão na `/auth`,
+via `lovable.auth.signInWithOAuth("google")`). Esse login usa o broker
+gerenciado pelo Lovable Cloud — não pede escopos de Calendar.
+
+No onboarding, etapa **Agenda**, se detectarmos `provider === "google"` no
+`app_metadata`, mostramos um card "Usar a mesma conta (`email@x.com`) como
+agenda?". Ao clicar **Usar esta conta**, passamos `login_hint=<email>` no
+fluxo OAuth do Calendar — o Google pula a seleção de conta e o usuário só
+precisa autorizar os escopos. Se o email retornado pelo Calendar diferir do
+email de login, avisamos via toast.
+
 ## Fluxo do usuário
 
 1. Admin abre `/onboarding` → etapa "Agenda" → clica **Conectar com Google**.
 2. Popup do Google abre → escolhe conta → autoriza escopos.
+
 3. Popup redireciona para `/api/public/google/callback`, que troca o `code` por tokens, salva em `clinic_integrations` e envia `postMessage` para fechar.
 4. Onboarding mostra "Conectado · email@clinica.com".
 

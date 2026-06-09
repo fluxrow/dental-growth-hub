@@ -1,37 +1,58 @@
-# Integração Google Calendar via App User Connector
+# Plano: Login com Google + reuso da conta para a Agenda
 
-## O que vai ser feito
+## Objetivo
+Permitir que o usuário entre no DrFlux direto com a conta Google (1 clique) e, no onboarding, perguntar se quer usar **a mesma conta Google** já autenticada como agenda da clínica — pulando o segundo popup de OAuth quando possível.
 
-1. **Helpers do connector**
-   - `src/integrations/lovable/appUserConnector.ts` (server-only): `authorizeAppUserOAuth` + `callAsAppUser`.
-   - `src/integrations/lovable/appUserConnectorClient.ts` (browser-safe): `connectAppUser` (popup + postMessage).
+---
 
-2. **Server functions** (`src/lib/googleCalendar.functions.ts`, protegidas por `requireSupabaseAuth`)
-   - `startGoogleConnect(targetOrigin)` → chama `authorizeAppUserOAuth` com connector `google_calendar`, escopos `calendar.events` e `calendar.readonly`, modo `web_message`.
-   - `saveGoogleConnection({ connectionAPIKey })` → upsert em `clinic_integrations` (`provider='google_calendar'`, `status='connected'`, `access_token=connectionAPIKey`, `connected_at=now()`) e atualiza `clinicas.provisioning_status.calendar = 'connected'`.
-   - `disconnectGoogleCalendar()` → marca a linha como `disconnected`.
+## 1. Login com Google (Sign in with Google)
 
-3. **Connector ID env var**
-   - Adicionar `GOOGLE_CALENDAR_APP_USER_CONNECTOR_CLIENT_ID` como secret (vou pedir após confirmar). Esse é o único valor necessário — sem GCP próprio, sem client secret.
+- Habilitar **Google** como provider via `supabase--configure_social_auth` (managed Google OAuth do Lovable Cloud — zero config do usuário).
+- Atualizar `src/routes/auth.tsx`:
+  - Adicionar botão **"Continuar com Google"** no topo (acima do form de email/senha).
+  - Usar `lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin })` (módulo `@/integrations/lovable`).
+  - Manter email/senha como alternativa secundária.
+- Trigger `handle_new_user` já cria o `profile` automaticamente — funciona igual para signup OAuth.
+- Após login bem-sucedido, o `__root.tsx` (listener `onAuthStateChange`) redireciona para `/app` ou `/onboarding` conforme já existe.
 
-4. **Onboarding (`src/routes/onboarding.tsx`)**
-   - Substituir o botão "Em breve" pelo botão funcional "Conectar Google Calendar" usando `connectAppUser`.
-   - Após sucesso: persiste via `saveGoogleConnection`, mostra "Conectado ✅" com email/nome da conta, libera "Continuar".
-   - Botão "Desconectar" disponível enquanto já está conectado.
+## 2. Reuso da conta Google para a Agenda
 
-5. **Docs**
-   - Reescrever `docs/integrations/google-calendar.md` removendo todo o passo-a-passo de Google Cloud Console; explicar o fluxo App User Connector (popup, sem verificação Google, sem GCP).
-   - Remover/atualizar referências em `docs/integrations/webhooks.md` se houver.
+A questão: o login do Google via Lovable broker **não pede** os escopos de Calendar e **não retorna refresh_token de Calendar** para nós. Então tecnicamente ainda precisamos de **um** consent do Calendar. O que dá pra fazer é tornar a experiência quase invisível:
 
-## Pré-requisitos do usuário
+### Fluxo proposto
 
-Antes de eu poder rodar de ponta a ponta, vou precisar de **uma** coisa: o `connector_client_id` do conector `google_calendar` (vem das configurações do projeto Lovable → Connectors → Google Calendar → App User mode). Vou pedir via `add_secret` no momento certo. **Nada de Google Cloud Console.**
+1. No onboarding, etapa **Agenda**, detectar se o usuário logou com Google:
+   - Ler `session.user.app_metadata.provider === "google"` e `user.email`.
+2. Se sim, mostrar card:
+   > "Detectamos que você entrou com **maria@clinica.com**. Quer usar essa mesma agenda do Google para os agendamentos da clínica?"
+   > [ Usar esta conta ] [ Escolher outra conta ]
+3. Ao clicar **Usar esta conta**:
+   - Chamar `startGoogleCalendarConnect` (fluxo OAuth atual), mas passar `login_hint=<email>` e `prompt=consent` na URL de autorização.
+   - Resultado: Google pula a tela de seleção de conta e vai direto pra tela de consent dos escopos de Calendar — 1 clique em "Permitir" e pronto.
+4. **Escolher outra conta** → fluxo OAuth normal sem `login_hint`.
+
+### Mudanças técnicas
+
+- `src/lib/googleCalendar.functions.ts` → `startGoogleCalendarConnect`:
+  - Adicionar input opcional `loginHint?: string`.
+  - Incluir `login_hint` no `URLSearchParams` quando presente.
+- `src/routes/onboarding.tsx`:
+  - Ler `user.email` + `app_metadata.provider`.
+  - Renderizar o card de "reusar conta" + dois botões; passar `loginHint` quando aplicável.
+- Validação: depois do callback, comparar o `email` retornado pelo Google com o `user.email` — se diferentes e o usuário escolheu "Usar esta conta", mostrar warning "Você conectou outra agenda (X) em vez de (Y). Tudo bem?" com opção de refazer.
+
+## 3. Documentação
+
+- Atualizar `docs/integrations/google-calendar.md` com seção "Reuso da conta de login".
+- Nota: continuamos precisando do projeto Google Cloud Console (DrFlux) com as credenciais OAuth — login social é separado da API de Calendar.
+
+---
 
 ## Fora do escopo desta sprint
+- Unificar login Google + permissão Calendar em **um único** consent (exigiria mover o login de Google para fora do broker do Lovable e usar nosso próprio client OAuth também para auth — trade-off grande, fica para depois se virar dor real).
+- Apple / outros providers de login.
 
-- Widget "Próximas consultas" no Dashboard (fica para a próxima — quer que eu já faça junto? me avisa).
-- Renomear / deletar o projeto GCP antigo "DentalFlow Pro" (instrução manual no final, 1 clique).
-
-## Resultado
-
-Clínica abre onboarding → clica "Conectar Google Calendar" → popup do Google → consent → popup fecha → onboarding mostra ✅ e libera "Continuar". Token (`lovack_*`) salvo em `clinic_integrations`, pronto para o sistema ler/escrever eventos via `callAsAppUser`.
+## Detalhes técnicos resumidos
+- Login: `lovable.auth.signInWithOAuth("google", ...)` + `supabase--configure_social_auth({ providers: ["google"] })`.
+- Calendar: mantém OAuth direto Google Cloud (já implementado), só adiciona `login_hint` param.
+- Sem mudança de schema, sem nova migration.
