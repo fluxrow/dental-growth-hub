@@ -16,6 +16,8 @@ export type Clinic = {
   slug: string | null;
   onboarded: boolean;
   tone: "acolhedora" | "institucional" | "descontraida" | null;
+  phone: string | null;
+  address: string | null;
 };
 
 export function useProfile(userId: string | undefined) {
@@ -32,7 +34,7 @@ export function useProfile(userId: string | undefined) {
       if (!profile?.clinic_id) return { profile: profile ?? null, clinic: null };
       const { data: clinic } = await supabase
         .from("clinicas")
-        .select("id, name, city, slug, onboarded, tone")
+        .select("id, name, city, slug, onboarded, tone, phone, address")
         .eq("id", profile.clinic_id)
         .maybeSingle();
       return { profile, clinic: clinic ?? null };

@@ -1,12 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import { Calendar, Check, Plus } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Calendar, Check, Loader2, Plus } from "lucide-react";
 import { AppShell } from "@/components/app/app-shell";
-import { CLINIC, INTEGRATIONS, PLANS, TEAM } from "@/lib/mock";
+import { INTEGRATIONS, PLANS, TEAM } from "@/lib/mock";
 import { cn } from "@/lib/utils";
 import { GoogleCalendarConnector } from "@/components/app/google-calendar-connector";
 import { useAuth } from "@/hooks/use-auth";
 import { useProfile } from "@/hooks/use-profile";
+import { updateClinic } from "@/lib/clinicas.functions";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 
 export const Route = createFileRoute("/app/configuracoes")({
@@ -91,46 +94,193 @@ function AgendaTab() {
   );
 }
 
+const TONE_LABELS: Record<string, string> = {
+  acolhedora: "Acolhedora",
+  institucional: "Institucional",
+  descontraida: "Descontraída",
+};
+
 function ClinicTab() {
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
+  const { data, isLoading } = useProfile(user?.id);
+  const clinic = data?.clinic ?? null;
+
+  const [name, setName] = useState("");
+  const [city, setCity] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
+  const [tone, setTone] = useState<"acolhedora" | "institucional" | "descontraida" | "">("");
+  const [saving, setSaving] = useState(false);
+
+  // Seed form when clinic data loads
+  useEffect(() => {
+    if (!clinic) return;
+    setName(clinic.name ?? "");
+    setCity(clinic.city ?? "");
+    setPhone(clinic.phone ?? "");
+    setAddress(clinic.address ?? "");
+    setTone(clinic.tone ?? "");
+  }, [clinic]);
+
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!clinic?.id) return;
+    setSaving(true);
+    try {
+      await updateClinic({
+        data: {
+          clinicId: clinic.id,
+          name,
+          city: city || null,
+          phone: phone || null,
+          address: address || null,
+          tone: (tone as "acolhedora" | "institucional" | "descontraida") || null,
+        },
+      });
+      // Invalidate profile cache so nav/sidebar reflect new name instantly
+      await queryClient.invalidateQueries({ queryKey: ["profile", user?.id] });
+      toast.success("Alterações salvas com sucesso.");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Erro ao salvar alterações.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <Loader2 className="size-5 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  const slugDisplay = clinic?.slug ? `${clinic.slug}.dentalflux.app` : "—";
+  const initials = name
+    .split(" ")
+    .map((n) => n[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl">
-      <Field label="Nome da clínica" value={CLINIC.name} />
-      <Field label="Slug (subdomínio)" value={`${CLINIC.slug}.dentalflux.app`} />
-      <Field label="Cidade" value={CLINIC.city} />
-      <Field label="Telefone principal" value="(11) 3333-4444" />
-      <Field label="Horário de atendimento" value="Seg–Sex 08:00–19:00 · Sáb 08:00–13:00" full />
+    <form onSubmit={handleSave} className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl">
+      <Field label="Nome da clínica" value={name} onChange={setName} required />
+      <Field label="Slug (subdomínio)" value={slugDisplay} readOnly hint="Definido no cadastro" />
+      <Field label="Cidade" value={city} onChange={setCity} />
+      <Field
+        label="Telefone principal"
+        value={phone}
+        onChange={setPhone}
+        placeholder="(11) 9 9999-9999"
+      />
+      <Field
+        label="Endereço"
+        value={address}
+        onChange={setAddress}
+        full
+        placeholder="Rua, número, bairro"
+      />
+
+      {/* Tom de comunicação */}
+      <div className="md:col-span-2">
+        <div className="text-[11.5px] uppercase tracking-wider text-muted-foreground mb-1.5">
+          Tom de comunicação
+        </div>
+        <div className="flex gap-2 flex-wrap">
+          {(["acolhedora", "institucional", "descontraida"] as const).map((t) => (
+            <button
+              key={t}
+              type="button"
+              onClick={() => setTone(t)}
+              className={cn(
+                "h-8 px-3 rounded-md text-[12.5px] font-medium border transition-colors",
+                tone === t
+                  ? "border-primary bg-primary/10 text-primary"
+                  : "border-input bg-background text-muted-foreground hover:bg-muted",
+              )}
+            >
+              {TONE_LABELS[t]}
+            </button>
+          ))}
+        </div>
+        <p className="mt-1.5 text-[11.5px] text-muted-foreground">
+          Define como as mensagens automáticas são enviadas aos seus pacientes.
+        </p>
+      </div>
+
+      {/* Logo placeholder */}
       <div className="md:col-span-2">
         <div className="text-[11.5px] uppercase tracking-wider text-muted-foreground mb-2">
           Logo
         </div>
         <div className="flex items-center gap-4">
           <div className="size-16 rounded-xl bg-gradient-to-br from-primary to-chart-2 flex items-center justify-center text-primary-foreground font-display text-xl font-semibold">
-            SP
+            {initials || "—"}
           </div>
-          <button className="h-8 px-3 rounded-md border border-input bg-background text-[12px]">
+          <button
+            type="button"
+            disabled
+            className="h-8 px-3 rounded-md border border-input bg-background text-[12px] opacity-40 cursor-not-allowed"
+            title="Upload de logo em breve"
+          >
             Trocar logo
           </button>
+          <span className="text-[11.5px] text-muted-foreground">Upload em breve</span>
         </div>
       </div>
-      <div className="md:col-span-2 flex justify-end pt-4">
-        <button className="h-9 px-4 rounded-md bg-primary text-primary-foreground text-[12.5px] font-medium hover:opacity-90">
-          Salvar alterações
+
+      <div className="md:col-span-2 flex justify-end pt-4 border-t border-border">
+        <button
+          type="submit"
+          disabled={saving || !name.trim()}
+          className="inline-flex items-center gap-1.5 h-9 px-4 rounded-md bg-primary text-primary-foreground text-[12.5px] font-medium hover:opacity-90 disabled:opacity-50"
+        >
+          {saving && <Loader2 className="size-3.5 animate-spin" />}
+          {saving ? "Salvando…" : "Salvar alterações"}
         </button>
       </div>
-    </div>
+    </form>
   );
 }
 
-function Field({ label, value, full }: { label: string; value: string; full?: boolean }) {
+function Field({
+  label,
+  value,
+  onChange,
+  full,
+  required,
+  readOnly,
+  hint,
+  placeholder,
+}: {
+  label: string;
+  value: string;
+  onChange?: (v: string) => void;
+  full?: boolean;
+  required?: boolean;
+  readOnly?: boolean;
+  hint?: string;
+  placeholder?: string;
+}) {
   return (
     <div className={cn(full && "md:col-span-2")}>
       <div className="text-[11.5px] uppercase tracking-wider text-muted-foreground mb-1.5">
         {label}
       </div>
       <input
-        defaultValue={value}
-        className="w-full h-9 rounded-md border border-input bg-background px-3 text-[13px] focus:outline-none focus:ring-2 focus:ring-ring"
+        value={value}
+        onChange={onChange ? (e) => onChange(e.target.value) : undefined}
+        readOnly={readOnly}
+        required={required}
+        placeholder={placeholder}
+        className={cn(
+          "w-full h-9 rounded-md border border-input bg-background px-3 text-[13px] focus:outline-none focus:ring-2 focus:ring-ring",
+          readOnly && "opacity-50 cursor-not-allowed bg-muted",
+        )}
       />
+      {hint && <p className="mt-1 text-[11px] text-muted-foreground">{hint}</p>}
     </div>
   );
 }
