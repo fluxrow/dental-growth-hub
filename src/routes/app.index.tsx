@@ -111,7 +111,7 @@ function Panel({
             {subtitle && <p className="text-[12px] text-muted-foreground">{subtitle}</p>}
           </div>
         </div>
-        <Link to={href} className="text-[12px] text-primary font-medium inline-flex items-center gap-0.5 hover:underline">
+        <Link to={href as never} className="text-[12px] text-primary font-medium inline-flex items-center gap-0.5 hover:underline">
           {cta} <ArrowRight className="size-3.5" />
         </Link>
       </div>
