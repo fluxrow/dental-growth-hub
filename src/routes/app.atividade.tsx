@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { Activity as ActivityIcon } from "lucide-react";
+
 import { CheckCheck, Loader2 } from "lucide-react";
 import { AppShell } from "@/components/app/app-shell";
 import { NotificationRow } from "@/components/app/notifications-popover";
