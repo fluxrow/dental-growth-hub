@@ -647,3 +647,11 @@ export const ACTIVITY_CATEGORIES: { id: ActivityCategory | "todas"; label: strin
   { id: "financeiro",   label: "Financeiro" },
   { id: "sistema",      label: "Sistema" },
 ];
+
+// Linka eventos financeiros ao portal do paciente (demo) e ao histórico de cobranças.
+for (const a of ACTIVITY_FEED) {
+  if (a.category === "financeiro") {
+    a.patientHref = "/p/marina-2026";
+    a.billingHref = "/app/cobrancas";
+  }
+}
