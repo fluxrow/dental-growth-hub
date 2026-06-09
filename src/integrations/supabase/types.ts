@@ -179,6 +179,68 @@ export type Database = {
           },
         ]
       }
+      clinic_integrations: {
+        Row: {
+          access_token: string | null
+          calendar_id: string | null
+          clinic_id: string
+          connected_at: string | null
+          connected_by_user_id: string | null
+          created_at: string
+          expires_at: string | null
+          id: string
+          last_sync_at: string | null
+          metadata: Json
+          provider: string
+          refresh_token: string | null
+          scope: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          access_token?: string | null
+          calendar_id?: string | null
+          clinic_id: string
+          connected_at?: string | null
+          connected_by_user_id?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          last_sync_at?: string | null
+          metadata?: Json
+          provider: string
+          refresh_token?: string | null
+          scope?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          access_token?: string | null
+          calendar_id?: string | null
+          clinic_id?: string
+          connected_at?: string | null
+          connected_by_user_id?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          last_sync_at?: string | null
+          metadata?: Json
+          provider?: string
+          refresh_token?: string | null
+          scope?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clinic_integrations_clinic_id_fkey"
+            columns: ["clinic_id"]
+            isOneToOne: false
+            referencedRelation: "clinicas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clinicas: {
         Row: {
           address: string | null
@@ -191,6 +253,7 @@ export type Database = {
           name: string
           onboarded: boolean
           phone: string | null
+          provisioning_status: Json
           slug: string | null
           specialties: string[] | null
           timezone: string | null
@@ -211,6 +274,7 @@ export type Database = {
           name: string
           onboarded?: boolean
           phone?: string | null
+          provisioning_status?: Json
           slug?: string | null
           specialties?: string[] | null
           timezone?: string | null
@@ -231,6 +295,7 @@ export type Database = {
           name?: string
           onboarded?: boolean
           phone?: string | null
+          provisioning_status?: Json
           slug?: string | null
           specialties?: string[] | null
           timezone?: string | null
