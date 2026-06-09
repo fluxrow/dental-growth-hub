@@ -6,6 +6,7 @@ import { getPortalData, OPP_STAGES, type PortalData, type PortalTimelineEvent } 
 import { BillingCard } from "@/components/portal/billing-card";
 import { BillingHistory } from "@/components/portal/billing-history";
 import { Logo } from "@/components/app/app-shell";
+import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/p/$token")({
