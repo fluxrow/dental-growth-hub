@@ -80,16 +80,39 @@ const SPECIALTY_OPTIONS = [
   "Próteses",
 ];
 
+const DRAFT_KEY = "drflux:onboarding-draft:v1";
+
+function loadDraft(): OnboardingState | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = localStorage.getItem(DRAFT_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw) as OnboardingState;
+  } catch {
+    return null;
+  }
+}
+
 function OnboardingWizard() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { user, loading: authLoading } = useAuth();
   const [stepIdx, setStepIdx] = useState(0);
-  const [state, setState] = useState<OnboardingState>(INITIAL);
+  const [state, setState] = useState<OnboardingState>(() => loadDraft() ?? INITIAL);
   const [saving, setSaving] = useState(false);
   const [seeding, setSeeding] = useState(false);
   const [createdClinicId, setCreatedClinicId] = useState<string | null>(null);
   const step = STEPS[stepIdx];
+
+  // Salva rascunho a cada mudança — não perde dados em reload/erro.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(state));
+    } catch {
+      /* quota cheia, ignora */
+    }
+  }, [state]);
 
   useEffect(() => {
     if (!authLoading && !user) navigate({ to: "/auth", replace: true });
@@ -103,6 +126,7 @@ function OnboardingWizard() {
       }));
     }
   }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
+
 
   const persist = async (): Promise<string | null> => {
     if (!user) return null;
