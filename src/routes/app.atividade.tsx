@@ -6,7 +6,13 @@ import { Activity as ActivityIcon } from "lucide-react";
 import { CheckCheck, Loader2 } from "lucide-react";
 import { AppShell } from "@/components/app/app-shell";
 import { NotificationRow } from "@/components/app/notifications-popover";
-import { ACTIVITY_CATEGORIES, ACTIVITY_FEED, type Activity, type ActivityCategory, type ActivityKind } from "@/lib/mock";
+import {
+  ACTIVITY_CATEGORIES,
+  ACTIVITY_FEED,
+  type Activity,
+  type ActivityCategory,
+  type ActivityKind,
+} from "@/lib/mock";
 import { EmptyState } from "@/components/app/empty-state";
 import { markAllRead, useReadIds, useUnreadCount } from "@/hooks/use-notifications";
 import { useEmptyMode } from "@/hooks/use-empty-mode";
@@ -32,9 +38,16 @@ const DB_TO_KIND: Record<string, ActivityKind> = {
 };
 
 const KIND_TO_CATEGORY: Record<ActivityKind, ActivityCategory> = {
-  resposta: "respostas", confirmacao: "confirmacoes", falha: "falhas", avaliacao: "avaliacoes",
-  "cobranca-enviada": "financeiro", "cobranca-respondida": "financeiro", "pagamento-confirmado": "financeiro",
-  "pagamento-atrasado": "financeiro", "cobranca-falhou": "financeiro", sistema: "sistema",
+  resposta: "respostas",
+  confirmacao: "confirmacoes",
+  falha: "falhas",
+  avaliacao: "avaliacoes",
+  "cobranca-enviada": "financeiro",
+  "cobranca-respondida": "financeiro",
+  "pagamento-confirmado": "financeiro",
+  "pagamento-atrasado": "financeiro",
+  "cobranca-falhou": "financeiro",
+  sistema: "sistema",
 };
 
 function dayLabel(d: Date): string {
@@ -105,7 +118,6 @@ function AtividadePage() {
     return Array.from(m.entries());
   }, [filtered]);
 
-
   return (
     <AppShell
       title="Atividade"
@@ -117,12 +129,18 @@ function AtividadePage() {
           className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md border border-input bg-surface text-[12px] font-medium hover:bg-muted disabled:opacity-40"
         >
           <CheckCheck className="size-3.5" /> Marcar todas como lidas
-          {unread > 0 && <span className="ml-1 rounded-full bg-primary text-primary-foreground text-[10px] px-1.5 py-0.5 tabular-nums">{unread}</span>}
+          {unread > 0 && (
+            <span className="ml-1 rounded-full bg-primary text-primary-foreground text-[10px] px-1.5 py-0.5 tabular-nums">
+              {unread}
+            </span>
+          )}
         </button>
       }
     >
       {live && isLoading && (
-        <div className="flex items-center justify-center py-10"><Loader2 className="size-5 animate-spin text-muted-foreground" /></div>
+        <div className="flex items-center justify-center py-10">
+          <Loader2 className="size-5 animate-spin text-muted-foreground" />
+        </div>
       )}
       {!isLoading && source.length === 0 && (
         <EmptyState
@@ -148,11 +166,18 @@ function AtividadePage() {
                 "h-7 px-2.5 rounded-full text-[11.5px] font-medium border transition-colors inline-flex items-center gap-1.5",
                 active
                   ? "bg-primary text-primary-foreground border-primary"
-                  : "border-border bg-surface text-foreground/70 hover:bg-muted"
+                  : "border-border bg-surface text-foreground/70 hover:bg-muted",
               )}
             >
               {c.label}
-              <span className={cn("tabular-nums text-[10px]", active ? "opacity-80" : "text-muted-foreground")}>{count}</span>
+              <span
+                className={cn(
+                  "tabular-nums text-[10px]",
+                  active ? "opacity-80" : "text-muted-foreground",
+                )}
+              >
+                {count}
+              </span>
             </button>
           );
         })}
@@ -163,7 +188,7 @@ function AtividadePage() {
             "h-7 px-2.5 rounded-full text-[11.5px] font-medium border transition-colors inline-flex items-center gap-1.5",
             onlyUnread
               ? "bg-foreground text-background border-foreground"
-              : "border-border bg-surface text-foreground/70 hover:bg-muted"
+              : "border-border bg-surface text-foreground/70 hover:bg-muted",
           )}
         >
           Apenas não lidas
@@ -172,7 +197,9 @@ function AtividadePage() {
 
       <div className="rounded-xl border border-border bg-surface overflow-hidden">
         {grouped.length === 0 && (
-          <div className="px-5 py-12 text-center text-[13px] text-muted-foreground">Nenhuma atividade nesta categoria.</div>
+          <div className="px-5 py-12 text-center text-[13px] text-muted-foreground">
+            Nenhuma atividade nesta categoria.
+          </div>
         )}
         {grouped.map(([day, list]) => (
           <div key={day}>

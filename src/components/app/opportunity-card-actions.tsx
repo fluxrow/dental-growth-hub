@@ -1,4 +1,12 @@
-import { ArrowRight, MoreHorizontal, CheckCircle2, CalendarPlus, XCircle, MessageSquare, User } from "lucide-react";
+import {
+  ArrowRight,
+  MoreHorizontal,
+  CheckCircle2,
+  CalendarPlus,
+  XCircle,
+  MessageSquare,
+  User,
+} from "lucide-react";
 import { toast } from "sonner";
 import {
   DropdownMenu,

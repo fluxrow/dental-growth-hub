@@ -1,7 +1,19 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import {
-  Bell, MessageSquare, CalendarCheck, AlertTriangle, Star, Send, CheckCircle2, Clock, XCircle, Settings as SettingsIcon, CheckCheck, User, Receipt,
+  Bell,
+  MessageSquare,
+  CalendarCheck,
+  AlertTriangle,
+  Star,
+  Send,
+  CheckCircle2,
+  Clock,
+  XCircle,
+  Settings as SettingsIcon,
+  CheckCheck,
+  User,
+  Receipt,
 } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ACTIVITY_FEED, type Activity, type ActivityKind } from "@/lib/mock";
@@ -9,16 +21,16 @@ import { cn } from "@/lib/utils";
 import { markAllRead, markRead, useReadIds, useUnreadCount } from "@/hooks/use-notifications";
 
 const ICON: Record<ActivityKind, { icon: typeof Bell; cls: string }> = {
-  resposta:               { icon: MessageSquare, cls: "bg-info/10 text-info" },
-  confirmacao:            { icon: CalendarCheck, cls: "bg-success/10 text-success" },
-  falha:                  { icon: AlertTriangle, cls: "bg-warning/15 text-warning-foreground" },
-  avaliacao:              { icon: Star,          cls: "bg-warning/15 text-warning-foreground" },
-  "cobranca-enviada":     { icon: Send,          cls: "bg-primary/10 text-primary" },
-  "cobranca-respondida":  { icon: MessageSquare, cls: "bg-info/10 text-info" },
-  "pagamento-confirmado": { icon: CheckCircle2,  cls: "bg-success/10 text-success" },
-  "pagamento-atrasado":   { icon: Clock,         cls: "bg-warning/15 text-warning-foreground" },
-  "cobranca-falhou":      { icon: XCircle,       cls: "bg-destructive/10 text-destructive" },
-  sistema:                { icon: SettingsIcon,  cls: "bg-muted text-foreground/70" },
+  resposta: { icon: MessageSquare, cls: "bg-info/10 text-info" },
+  confirmacao: { icon: CalendarCheck, cls: "bg-success/10 text-success" },
+  falha: { icon: AlertTriangle, cls: "bg-warning/15 text-warning-foreground" },
+  avaliacao: { icon: Star, cls: "bg-warning/15 text-warning-foreground" },
+  "cobranca-enviada": { icon: Send, cls: "bg-primary/10 text-primary" },
+  "cobranca-respondida": { icon: MessageSquare, cls: "bg-info/10 text-info" },
+  "pagamento-confirmado": { icon: CheckCircle2, cls: "bg-success/10 text-success" },
+  "pagamento-atrasado": { icon: Clock, cls: "bg-warning/15 text-warning-foreground" },
+  "cobranca-falhou": { icon: XCircle, cls: "bg-destructive/10 text-destructive" },
+  sistema: { icon: SettingsIcon, cls: "bg-muted text-foreground/70" },
 };
 
 export function NotificationsPopover() {
@@ -71,7 +83,15 @@ export function NotificationsPopover() {
   );
 }
 
-export function NotificationRow({ a, onNav, compact }: { a: Activity; onNav?: () => void; compact?: boolean }) {
+export function NotificationRow({
+  a,
+  onNav,
+  compact,
+}: {
+  a: Activity;
+  onNav?: () => void;
+  compact?: boolean;
+}) {
   const m = ICON[a.kind];
   const Icon = m.icon;
   const readIds = useReadIds();
@@ -85,7 +105,13 @@ export function NotificationRow({ a, onNav, compact }: { a: Activity; onNav?: ()
   const isFinance = a.category === "financeiro";
 
   return (
-    <li className={cn("flex items-start gap-3 px-4", compact ? "py-2.5" : "py-3", isUnread && "bg-primary/[0.03]")}>
+    <li
+      className={cn(
+        "flex items-start gap-3 px-4",
+        compact ? "py-2.5" : "py-3",
+        isUnread && "bg-primary/[0.03]",
+      )}
+    >
       <div className={cn("size-8 rounded-md flex items-center justify-center shrink-0", m.cls)}>
         <Icon className="size-3.5" />
       </div>
@@ -121,8 +147,9 @@ export function NotificationRow({ a, onNav, compact }: { a: Activity; onNav?: ()
               <Receipt className="size-3" /> Histórico
             </Link>
           )}
-          {!isFinance && a.action && (
-            a.action.href ? (
+          {!isFinance &&
+            a.action &&
+            (a.action.href ? (
               <Link
                 to={a.action.href as never}
                 onClick={handleClick}
@@ -131,9 +158,13 @@ export function NotificationRow({ a, onNav, compact }: { a: Activity; onNav?: ()
                 {a.action.label} →
               </Link>
             ) : (
-              <button onClick={handleClick} className="text-[11.5px] font-medium text-primary hover:underline">{a.action.label}</button>
-            )
-          )}
+              <button
+                onClick={handleClick}
+                className="text-[11.5px] font-medium text-primary hover:underline"
+              >
+                {a.action.label}
+              </button>
+            ))}
           {isUnread && (
             <button
               onClick={() => markRead(a.id)}

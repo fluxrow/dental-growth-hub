@@ -13,10 +13,10 @@ export const Route = createFileRoute("/app/campanhas")({
 });
 
 const TYPES: Record<CampaignType, { label: string; icon: typeof Repeat; tone: string }> = {
-  reativacao:  { label: "Reativação",  icon: Repeat,        tone: "bg-info/10 text-info" },
+  reativacao: { label: "Reativação", icon: Repeat, tone: "bg-info/10 text-info" },
   confirmacao: { label: "Confirmação", icon: CalendarCheck, tone: "bg-primary/10 text-primary" },
-  cobranca:    { label: "Cobrança",    icon: Wallet,        tone: "bg-warning/15 text-warning-foreground" },
-  avaliacao:   { label: "Avaliação",   icon: Star,          tone: "bg-success/10 text-success" },
+  cobranca: { label: "Cobrança", icon: Wallet, tone: "bg-warning/15 text-warning-foreground" },
+  avaliacao: { label: "Avaliação", icon: Star, tone: "bg-success/10 text-success" },
 };
 
 function Campanhas() {
@@ -37,7 +37,7 @@ function Campanhas() {
       subtitle="Campanhas únicas e disparos manuais"
       actions={
         <button className="hidden md:inline-flex items-center gap-1.5 h-8 px-3 rounded-md bg-primary text-primary-foreground text-[12.5px] font-medium hover:opacity-90">
-          <Plus className="size-3.5"/> Nova campanha
+          <Plus className="size-3.5" /> Nova campanha
         </button>
       }
     >
@@ -48,8 +48,10 @@ function Campanhas() {
           const total = CAMPAIGNS.filter((c) => c.type === k).length;
           return (
             <div key={k} className="rounded-xl border border-border bg-surface p-4">
-              <div className={cn("size-9 rounded-md flex items-center justify-center mb-3", t.tone)}>
-                <Icon className="size-4.5"/>
+              <div
+                className={cn("size-9 rounded-md flex items-center justify-center mb-3", t.tone)}
+              >
+                <Icon className="size-4.5" />
               </div>
               <div className="text-[11px] text-muted-foreground">{t.label}</div>
               <div className="font-display text-2xl font-semibold tabular-nums">{total}</div>
@@ -62,13 +64,18 @@ function Campanhas() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-5">
         <Highlight label="Mensagens enviadas" value={totalSent.toLocaleString("pt-BR")} />
         <Highlight label="Receita gerada" value={`R$ ${totalRev.toLocaleString("pt-BR")}`} />
-        <Highlight label="Conversão média" value={`${Math.round((CAMPAIGNS.reduce((s,c)=>s+c.converted,0)/totalSent)*100)}%`} />
+        <Highlight
+          label="Conversão média"
+          value={`${Math.round((CAMPAIGNS.reduce((s, c) => s + c.converted, 0) / totalSent) * 100)}%`}
+        />
       </div>
 
       <div className="rounded-xl border border-border bg-surface overflow-hidden">
         <div className="px-4 h-12 border-b border-border flex items-center justify-between">
           <div className="text-[13px] font-semibold tracking-tight">Todas as campanhas</div>
-          <div className="text-[11px] text-muted-foreground tabular-nums">{CAMPAIGNS.length} resultados</div>
+          <div className="text-[11px] text-muted-foreground tabular-nums">
+            {CAMPAIGNS.length} resultados
+          </div>
         </div>
         <table className="w-full text-[13px]">
           <thead className="text-[11px] uppercase tracking-wider text-muted-foreground bg-surface-muted/40">
@@ -93,21 +100,46 @@ function Campanhas() {
               return (
                 <tr key={c.id} className="hover:bg-muted/30">
                   <td className="px-4 py-3 font-medium">{c.name}</td>
-                  <td className="px-4 py-3"><span className={cn("inline-flex rounded-full px-2 py-0.5 text-[11px] font-medium", t.tone)}>{t.label}</span></td>
                   <td className="px-4 py-3">
-                    <span className={cn(
-                      "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium",
-                      c.status === "ativa" ? "bg-success/10 text-success" : c.status === "pausada" ? "bg-warning/15 text-warning-foreground" : "bg-muted text-muted-foreground",
-                    )}>
-                      <span className="size-1.5 rounded-full bg-current"/> {c.status}
+                    <span
+                      className={cn(
+                        "inline-flex rounded-full px-2 py-0.5 text-[11px] font-medium",
+                        t.tone,
+                      )}
+                    >
+                      {t.label}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <span
+                      className={cn(
+                        "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium",
+                        c.status === "ativa"
+                          ? "bg-success/10 text-success"
+                          : c.status === "pausada"
+                            ? "bg-warning/15 text-warning-foreground"
+                            : "bg-muted text-muted-foreground",
+                      )}
+                    >
+                      <span className="size-1.5 rounded-full bg-current" /> {c.status}
                     </span>
                   </td>
                   <td className="px-4 py-3 text-right tabular-nums">{c.sent}</td>
-                  <td className="px-4 py-3 text-right tabular-nums text-muted-foreground">{open}%</td>
-                  <td className="px-4 py-3 text-right tabular-nums text-muted-foreground">{resp}%</td>
-                  <td className="px-4 py-3 text-right tabular-nums font-medium text-primary">{conv}%</td>
-                  <td className="px-4 py-3 text-right tabular-nums font-medium">{c.revenue ? `R$ ${c.revenue.toLocaleString("pt-BR")}` : "—"}</td>
-                  <td className="px-4 py-3"><MoreVertical className="size-4 text-muted-foreground"/></td>
+                  <td className="px-4 py-3 text-right tabular-nums text-muted-foreground">
+                    {open}%
+                  </td>
+                  <td className="px-4 py-3 text-right tabular-nums text-muted-foreground">
+                    {resp}%
+                  </td>
+                  <td className="px-4 py-3 text-right tabular-nums font-medium text-primary">
+                    {conv}%
+                  </td>
+                  <td className="px-4 py-3 text-right tabular-nums font-medium">
+                    {c.revenue ? `R$ ${c.revenue.toLocaleString("pt-BR")}` : "—"}
+                  </td>
+                  <td className="px-4 py-3">
+                    <MoreVertical className="size-4 text-muted-foreground" />
+                  </td>
                 </tr>
               );
             })}

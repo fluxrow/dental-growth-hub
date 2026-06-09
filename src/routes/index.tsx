@@ -61,13 +61,24 @@ function SiteHeader() {
           <span className="font-display font-semibold tracking-tight text-[15px]">DentalFlux</span>
         </Link>
         <nav className="hidden md:flex items-center gap-7 text-[13px] text-muted-foreground">
-          <a href="#problema" className="hover:text-foreground">Problema</a>
-          <a href="#funil" className="hover:text-foreground">Funil</a>
-          <a href="#beneficios" className="hover:text-foreground">Benefícios</a>
-          <a href="#resultados" className="hover:text-foreground">Resultados</a>
+          <a href="#problema" className="hover:text-foreground">
+            Problema
+          </a>
+          <a href="#funil" className="hover:text-foreground">
+            Funil
+          </a>
+          <a href="#beneficios" className="hover:text-foreground">
+            Benefícios
+          </a>
+          <a href="#resultados" className="hover:text-foreground">
+            Resultados
+          </a>
         </nav>
         <div className="flex items-center gap-2">
-          <Link to="/auth" className="hidden sm:inline text-[13px] text-muted-foreground hover:text-foreground px-3 py-1.5">
+          <Link
+            to="/auth"
+            className="hidden sm:inline text-[13px] text-muted-foreground hover:text-foreground px-3 py-1.5"
+          >
             Entrar
           </Link>
           <Link
@@ -101,11 +112,13 @@ function Hero() {
               mais pacientes.
             </span>{" "}
             Precisa parar de perder
-            <br />os que já chegam.
+            <br />
+            os que já chegam.
           </h1>
           <p className="mt-6 text-[16px] lg:text-[17px] text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Centralize atendimento, follow-up, confirmações, reativações, cobranças e avaliações em um único
-            lugar. Sem ERP. Sem agenda complicada. Foco no que importa: converter mais e reter melhor.
+            Centralize atendimento, follow-up, confirmações, reativações, cobranças e avaliações em
+            um único lugar. Sem ERP. Sem agenda complicada. Foco no que importa: converter mais e
+            reter melhor.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Link
@@ -140,7 +153,9 @@ function DashboardMockup() {
           <span className="size-2.5 rounded-full bg-destructive/60" />
           <span className="size-2.5 rounded-full bg-warning/60" />
           <span className="size-2.5 rounded-full bg-success/60" />
-          <span className="ml-3 text-[11px] text-muted-foreground">sorrisopleno.dentalflux.app</span>
+          <span className="ml-3 text-[11px] text-muted-foreground">
+            sorrisopleno.dentalflux.app
+          </span>
         </div>
         <div className="grid grid-cols-12 min-h-[420px]">
           <div className="col-span-3 border-r border-border bg-sidebar p-4 hidden md:block">
@@ -148,7 +163,17 @@ function DashboardMockup() {
               <Logo />
               <span className="font-display font-semibold text-[13px]">DentalFlux</span>
             </div>
-            {["Dashboard","Oportunidades","Conversas","Pacientes","Campanhas","Automações","Cobranças","Avaliações","Relatórios"].map((label, i) => (
+            {[
+              "Dashboard",
+              "Oportunidades",
+              "Conversas",
+              "Pacientes",
+              "Campanhas",
+              "Automações",
+              "Cobranças",
+              "Avaliações",
+              "Relatórios",
+            ].map((label, i) => (
               <div
                 key={label}
                 className={`flex items-center gap-2 px-2 py-1.5 rounded-md text-[12px] mb-0.5 ${
@@ -167,17 +192,22 @@ function DashboardMockup() {
                 <div className="text-[11px] text-muted-foreground">Últimos 30 dias</div>
               </div>
               <div className="flex gap-1">
-                {["7d","30d","90d"].map((p, i) => (
-                  <span key={p} className={`px-2 py-1 rounded text-[10.5px] ${i===1 ? "bg-primary/10 text-primary" : "text-muted-foreground"}`}>{p}</span>
+                {["7d", "30d", "90d"].map((p, i) => (
+                  <span
+                    key={p}
+                    className={`px-2 py-1 rounded text-[10.5px] ${i === 1 ? "bg-primary/10 text-primary" : "text-muted-foreground"}`}
+                  >
+                    {p}
+                  </span>
                 ))}
               </div>
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
               {[
-                { l: "Leads",         v: "248", d: "+12%", c: "text-success" },
-                { l: "Agendados",     v: "164", d: "+9%",  c: "text-success" },
-                { l: "Recuperados",   v: "37",  d: "+41%", c: "text-success" },
-                { l: "Conversão",     v: "21.4%", d: "+3.6%", c: "text-success" },
+                { l: "Leads", v: "248", d: "+12%", c: "text-success" },
+                { l: "Agendados", v: "164", d: "+9%", c: "text-success" },
+                { l: "Recuperados", v: "37", d: "+41%", c: "text-success" },
+                { l: "Conversão", v: "21.4%", d: "+3.6%", c: "text-success" },
               ].map((k) => (
                 <div key={k.l} className="rounded-lg border border-border bg-surface p-3">
                   <div className="text-[10.5px] text-muted-foreground">{k.l}</div>
@@ -189,17 +219,26 @@ function DashboardMockup() {
             <div className="rounded-lg border border-border bg-surface p-4">
               <div className="text-[12px] font-semibold mb-3">Funil DentalFlux</div>
               {[
-                ["Lead",248,100],["Primeiro Contato",231,93],["Agendamento",164,71],
-                ["Comparecimento",141,86],["Tratamento",98,69],["Avaliação",53,54],
-              ].map(([s,n,p]) => (
+                ["Lead", 248, 100],
+                ["Primeiro Contato", 231, 93],
+                ["Agendamento", 164, 71],
+                ["Comparecimento", 141, 86],
+                ["Tratamento", 98, 69],
+                ["Avaliação", 53, 54],
+              ].map(([s, n, p]) => (
                 <div key={s as string} className="flex items-center gap-2 mb-1.5">
                   <div className="w-28 text-[11px] text-foreground/80">{s}</div>
                   <div className="flex-1 h-5 bg-muted/60 rounded-sm overflow-hidden">
-                    <div className="h-full bg-gradient-to-r from-primary to-chart-2 flex items-center px-1.5 text-[10px] font-semibold text-primary-foreground" style={{ width: `${(Number(n)/248)*100}%` }}>
+                    <div
+                      className="h-full bg-gradient-to-r from-primary to-chart-2 flex items-center px-1.5 text-[10px] font-semibold text-primary-foreground"
+                      style={{ width: `${(Number(n) / 248) * 100}%` }}
+                    >
                       {n}
                     </div>
                   </div>
-                  <div className="w-10 text-right text-[10px] text-muted-foreground tabular-nums">{p}%</div>
+                  <div className="w-10 text-right text-[10px] text-muted-foreground tabular-nums">
+                    {p}%
+                  </div>
                 </div>
               ))}
             </div>
@@ -245,8 +284,9 @@ function Problem() {
             <br />E perde no WhatsApp.
           </h2>
           <p className="mt-5 text-[15px] text-muted-foreground leading-relaxed">
-            A maior parte das clínicas que conhecemos investe pesado em Google Ads, Instagram, Meta Ads e indicações.
-            O lead chega. E morre em uma conversa esquecida, uma confirmação não enviada, um orçamento sem follow-up.
+            A maior parte das clínicas que conhecemos investe pesado em Google Ads, Instagram, Meta
+            Ads e indicações. O lead chega. E morre em uma conversa esquecida, uma confirmação não
+            enviada, um orçamento sem follow-up.
           </p>
           <p className="mt-4 text-[15px] font-medium">
             O problema não é gerar demanda. É converter o que já chega.
@@ -254,9 +294,21 @@ function Problem() {
         </div>
         <div className="space-y-2.5">
           {dores.map((d) => (
-            <div key={d} className="flex items-start gap-3 rounded-lg border border-border bg-surface p-4">
+            <div
+              key={d}
+              className="flex items-start gap-3 rounded-lg border border-border bg-surface p-4"
+            >
               <div className="size-7 rounded-md bg-destructive/10 text-destructive flex items-center justify-center shrink-0">
-                <svg viewBox="0 0 24 24" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                <svg
+                  viewBox="0 0 24 24"
+                  className="size-3.5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                >
+                  <path d="M18 6 6 18M6 6l12 12" />
+                </svg>
               </div>
               <div className="text-[14px] text-foreground/85">{d}</div>
             </div>
@@ -306,7 +358,9 @@ function HowItWorks() {
                 <div className="mt-3 size-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
                   <Icon className="size-5" />
                 </div>
-                <h3 className="mt-4 font-display text-lg font-semibold tracking-tight">{s.title}</h3>
+                <h3 className="mt-4 font-display text-lg font-semibold tracking-tight">
+                  {s.title}
+                </h3>
                 <p className="mt-2 text-[14px] text-muted-foreground leading-relaxed">{s.desc}</p>
               </div>
             );
@@ -319,8 +373,14 @@ function HowItWorks() {
 
 function FunnelSection() {
   const stages = [
-    "Lead", "Primeiro Contato", "Agendamento", "Comparecimento",
-    "Tratamento", "Retorno", "Avaliação", "Indicação",
+    "Lead",
+    "Primeiro Contato",
+    "Agendamento",
+    "Comparecimento",
+    "Tratamento",
+    "Retorno",
+    "Avaliação",
+    "Indicação",
   ];
   return (
     <section id="funil" className="py-20 lg:py-28">
@@ -338,10 +398,17 @@ function FunnelSection() {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {stages.map((s, i) => (
               <div key={s} className="relative rounded-lg border border-border bg-background p-4">
-                <div className="text-[10.5px] font-mono text-muted-foreground">{String(i+1).padStart(2,"0")}</div>
-                <div className="mt-1 font-display text-[14px] font-semibold tracking-tight">{s}</div>
+                <div className="text-[10.5px] font-mono text-muted-foreground">
+                  {String(i + 1).padStart(2, "0")}
+                </div>
+                <div className="mt-1 font-display text-[14px] font-semibold tracking-tight">
+                  {s}
+                </div>
                 <div className="mt-2 h-1 rounded-full bg-muted overflow-hidden">
-                  <div className="h-full bg-gradient-to-r from-primary to-chart-2" style={{ width: `${100 - i*10}%` }} />
+                  <div
+                    className="h-full bg-gradient-to-r from-primary to-chart-2"
+                    style={{ width: `${100 - i * 10}%` }}
+                  />
                 </div>
               </div>
             ))}
@@ -354,12 +421,36 @@ function FunnelSection() {
 
 function Benefits() {
   const benefits = [
-    { icon: MessageCircle, title: "Resposta rápida no WhatsApp", desc: "Inbox unificado com contexto do paciente. Templates prontos. Ninguém fica sem resposta." },
-    { icon: Repeat,        title: "Follow-up automático",         desc: "Quem pediu orçamento e sumiu volta para o funil. Sequências configuráveis." },
-    { icon: Repeat,        title: "Reativação de inativos",        desc: "Pacientes sem visita há 6+ meses entram em campanhas automáticas." },
-    { icon: CalendarCheck, title: "Confirmação inteligente",      desc: "Mensagens 24h e 2h antes. Reagendamento em 1 clique. Menos faltas." },
-    { icon: Star,          title: "Avaliações no Google",          desc: "Pedido automático após o atendimento. Sua reputação cresce no piloto automático." },
-    { icon: BarChart3,     title: "Indicadores claros",            desc: "Conversão por etapa, origem dos leads, receita recuperada, taxa de comparecimento." },
+    {
+      icon: MessageCircle,
+      title: "Resposta rápida no WhatsApp",
+      desc: "Inbox unificado com contexto do paciente. Templates prontos. Ninguém fica sem resposta.",
+    },
+    {
+      icon: Repeat,
+      title: "Follow-up automático",
+      desc: "Quem pediu orçamento e sumiu volta para o funil. Sequências configuráveis.",
+    },
+    {
+      icon: Repeat,
+      title: "Reativação de inativos",
+      desc: "Pacientes sem visita há 6+ meses entram em campanhas automáticas.",
+    },
+    {
+      icon: CalendarCheck,
+      title: "Confirmação inteligente",
+      desc: "Mensagens 24h e 2h antes. Reagendamento em 1 clique. Menos faltas.",
+    },
+    {
+      icon: Star,
+      title: "Avaliações no Google",
+      desc: "Pedido automático após o atendimento. Sua reputação cresce no piloto automático.",
+    },
+    {
+      icon: BarChart3,
+      title: "Indicadores claros",
+      desc: "Conversão por etapa, origem dos leads, receita recuperada, taxa de comparecimento.",
+    },
   ];
   return (
     <section id="beneficios" className="py-20 lg:py-28 bg-surface-muted/50 border-y border-border">
@@ -378,8 +469,12 @@ function Benefits() {
                 <div className="size-9 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
                   <Icon className="size-4.5" />
                 </div>
-                <h3 className="mt-3 font-display font-semibold text-[15px] tracking-tight">{b.title}</h3>
-                <p className="mt-1.5 text-[13.5px] text-muted-foreground leading-relaxed">{b.desc}</p>
+                <h3 className="mt-3 font-display font-semibold text-[15px] tracking-tight">
+                  {b.title}
+                </h3>
+                <p className="mt-1.5 text-[13.5px] text-muted-foreground leading-relaxed">
+                  {b.desc}
+                </p>
               </div>
             );
           })}
@@ -394,7 +489,7 @@ function Results() {
     { v: "+38%", l: "Pacientes recuperados em 60 dias" },
     { v: "−42%", l: "Faltas em consultas confirmadas" },
     { v: "R$ 86k", l: "Receita média recuperada/mês" },
-    { v: "4.8★",  l: "Nota média Google após automação" },
+    { v: "4.8★", l: "Nota média Google após automação" },
   ];
   return (
     <section id="resultados" className="py-20 lg:py-24">
@@ -425,12 +520,14 @@ function Results() {
 function Testimonials() {
   const items = [
     {
-      quote: "Antes eu perdia uma média de 15 pacientes por mês só por não responder rápido. Hoje converto quase tudo.",
+      quote:
+        "Antes eu perdia uma média de 15 pacientes por mês só por não responder rápido. Hoje converto quase tudo.",
       name: "Dra. Marina Lopes",
       role: "Sorriso Pleno · São Paulo",
     },
     {
-      quote: "A reativação de inativos pagou o sistema em duas semanas. Pacientes que eu tinha esquecido voltaram.",
+      quote:
+        "A reativação de inativos pagou o sistema em duas semanas. Pacientes que eu tinha esquecido voltaram.",
       name: "Dr. Caio Fernandes",
       role: "OdontoVita · Belo Horizonte",
     },
@@ -480,7 +577,8 @@ function FinalCta() {
           Pare de perder pacientes hoje.
         </h2>
         <p className="mt-5 text-[15px] lg:text-[16px] text-muted-foreground">
-          Em 10 minutos sua clínica está conectada. Em 7 dias você já vê o primeiro paciente recuperado.
+          Em 10 minutos sua clínica está conectada. Em 7 dias você já vê o primeiro paciente
+          recuperado.
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           <Link
@@ -491,9 +589,15 @@ function FinalCta() {
           </Link>
         </div>
         <div className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[12px] text-muted-foreground">
-          <span className="inline-flex items-center gap-1.5"><Check className="size-3.5 text-success" /> 14 dias grátis</span>
-          <span className="inline-flex items-center gap-1.5"><Check className="size-3.5 text-success" /> Sem cartão</span>
-          <span className="inline-flex items-center gap-1.5"><ShieldCheck className="size-3.5 text-success" /> LGPD</span>
+          <span className="inline-flex items-center gap-1.5">
+            <Check className="size-3.5 text-success" /> 14 dias grátis
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <Check className="size-3.5 text-success" /> Sem cartão
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <ShieldCheck className="size-3.5 text-success" /> LGPD
+          </span>
         </div>
       </div>
     </section>
@@ -510,27 +614,52 @@ function SiteFooter() {
             <span className="font-display font-semibold tracking-tight">DentalFlux</span>
           </div>
           <p className="text-[12.5px] text-muted-foreground leading-relaxed">
-            Plataforma de crescimento, relacionamento e recuperação de pacientes para clínicas odontológicas.
+            Plataforma de crescimento, relacionamento e recuperação de pacientes para clínicas
+            odontológicas.
           </p>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-12 gap-y-2 text-[13px]">
           <div className="space-y-2">
-            <div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Produto</div>
-            <a href="#funil" className="block text-foreground/80 hover:text-foreground">Funil</a>
-            <a href="#beneficios" className="block text-foreground/80 hover:text-foreground">Benefícios</a>
-            <Link to="/auth" className="block text-foreground/80 hover:text-foreground">Demonstração</Link>
+            <div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+              Produto
+            </div>
+            <a href="#funil" className="block text-foreground/80 hover:text-foreground">
+              Funil
+            </a>
+            <a href="#beneficios" className="block text-foreground/80 hover:text-foreground">
+              Benefícios
+            </a>
+            <Link to="/auth" className="block text-foreground/80 hover:text-foreground">
+              Demonstração
+            </Link>
           </div>
           <div className="space-y-2">
-            <div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Empresa</div>
-            <a className="block text-foreground/80 hover:text-foreground" href="#">Sobre</a>
-            <a className="block text-foreground/80 hover:text-foreground" href="#">Contato</a>
-            <a className="block text-foreground/80 hover:text-foreground" href="#">Blog</a>
+            <div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+              Empresa
+            </div>
+            <a className="block text-foreground/80 hover:text-foreground" href="#">
+              Sobre
+            </a>
+            <a className="block text-foreground/80 hover:text-foreground" href="#">
+              Contato
+            </a>
+            <a className="block text-foreground/80 hover:text-foreground" href="#">
+              Blog
+            </a>
           </div>
           <div className="space-y-2">
-            <div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Legal</div>
-            <a className="block text-foreground/80 hover:text-foreground" href="#">Termos</a>
-            <a className="block text-foreground/80 hover:text-foreground" href="#">Privacidade</a>
-            <a className="block text-foreground/80 hover:text-foreground" href="#">LGPD</a>
+            <div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+              Legal
+            </div>
+            <a className="block text-foreground/80 hover:text-foreground" href="#">
+              Termos
+            </a>
+            <a className="block text-foreground/80 hover:text-foreground" href="#">
+              Privacidade
+            </a>
+            <a className="block text-foreground/80 hover:text-foreground" href="#">
+              LGPD
+            </a>
           </div>
         </div>
       </div>

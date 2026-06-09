@@ -137,7 +137,9 @@ function RootComponent() {
       });
       return () => sub.subscription.unsubscribe();
     });
-    return () => { mounted = false; };
+    return () => {
+      mounted = false;
+    };
   }, [queryClient]);
 
   return (
@@ -146,4 +148,3 @@ function RootComponent() {
     </QueryClientProvider>
   );
 }
-

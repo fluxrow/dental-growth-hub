@@ -27,6 +27,7 @@ import { Route as AppCampanhasRouteImport } from './routes/app.campanhas'
 import { Route as AppAvaliacoesRouteImport } from './routes/app.avaliacoes'
 import { Route as AppAutomacoesRouteImport } from './routes/app.automacoes'
 import { Route as AppAtividadeRouteImport } from './routes/app.atividade'
+import { Route as AppDiagnosticoRouteImport } from './routes/app.diagnostico'
 
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
@@ -118,12 +119,18 @@ const AppAtividadeRoute = AppAtividadeRouteImport.update({
   path: '/atividade',
   getParentRoute: () => AppRoute,
 } as any)
+const AppDiagnosticoRoute = AppDiagnosticoRouteImport.update({
+  id: '/diagnostico',
+  path: '/diagnostico',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/auth': typeof AuthRoute
   '/onboarding': typeof OnboardingRoute
+  '/app/diagnostico': typeof AppDiagnosticoRoute
   '/app/atividade': typeof AppAtividadeRoute
   '/app/automacoes': typeof AppAutomacoesRoute
   '/app/avaliacoes': typeof AppAvaliacoesRoute
@@ -143,6 +150,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/onboarding': typeof OnboardingRoute
+  '/app/diagnostico': typeof AppDiagnosticoRoute
   '/app/atividade': typeof AppAtividadeRoute
   '/app/automacoes': typeof AppAutomacoesRoute
   '/app/avaliacoes': typeof AppAvaliacoesRoute
@@ -164,6 +172,7 @@ export interface FileRoutesById {
   '/app': typeof AppRouteWithChildren
   '/auth': typeof AuthRoute
   '/onboarding': typeof OnboardingRoute
+  '/app/diagnostico': typeof AppDiagnosticoRoute
   '/app/atividade': typeof AppAtividadeRoute
   '/app/automacoes': typeof AppAutomacoesRoute
   '/app/avaliacoes': typeof AppAvaliacoesRoute
@@ -186,6 +195,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/auth'
     | '/onboarding'
+    | '/app/diagnostico'
     | '/app/atividade'
     | '/app/automacoes'
     | '/app/avaliacoes'
@@ -205,6 +215,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/onboarding'
+    | '/app/diagnostico'
     | '/app/atividade'
     | '/app/automacoes'
     | '/app/avaliacoes'
@@ -225,6 +236,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/auth'
     | '/onboarding'
+    | '/app/diagnostico'
     | '/app/atividade'
     | '/app/automacoes'
     | '/app/avaliacoes'
@@ -377,10 +389,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAtividadeRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/diagnostico': {
+      id: '/app/diagnostico'
+      path: '/diagnostico'
+      fullPath: '/app/diagnostico'
+      preLoaderRoute: typeof AppDiagnosticoRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
+  AppDiagnosticoRoute: typeof AppDiagnosticoRoute
   AppAtividadeRoute: typeof AppAtividadeRoute
   AppAutomacoesRoute: typeof AppAutomacoesRoute
   AppAvaliacoesRoute: typeof AppAvaliacoesRoute
@@ -397,6 +417,7 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppDiagnosticoRoute: AppDiagnosticoRoute,
   AppAtividadeRoute: AppAtividadeRoute,
   AppAutomacoesRoute: AppAutomacoesRoute,
   AppAvaliacoesRoute: AppAvaliacoesRoute,

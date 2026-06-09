@@ -1,6 +1,17 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { useState } from "react";
-import { CheckCircle2, Calendar, Clock, MapPin, FileText, Star, MessageSquareText, CalendarCheck, Receipt, CircleDot } from "lucide-react";
+import {
+  CheckCircle2,
+  Calendar,
+  Clock,
+  MapPin,
+  FileText,
+  Star,
+  MessageSquareText,
+  CalendarCheck,
+  Receipt,
+  CircleDot,
+} from "lucide-react";
 import { getPortalData, OPP_STAGES, type PortalData, type PortalTimelineEvent } from "@/lib/mock";
 
 import { BillingCard } from "@/components/portal/billing-card";
@@ -49,7 +60,9 @@ function PatientPortal() {
             <div className="text-[13px] font-semibold truncate">{data.clinic.name}</div>
             <div className="text-[11px] text-muted-foreground truncate">{data.clinic.city}</div>
           </div>
-          <span className="text-[11px] rounded-full bg-primary/10 text-primary px-2.5 py-1 font-medium">Portal do paciente</span>
+          <span className="text-[11px] rounded-full bg-primary/10 text-primary px-2.5 py-1 font-medium">
+            Portal do paciente
+          </span>
         </div>
       </header>
 
@@ -57,7 +70,9 @@ function PatientPortal() {
         {/* Greeting */}
         <div>
           <div className="text-[12px] text-muted-foreground">Olá,</div>
-          <h1 className="font-display text-2xl sm:text-3xl font-semibold tracking-tight">{data.patient.name}</h1>
+          <h1 className="font-display text-2xl sm:text-3xl font-semibold tracking-tight">
+            {data.patient.name}
+          </h1>
           <p className="mt-1 text-[13px] text-muted-foreground">
             Acompanhe seu tratamento, próximas consultas e pagamentos em um só lugar.
           </p>
@@ -68,22 +83,43 @@ function PatientPortal() {
           <div className="p-5">
             <div className="flex items-center justify-between gap-3 flex-wrap">
               <div>
-                <div className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Etapa atual</div>
+                <div className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">
+                  Etapa atual
+                </div>
                 <div className="mt-1 text-[15px] font-semibold">{currentStage?.label}</div>
               </div>
               <div className="text-right">
-                <div className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Progresso</div>
-                <div className="mt-1 text-[15px] font-semibold tabular-nums">{data.treatment.progress}%</div>
+                <div className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">
+                  Progresso
+                </div>
+                <div className="mt-1 text-[15px] font-semibold tabular-nums">
+                  {data.treatment.progress}%
+                </div>
               </div>
             </div>
             <div className="mt-3 h-2 rounded-full bg-muted overflow-hidden">
-              <div className="h-full bg-gradient-to-r from-primary to-chart-2" style={{ width: `${data.treatment.progress}%` }} />
+              <div
+                className="h-full bg-gradient-to-r from-primary to-chart-2"
+                style={{ width: `${data.treatment.progress}%` }}
+              />
             </div>
             <ol className="mt-4 grid grid-cols-7 gap-1">
               {OPP_STAGES.map((s, i) => (
                 <li key={s.id} className="flex flex-col items-center gap-1">
-                  <CircleDot className={cn("size-3", i <= currentStageIdx ? "text-primary" : "text-muted-foreground/40")} />
-                  <span className={cn("text-[9px] text-center leading-tight", i === currentStageIdx ? "text-primary font-medium" : "text-muted-foreground/70")}>
+                  <CircleDot
+                    className={cn(
+                      "size-3",
+                      i <= currentStageIdx ? "text-primary" : "text-muted-foreground/40",
+                    )}
+                  />
+                  <span
+                    className={cn(
+                      "text-[9px] text-center leading-tight",
+                      i === currentStageIdx
+                        ? "text-primary font-medium"
+                        : "text-muted-foreground/70",
+                    )}
+                  >
                     {s.label.split(" ")[0]}
                   </span>
                 </li>
@@ -93,13 +129,26 @@ function PatientPortal() {
 
           {data.treatment.nextAppointment && (
             <div className="border-t border-border bg-accent/50 px-5 py-4">
-              <div className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Próxima consulta</div>
-              <div className="mt-1.5 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-[13px]">
-                <span className="inline-flex items-center gap-1.5"><Calendar className="size-3.5 text-primary" />{data.treatment.nextAppointment.date}</span>
-                <span className="inline-flex items-center gap-1.5"><Clock className="size-3.5 text-primary" />{data.treatment.nextAppointment.time}</span>
-                <span className="inline-flex items-center gap-1.5"><MapPin className="size-3.5 text-primary" />{data.treatment.nextAppointment.room}</span>
+              <div className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">
+                Próxima consulta
               </div>
-              <div className="mt-1 text-[12px] text-muted-foreground">com {data.treatment.nextAppointment.dentist}</div>
+              <div className="mt-1.5 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-[13px]">
+                <span className="inline-flex items-center gap-1.5">
+                  <Calendar className="size-3.5 text-primary" />
+                  {data.treatment.nextAppointment.date}
+                </span>
+                <span className="inline-flex items-center gap-1.5">
+                  <Clock className="size-3.5 text-primary" />
+                  {data.treatment.nextAppointment.time}
+                </span>
+                <span className="inline-flex items-center gap-1.5">
+                  <MapPin className="size-3.5 text-primary" />
+                  {data.treatment.nextAppointment.room}
+                </span>
+              </div>
+              <div className="mt-1 text-[12px] text-muted-foreground">
+                com {data.treatment.nextAppointment.dentist}
+              </div>
             </div>
           )}
         </section>
@@ -125,7 +174,9 @@ function PatientPortal() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-[13px] font-medium">{e.title}</div>
-                    {e.description && <div className="text-[12px] text-muted-foreground">{e.description}</div>}
+                    {e.description && (
+                      <div className="text-[12px] text-muted-foreground">{e.description}</div>
+                    )}
                     <div className="text-[11px] text-muted-foreground mt-0.5">{e.date}</div>
                   </div>
                 </li>
@@ -150,16 +201,22 @@ function PatientPortal() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="text-[13px] font-medium truncate">{d.name}</div>
-                  <div className="text-[11.5px] text-muted-foreground">{d.type} · {d.date}</div>
+                  <div className="text-[11.5px] text-muted-foreground">
+                    {d.type} · {d.date}
+                  </div>
                 </div>
-                <button className="text-[12px] font-medium text-primary hover:underline">Baixar</button>
+                <button className="text-[12px] font-medium text-primary hover:underline">
+                  Baixar
+                </button>
               </li>
             ))}
           </ul>
         </section>
 
         <footer className="pt-4 text-center text-[11px] text-muted-foreground">
-          <p>Este portal segue a LGPD. Seus dados são tratados com sigilo pela {data.clinic.name}.</p>
+          <p>
+            Este portal segue a LGPD. Seus dados são tratados com sigilo pela {data.clinic.name}.
+          </p>
           <p className="mt-1">Powered by DentalFlux</p>
         </footer>
       </main>
@@ -179,8 +236,15 @@ function ReviewCard() {
       <section className="rounded-2xl border border-success/30 bg-success/5 p-6 text-center">
         <CheckCircle2 className="size-8 text-success mx-auto" />
         <h3 className="mt-2 text-[15px] font-semibold">Obrigada pelo seu feedback! 💜</h3>
-        <p className="mt-1 text-[12.5px] text-muted-foreground">Seu apoio ajuda outras pessoas a encontrarem nossa clínica.</p>
-        <a href="#" className="mt-4 inline-flex h-9 px-4 items-center rounded-md bg-primary text-primary-foreground text-[12.5px] font-medium">Avaliar no Google</a>
+        <p className="mt-1 text-[12.5px] text-muted-foreground">
+          Seu apoio ajuda outras pessoas a encontrarem nossa clínica.
+        </p>
+        <a
+          href="#"
+          className="mt-4 inline-flex h-9 px-4 items-center rounded-md bg-primary text-primary-foreground text-[12.5px] font-medium"
+        >
+          Avaliar no Google
+        </a>
       </section>
     );
   }
@@ -191,7 +255,9 @@ function ReviewCard() {
         <Star className="size-4 text-primary" />
         <h2 className="text-[14px] font-semibold tracking-tight">Como foi sua experiência?</h2>
       </div>
-      <p className="mt-1 text-[12.5px] text-muted-foreground">Sua opinião nos ajuda a melhorar continuamente.</p>
+      <p className="mt-1 text-[12.5px] text-muted-foreground">
+        Sua opinião nos ajuda a melhorar continuamente.
+      </p>
 
       <div className="mt-3 flex items-center gap-1.5" onMouseLeave={() => setHover(0)}>
         {[1, 2, 3, 4, 5].map((n) => {
@@ -204,7 +270,12 @@ function ReviewCard() {
               className="p-0.5"
               aria-label={`${n} estrela${n > 1 ? "s" : ""}`}
             >
-              <Star className={cn("size-7 transition-colors", active ? "fill-warning text-warning" : "text-muted-foreground/40")} />
+              <Star
+                className={cn(
+                  "size-7 transition-colors",
+                  active ? "fill-warning text-warning" : "text-muted-foreground/40",
+                )}
+              />
             </button>
           );
         })}

@@ -1,12 +1,44 @@
-import { CreditCard, QrCode, FileText, CalendarRange, X, Check, Loader2, CheckCircle2 } from "lucide-react";
+import {
+  CreditCard,
+  QrCode,
+  FileText,
+  CalendarRange,
+  X,
+  Check,
+  Loader2,
+  CheckCircle2,
+} from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
 const METHODS = [
-  { id: "pix",      icon: QrCode,        title: "PIX",                desc: "Pagamento instantâneo, sem taxa", highlight: "5% de desconto" },
-  { id: "cartao",   icon: CreditCard,    title: "Cartão de crédito",  desc: "Visa, Master, Elo, Amex", highlight: "Até 12x" },
-  { id: "boleto",   icon: FileText,      title: "Boleto bancário",    desc: "Compensação em até 2 dias úteis" },
-  { id: "parcelar", icon: CalendarRange, title: "Reparcelar",         desc: "Fale com a clínica para ajustar", highlight: "Sem juros" },
+  {
+    id: "pix",
+    icon: QrCode,
+    title: "PIX",
+    desc: "Pagamento instantâneo, sem taxa",
+    highlight: "5% de desconto",
+  },
+  {
+    id: "cartao",
+    icon: CreditCard,
+    title: "Cartão de crédito",
+    desc: "Visa, Master, Elo, Amex",
+    highlight: "Até 12x",
+  },
+  {
+    id: "boleto",
+    icon: FileText,
+    title: "Boleto bancário",
+    desc: "Compensação em até 2 dias úteis",
+  },
+  {
+    id: "parcelar",
+    icon: CalendarRange,
+    title: "Reparcelar",
+    desc: "Fale com a clínica para ajustar",
+    highlight: "Sem juros",
+  },
 ];
 
 type Stage = "select" | "processing" | "done";
@@ -52,7 +84,10 @@ export function PaymentMethodsDialog({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-foreground/40 backdrop-blur-sm" onClick={close}>
+    <div
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-foreground/40 backdrop-blur-sm"
+      onClick={close}
+    >
       <div
         onClick={(e) => e.stopPropagation()}
         className="w-full sm:max-w-md bg-background rounded-t-2xl sm:rounded-2xl border border-border shadow-xl overflow-hidden"
@@ -63,10 +98,16 @@ export function PaymentMethodsDialog({
               {stage === "done" ? "Tudo certo!" : "Formas de pagamento"}
             </div>
             <div className="text-[11.5px] text-muted-foreground">
-              Total: <span className="font-medium text-foreground">R$ {amount.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</span>
+              Total:{" "}
+              <span className="font-medium text-foreground">
+                R$ {amount.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+              </span>
             </div>
           </div>
-          <button onClick={close} className="size-8 rounded-md hover:bg-muted flex items-center justify-center">
+          <button
+            onClick={close}
+            className="size-8 rounded-md hover:bg-muted flex items-center justify-center"
+          >
             <X className="size-4" />
           </button>
         </div>
@@ -85,7 +126,9 @@ export function PaymentMethodsDialog({
                       active ? "border-primary bg-primary/5" : "border-border hover:bg-muted/60"
                     }`}
                   >
-                    <div className={`size-10 rounded-lg flex items-center justify-center ${active ? "bg-primary text-primary-foreground" : "bg-muted text-foreground/70"}`}>
+                    <div
+                      className={`size-10 rounded-lg flex items-center justify-center ${active ? "bg-primary text-primary-foreground" : "bg-muted text-foreground/70"}`}
+                    >
                       <Icon className="size-4" />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -93,7 +136,9 @@ export function PaymentMethodsDialog({
                       <div className="text-[11.5px] text-muted-foreground truncate">{m.desc}</div>
                     </div>
                     {m.highlight && (
-                      <span className="text-[10.5px] font-medium rounded-full bg-success/10 text-success px-2 py-0.5">{m.highlight}</span>
+                      <span className="text-[10.5px] font-medium rounded-full bg-success/10 text-success px-2 py-0.5">
+                        {m.highlight}
+                      </span>
                     )}
                   </button>
                 );
@@ -131,7 +176,9 @@ export function PaymentMethodsDialog({
             </div>
             <div className="mt-4 text-[15px] font-semibold">Pagamento confirmado</div>
             <p className="mt-1 text-[12.5px] text-muted-foreground max-w-xs">
-              Obrigada pelo pagamento de R$ {amount.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}. O comprovante foi enviado pelo WhatsApp.
+              Obrigada pelo pagamento de R${" "}
+              {amount.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}. O comprovante foi
+              enviado pelo WhatsApp.
             </p>
             <button
               onClick={close}

@@ -32,7 +32,12 @@ export function EmptyState({
   className,
 }: EmptyStateProps) {
   return (
-    <div className={cn("relative overflow-hidden rounded-2xl border border-border bg-surface", className)}>
+    <div
+      className={cn(
+        "relative overflow-hidden rounded-2xl border border-border bg-surface",
+        className,
+      )}
+    >
       {/* Decorative gradient orbs */}
       <div className="pointer-events-none absolute -top-24 -right-24 size-64 rounded-full bg-gradient-to-br from-primary/15 to-chart-2/10 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-32 -left-16 size-72 rounded-full bg-gradient-to-tr from-accent to-transparent blur-3xl" />
@@ -45,12 +50,18 @@ export function EmptyState({
               <Icon className="size-5" />
             </div>
             {eyebrow && (
-              <span className="text-[10.5px] uppercase tracking-wider font-semibold text-primary/90">{eyebrow}</span>
+              <span className="text-[10.5px] uppercase tracking-wider font-semibold text-primary/90">
+                {eyebrow}
+              </span>
             )}
           </div>
 
-          <h2 className="font-display text-[22px] sm:text-[26px] leading-tight font-semibold tracking-tight">{title}</h2>
-          <p className="mt-2 text-[13.5px] text-muted-foreground max-w-md leading-relaxed">{description}</p>
+          <h2 className="font-display text-[22px] sm:text-[26px] leading-tight font-semibold tracking-tight">
+            {title}
+          </h2>
+          <p className="mt-2 text-[13.5px] text-muted-foreground max-w-md leading-relaxed">
+            {description}
+          </p>
 
           <div className="mt-5 flex flex-wrap items-center gap-2">
             <CTAButton variant="primary" {...primary} />
@@ -79,7 +90,9 @@ export function EmptyState({
                 <div className="flex-1 pt-0.5">
                   <div className="text-[13px] font-medium leading-snug">{s.title}</div>
                   {s.description && (
-                    <div className="text-[12px] text-muted-foreground mt-0.5 leading-relaxed">{s.description}</div>
+                    <div className="text-[12px] text-muted-foreground mt-0.5 leading-relaxed">
+                      {s.description}
+                    </div>
                   )}
                 </div>
                 <CheckCircle2 className="size-4 text-muted-foreground/30 shrink-0 mt-1" />

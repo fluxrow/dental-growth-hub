@@ -1,5 +1,13 @@
 import {
-  LayoutDashboard, Target, MessagesSquare, Users, Megaphone, Zap, Wallet, Star, BarChart3,
+  LayoutDashboard,
+  Target,
+  MessagesSquare,
+  Users,
+  Megaphone,
+  Zap,
+  Wallet,
+  Star,
+  BarChart3,
 } from "lucide-react";
 import type { EmptyStateProps } from "@/components/app/empty-state";
 
@@ -13,9 +21,18 @@ export const EMPTY_STATES = {
     description:
       "Conecte seu WhatsApp e importe sua base para começar a ver leads, agendamentos, faltas e receita recuperada em tempo real.",
     steps: [
-      { title: "Conectar WhatsApp", description: "Plugue sua linha via Z-API ou Meta para começar a registrar conversas." },
-      { title: "Importar pacientes", description: "Suba sua planilha ou conecte seu sistema atual em 1 clique." },
-      { title: "Ativar primeira automação", description: "Confirmação 24h antes já recupera, em média, 8 consultas por semana." },
+      {
+        title: "Conectar WhatsApp",
+        description: "Plugue sua linha via Z-API ou Meta para começar a registrar conversas.",
+      },
+      {
+        title: "Importar pacientes",
+        description: "Suba sua planilha ou conecte seu sistema atual em 1 clique.",
+      },
+      {
+        title: "Ativar primeira automação",
+        description: "Confirmação 24h antes já recupera, em média, 8 consultas por semana.",
+      },
     ],
     primary: { label: "Conectar WhatsApp", href: "/app/configuracoes" },
     secondary: { label: "Importar pacientes", href: "/app/pacientes" },
@@ -29,9 +46,18 @@ export const EMPTY_STATES = {
     description:
       "Toda pessoa que mostra interesse pela sua clínica deveria virar uma oportunidade. Conecte suas fontes e capture leads automaticamente.",
     steps: [
-      { title: "Conectar Meta Ads e Google", description: "Receba leads do Instagram, Facebook e Google direto no Kanban." },
-      { title: "Importar leads existentes", description: "Tem leads em uma planilha? Suba o CSV e organize no funil." },
-      { title: "Criar oportunidade manual", description: "Cadastre o próximo paciente em menos de 30 segundos." },
+      {
+        title: "Conectar Meta Ads e Google",
+        description: "Receba leads do Instagram, Facebook e Google direto no Kanban.",
+      },
+      {
+        title: "Importar leads existentes",
+        description: "Tem leads em uma planilha? Suba o CSV e organize no funil.",
+      },
+      {
+        title: "Criar oportunidade manual",
+        description: "Cadastre o próximo paciente em menos de 30 segundos.",
+      },
     ],
     primary: { label: "Criar oportunidade", href: "/app/oportunidades" },
     secondary: { label: "Conectar fontes", href: "/app/configuracoes" },
@@ -45,9 +71,18 @@ export const EMPTY_STATES = {
     description:
       "Centralize WhatsApp, Instagram e formulários do site em um único inbox. Sua recepção responde mais rápido e nenhum lead se perde.",
     steps: [
-      { title: "Conectar WhatsApp", description: "Z-API em ~2 minutos. Sua linha continua funcionando normalmente." },
-      { title: "Definir respostas rápidas", description: "Pré-configure mensagens para clareamento, implante, ortodontia." },
-      { title: "Ativar resposta automática", description: "Acolha o paciente em segundos, mesmo fora do expediente." },
+      {
+        title: "Conectar WhatsApp",
+        description: "Z-API em ~2 minutos. Sua linha continua funcionando normalmente.",
+      },
+      {
+        title: "Definir respostas rápidas",
+        description: "Pré-configure mensagens para clareamento, implante, ortodontia.",
+      },
+      {
+        title: "Ativar resposta automática",
+        description: "Acolha o paciente em segundos, mesmo fora do expediente.",
+      },
     ],
     primary: { label: "Conectar WhatsApp", href: "/app/configuracoes" },
     secondary: { label: "Ver automações", href: "/app/automacoes" },
@@ -61,9 +96,18 @@ export const EMPTY_STATES = {
     description:
       "Sua base é seu maior ativo. Importe pacientes ativos, inativos e tratamentos em andamento para começar a recuperar receita.",
     steps: [
-      { title: "Importar CSV", description: "Modelo pronto: nome, telefone, última visita, status." },
-      { title: "Migrar do sistema atual", description: "Suportamos Easy Dental, Dental Office, Clinicorp e outros." },
-      { title: "Cadastrar manualmente", description: "Comece pelos pacientes em tratamento ativo." },
+      {
+        title: "Importar CSV",
+        description: "Modelo pronto: nome, telefone, última visita, status.",
+      },
+      {
+        title: "Migrar do sistema atual",
+        description: "Suportamos Easy Dental, Dental Office, Clinicorp e outros.",
+      },
+      {
+        title: "Cadastrar manualmente",
+        description: "Comece pelos pacientes em tratamento ativo.",
+      },
     ],
     primary: { label: "Importar pacientes", href: "/app/pacientes" },
     secondary: { label: "Cadastrar manual", href: "/app/pacientes" },
@@ -77,9 +121,18 @@ export const EMPTY_STATES = {
     description:
       "Reative pacientes inativos, recupere orçamentos parados e peça avaliações no piloto automático — sem parecer spam.",
     steps: [
-      { title: "Escolher um template", description: "Reativação 6 meses, follow-up de orçamento, manutenção semestral." },
-      { title: "Definir o público", description: "Filtre por tags, última visita, valor de orçamento ou origem." },
-      { title: "Disparar e medir", description: "Acompanhe abertura, resposta e receita gerada em tempo real." },
+      {
+        title: "Escolher um template",
+        description: "Reativação 6 meses, follow-up de orçamento, manutenção semestral.",
+      },
+      {
+        title: "Definir o público",
+        description: "Filtre por tags, última visita, valor de orçamento ou origem.",
+      },
+      {
+        title: "Disparar e medir",
+        description: "Acompanhe abertura, resposta e receita gerada em tempo real.",
+      },
     ],
     primary: { label: "Criar campanha", href: "/app/campanhas" },
     secondary: { label: "Ver templates", href: "/app/campanhas" },
@@ -93,9 +146,18 @@ export const EMPTY_STATES = {
     description:
       "Cada automação é uma economia mensal de horas da recepção e um salto na taxa de comparecimento e recuperação.",
     steps: [
-      { title: "Confirmação 24h antes", description: "Reduz faltas em até 65% logo no primeiro mês." },
-      { title: "Cobrança amigável D+3", description: "Texto humanizado, sem tom agressivo, que recupera ~70% das pendências." },
-      { title: "Pedido de avaliação no Google", description: "Aumenta sua nota e atrai novos pacientes organicamente." },
+      {
+        title: "Confirmação 24h antes",
+        description: "Reduz faltas em até 65% logo no primeiro mês.",
+      },
+      {
+        title: "Cobrança amigável D+3",
+        description: "Texto humanizado, sem tom agressivo, que recupera ~70% das pendências.",
+      },
+      {
+        title: "Pedido de avaliação no Google",
+        description: "Aumenta sua nota e atrai novos pacientes organicamente.",
+      },
     ],
     primary: { label: "Ativar automações", href: "/app/automacoes" },
     secondary: { label: "Ver biblioteca", href: "/app/automacoes" },
@@ -109,9 +171,18 @@ export const EMPTY_STATES = {
     description:
       "Cobranças humanizadas, no canal certo, no momento certo. Sem constrangimento e sem perder o paciente.",
     steps: [
-      { title: "Configurar formas de pagamento", description: "Pix, cartão e parcelamento — em links prontos para o WhatsApp." },
-      { title: "Importar pendências atuais", description: "Suba a lista de valores em aberto da sua clínica." },
-      { title: "Ativar régua automática", description: "Sequência D-3, D+3, D+7 com tom respeitoso e eficiente." },
+      {
+        title: "Configurar formas de pagamento",
+        description: "Pix, cartão e parcelamento — em links prontos para o WhatsApp.",
+      },
+      {
+        title: "Importar pendências atuais",
+        description: "Suba a lista de valores em aberto da sua clínica.",
+      },
+      {
+        title: "Ativar régua automática",
+        description: "Sequência D-3, D+3, D+7 com tom respeitoso e eficiente.",
+      },
     ],
     primary: { label: "Configurar cobranças", href: "/app/cobrancas" },
     secondary: { label: "Importar pendências", href: "/app/cobrancas" },
@@ -125,9 +196,18 @@ export const EMPTY_STATES = {
     description:
       "Cada paciente satisfeito é um anúncio gratuito no Google. Peça no momento certo, no canal certo, com a mensagem certa.",
     steps: [
-      { title: "Conectar Google Meu Negócio", description: "Receba avaliações novas direto aqui e responda em 1 clique." },
-      { title: "Ativar pedido pós-consulta", description: "Disparo 24h depois — momento de maior satisfação." },
-      { title: "Personalizar mensagem", description: "Tom da sua clínica + link direto para avaliar." },
+      {
+        title: "Conectar Google Meu Negócio",
+        description: "Receba avaliações novas direto aqui e responda em 1 clique.",
+      },
+      {
+        title: "Ativar pedido pós-consulta",
+        description: "Disparo 24h depois — momento de maior satisfação.",
+      },
+      {
+        title: "Personalizar mensagem",
+        description: "Tom da sua clínica + link direto para avaliar.",
+      },
     ],
     primary: { label: "Conectar Google", href: "/app/configuracoes" },
     secondary: { label: "Ativar pedido", href: "/app/automacoes" },
@@ -141,9 +221,18 @@ export const EMPTY_STATES = {
     description:
       "Em poucos dias de uso, o DentalFlux mostra exatamente onde sua clínica perde dinheiro — e quanto está recuperando.",
     steps: [
-      { title: "Conectar canais e fontes", description: "Quanto mais dados, mais preciso o diagnóstico." },
-      { title: "Importar histórico recente", description: "90 dias já são suficientes para análises de tendência." },
-      { title: "Aguardar 7 dias de operação", description: "Tempo para gerar a primeira leitura sólida de funil e receita." },
+      {
+        title: "Conectar canais e fontes",
+        description: "Quanto mais dados, mais preciso o diagnóstico.",
+      },
+      {
+        title: "Importar histórico recente",
+        description: "90 dias já são suficientes para análises de tendência.",
+      },
+      {
+        title: "Aguardar 7 dias de operação",
+        description: "Tempo para gerar a primeira leitura sólida de funil e receita.",
+      },
     ],
     primary: { label: "Conectar canais", href: "/app/configuracoes" },
     secondary: { label: "Importar histórico", href: "/app/pacientes" },

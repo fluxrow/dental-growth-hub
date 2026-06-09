@@ -38,7 +38,12 @@ function Oportunidades() {
         value: Number(o.value ?? 0),
         owner: "Você",
         nextAction: o.next_action ?? "—",
-        daysInStage: o.stage_changed_at ? Math.max(0, Math.floor((Date.now() - new Date(o.stage_changed_at).getTime()) / 86400000)) : 0,
+        daysInStage: o.stage_changed_at
+          ? Math.max(
+              0,
+              Math.floor((Date.now() - new Date(o.stage_changed_at).getTime()) / 86400000),
+            )
+          : 0,
         phone: o.phone ?? "",
       }));
     },
@@ -56,7 +61,7 @@ function Oportunidades() {
         const idx = OPP_STAGES.findIndex((s) => s.id === o.stage);
         const next = OPP_STAGES[idx + 1];
         return next ? { ...o, stage: next.id as OppStage, daysInStage: 0 } : o;
-      })
+      }),
     );
 
   const lose = (id: string) => setItems((curr) => curr.filter((o) => o.id !== id));
@@ -69,7 +74,13 @@ function Oportunidades() {
   }, [items]);
 
   if (live && isLoading) {
-    return <AppShell title="Oportunidades"><div className="flex items-center justify-center py-20"><Loader2 className="size-5 animate-spin text-muted-foreground" /></div></AppShell>;
+    return (
+      <AppShell title="Oportunidades">
+        <div className="flex items-center justify-center py-20">
+          <Loader2 className="size-5 animate-spin text-muted-foreground" />
+        </div>
+      </AppShell>
+    );
   }
 
   if (items.length === 0) {
@@ -79,7 +90,6 @@ function Oportunidades() {
       </AppShell>
     );
   }
-
 
   return (
     <AppShell
@@ -93,17 +103,24 @@ function Oportunidades() {
       flush
     >
       <div className="flex items-center justify-between border-b border-border bg-background px-4 lg:px-6 h-12">
-
         <div className="flex items-center gap-2">
           <button className="inline-flex items-center gap-1.5 h-7 px-2.5 rounded-md border border-input bg-surface text-[12px]">
             <Filter className="size-3.5" /> Filtros
           </button>
-          <button className="inline-flex items-center gap-1.5 h-7 px-2.5 rounded-md text-[12px] text-muted-foreground hover:bg-muted">Origem: todas</button>
-          <button className="inline-flex items-center gap-1.5 h-7 px-2.5 rounded-md text-[12px] text-muted-foreground hover:bg-muted">Responsável: todos</button>
+          <button className="inline-flex items-center gap-1.5 h-7 px-2.5 rounded-md text-[12px] text-muted-foreground hover:bg-muted">
+            Origem: todas
+          </button>
+          <button className="inline-flex items-center gap-1.5 h-7 px-2.5 rounded-md text-[12px] text-muted-foreground hover:bg-muted">
+            Responsável: todos
+          </button>
         </div>
         <div className="flex h-7 rounded-md border border-input bg-surface overflow-hidden">
-          <button className="px-2 bg-primary/10 text-primary inline-flex items-center gap-1 text-[11.5px]"><LayoutGrid className="size-3.5"/> Kanban</button>
-          <button className="px-2 text-muted-foreground inline-flex items-center gap-1 text-[11.5px] border-l border-input"><Rows3 className="size-3.5"/> Tabela</button>
+          <button className="px-2 bg-primary/10 text-primary inline-flex items-center gap-1 text-[11.5px]">
+            <LayoutGrid className="size-3.5" /> Kanban
+          </button>
+          <button className="px-2 text-muted-foreground inline-flex items-center gap-1 text-[11.5px] border-l border-input">
+            <Rows3 className="size-3.5" /> Tabela
+          </button>
         </div>
       </div>
 
@@ -116,11 +133,18 @@ function Oportunidades() {
               <div key={stage.id} className="w-[280px] shrink-0">
                 <div className="flex items-center justify-between mb-2 px-1">
                   <div className="flex items-center gap-2 min-w-0">
-                    <span className={cn("inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[11px] font-medium", stage.tone)}>
+                    <span
+                      className={cn(
+                        "inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[11px] font-medium",
+                        stage.tone,
+                      )}
+                    >
                       <span className="size-1.5 rounded-full bg-current" />
                       {stage.label}
                     </span>
-                    <span className="text-[11px] text-muted-foreground tabular-nums">{stageItems.length}</span>
+                    <span className="text-[11px] text-muted-foreground tabular-nums">
+                      {stageItems.length}
+                    </span>
                   </div>
                 </div>
                 <div className="text-[10.5px] text-muted-foreground mb-2 px-1 tabular-nums">
@@ -141,15 +165,22 @@ function Oportunidades() {
                           <OpportunityCardActions opp={o} onAdvance={advance} onLose={lose} />
                         </div>
                       </div>
-                      <div className="text-[11.5px] text-muted-foreground truncate mb-2">{o.nextAction}</div>
+                      <div className="text-[11.5px] text-muted-foreground truncate mb-2">
+                        {o.nextAction}
+                      </div>
                       <div className="flex items-center justify-between gap-2">
                         <span className="text-[10.5px] inline-flex items-center gap-1 rounded-md bg-muted px-1.5 py-0.5 text-foreground/70">
                           {o.source}
                         </span>
                         <div className="flex items-center gap-1.5">
-                          <span className="text-[10.5px] text-muted-foreground tabular-nums">{o.daysInStage}d</span>
+                          <span className="text-[10.5px] text-muted-foreground tabular-nums">
+                            {o.daysInStage}d
+                          </span>
                           <div className="size-5 rounded-full bg-gradient-to-br from-primary to-chart-2 text-primary-foreground text-[9px] font-semibold flex items-center justify-center">
-                            {o.owner.split(" ").map(n => n[0]).slice(0,1)}
+                            {o.owner
+                              .split(" ")
+                              .map((n) => n[0])
+                              .slice(0, 1)}
                           </div>
                         </div>
                       </div>

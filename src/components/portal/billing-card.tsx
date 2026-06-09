@@ -11,10 +11,10 @@ import {
 import { PaymentMethodsDialog } from "./payment-methods-dialog";
 
 const STATUS_META: Record<PortalBillingStatus, { label: string; cls: string }> = {
-  "em-dia":   { label: "Em dia",   cls: "bg-success/10 text-success border-success/20" },
+  "em-dia": { label: "Em dia", cls: "bg-success/10 text-success border-success/20" },
   "a-vencer": { label: "A vencer", cls: "bg-info/10 text-info border-info/20" },
-  vencido:    { label: "Vencido",  cls: "bg-warning/15 text-warning-foreground border-warning/30" },
-  pago:       { label: "Pago",     cls: "bg-success/10 text-success border-success/20" },
+  vencido: { label: "Vencido", cls: "bg-warning/15 text-warning-foreground border-warning/30" },
+  pago: { label: "Pago", cls: "bg-success/10 text-success border-success/20" },
 };
 
 export function BillingCard({
@@ -50,7 +50,12 @@ export function BillingCard({
         </div>
         <div className="flex items-center gap-2">
           <ToneSelect tone={tone} onChange={setTone} />
-          <span className={cn("inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[11px] font-medium", meta.cls)}>
+          <span
+            className={cn(
+              "inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[11px] font-medium",
+              meta.cls,
+            )}
+          >
             <span className="size-1.5 rounded-full bg-current" />
             {meta.label}
           </span>
@@ -63,7 +68,10 @@ export function BillingCard({
             {billing.status === "pago" ? "Valor pago" : "Valor pendente"}
           </div>
           <div className="mt-1 font-display text-3xl font-semibold tabular-nums">
-            R$ {(billing.pending || initialBilling.pending).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+            R${" "}
+            {(billing.pending || initialBilling.pending).toLocaleString("pt-BR", {
+              minimumFractionDigits: 2,
+            })}
           </div>
           <div className="mt-1 text-[12.5px] text-muted-foreground">{billing.description}</div>
 
@@ -126,7 +134,9 @@ function ToneSelect({ tone, onChange }: { tone: ClinicTone; onChange: (t: Clinic
         className="h-7 rounded-md border border-input bg-background px-2 text-[11.5px] font-medium focus:outline-none focus:ring-2 focus:ring-ring"
       >
         {CLINIC_TONES.map((t) => (
-          <option key={t.id} value={t.id}>{t.label}</option>
+          <option key={t.id} value={t.id}>
+            {t.label}
+          </option>
         ))}
       </select>
     </label>

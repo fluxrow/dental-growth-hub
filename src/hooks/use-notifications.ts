@@ -13,19 +13,27 @@ function load() {
   try {
     const raw = localStorage.getItem(READ_KEY);
     if (raw) readSet = new Set(JSON.parse(raw) as string[]);
-  } catch {}
+  } catch {
+    /* localStorage may be unavailable */
+  }
   initialized = true;
 }
 
 function persist() {
-  try { localStorage.setItem(READ_KEY, JSON.stringify([...readSet])); } catch {}
+  try {
+    localStorage.setItem(READ_KEY, JSON.stringify([...readSet]));
+  } catch {
+    /* localStorage may be unavailable */
+  }
   listeners.forEach((l) => l());
 }
 
 function subscribe(l: () => void) {
   load();
   listeners.add(l);
-  return () => { listeners.delete(l); };
+  return () => {
+    listeners.delete(l);
+  };
 }
 
 function getSnapshot(): Set<string> {
@@ -65,4 +73,5 @@ export function useUnreadCount(): number {
   const read = useReadIds();
   return ACTIVITY_FEED.filter((a) => a.unread && !read.has(a.id)).length;
 }
-const _ = UNREAD_KEY; void _;
+const _ = UNREAD_KEY;
+void _;

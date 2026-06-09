@@ -1,7 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Search, Filter, Plus, X, ShieldCheck, ShieldAlert, Clock, MessageCircle, Loader2 } from "lucide-react";
+import {
+  Search,
+  Filter,
+  Plus,
+  X,
+  ShieldCheck,
+  ShieldAlert,
+  Clock,
+  MessageCircle,
+  Loader2,
+} from "lucide-react";
 import { AppShell } from "@/components/app/app-shell";
 import { EmptyState } from "@/components/app/empty-state";
 import { EMPTY_STATES } from "@/lib/empty-states";
@@ -37,25 +47,33 @@ function Pacientes() {
         .select("id, name, phone, status, source, last_visit_at, next_action, ltv, tags")
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return (data ?? []).map((p): PatientRow => ({
-        id: p.id,
-        name: p.name,
-        phone: p.phone ?? "",
-        status: (p.status === "lead" ? "ativo" : p.status) as Patient["status"],
-        source: (p.source ?? "—") as Patient["source"],
-        lastVisit: p.last_visit_at ? new Date(p.last_visit_at).toLocaleDateString("pt-BR") : "—",
-        nextAction: p.next_action ?? "—",
-        ltv: Number(p.ltv ?? 0),
-        tags: (p.tags ?? []) as string[],
-        consent: true,
-      }));
+      return (data ?? []).map(
+        (p): PatientRow => ({
+          id: p.id,
+          name: p.name,
+          phone: p.phone ?? "",
+          status: (p.status === "lead" ? "ativo" : p.status) as Patient["status"],
+          source: (p.source ?? "—") as Patient["source"],
+          lastVisit: p.last_visit_at ? new Date(p.last_visit_at).toLocaleDateString("pt-BR") : "—",
+          nextAction: p.next_action ?? "—",
+          ltv: Number(p.ltv ?? 0),
+          tags: (p.tags ?? []) as string[],
+          consent: true,
+        }),
+      );
     },
   });
 
   const rows: PatientRow[] = live ? (liveData ?? []) : PATIENTS;
 
   if (live && isLoading) {
-    return <AppShell title="Pacientes"><div className="flex items-center justify-center py-20"><Loader2 className="size-5 animate-spin text-muted-foreground" /></div></AppShell>;
+    return (
+      <AppShell title="Pacientes">
+        <div className="flex items-center justify-center py-20">
+          <Loader2 className="size-5 animate-spin text-muted-foreground" />
+        </div>
+      </AppShell>
+    );
   }
 
   if (rows.length === 0) {
@@ -72,21 +90,25 @@ function Pacientes() {
       subtitle={`${rows.length} pacientes · base completa da clínica`}
       actions={
         <button className="hidden md:inline-flex items-center gap-1.5 h-8 px-3 rounded-md bg-primary text-primary-foreground text-[12.5px] font-medium hover:opacity-90">
-          <Plus className="size-3.5"/> Novo paciente
+          <Plus className="size-3.5" /> Novo paciente
         </button>
       }
     >
-
       <div className="rounded-xl border border-border bg-surface overflow-hidden">
         <div className="flex items-center gap-2 px-4 h-12 border-b border-border">
           <div className="relative flex-1 max-w-xs">
             <Search className="size-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
-            <input placeholder="Buscar paciente…" className="h-8 w-full rounded-md border border-input bg-background pl-8 pr-3 text-[12px] focus:outline-none focus:ring-2 focus:ring-ring" />
+            <input
+              placeholder="Buscar paciente…"
+              className="h-8 w-full rounded-md border border-input bg-background pl-8 pr-3 text-[12px] focus:outline-none focus:ring-2 focus:ring-ring"
+            />
           </div>
           <button className="inline-flex items-center gap-1.5 h-8 px-2.5 rounded-md border border-input bg-background text-[12px]">
-            <Filter className="size-3.5"/> Filtros
+            <Filter className="size-3.5" /> Filtros
           </button>
-          <div className="ml-auto text-[11.5px] text-muted-foreground tabular-nums">{rows.length} resultados</div>
+          <div className="ml-auto text-[11.5px] text-muted-foreground tabular-nums">
+            {rows.length} resultados
+          </div>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-[13px]">
@@ -105,27 +127,53 @@ function Pacientes() {
               {rows.map((p) => {
                 const s = STATUS_LABEL[p.status];
                 return (
-                  <tr key={p.id} onClick={() => setOpen(p)} className="hover:bg-muted/40 cursor-pointer">
+                  <tr
+                    key={p.id}
+                    onClick={() => setOpen(p)}
+                    className="hover:bg-muted/40 cursor-pointer"
+                  >
                     <Td>
                       <div className="flex items-center gap-2.5">
                         <div className="size-7 rounded-full bg-gradient-to-br from-muted to-accent flex items-center justify-center text-[10.5px] font-semibold">
-                          {p.name.split(" ").map(n => n[0]).slice(0,2).join("")}
+                          {p.name
+                            .split(" ")
+                            .map((n) => n[0])
+                            .slice(0, 2)
+                            .join("")}
                         </div>
                         <div className="min-w-0">
                           <div className="font-medium truncate">{p.name}</div>
-                          <div className="text-[11px] text-muted-foreground tabular-nums">{p.phone}</div>
+                          <div className="text-[11px] text-muted-foreground tabular-nums">
+                            {p.phone}
+                          </div>
                         </div>
                       </div>
                     </Td>
-                    <Td><span className={cn("inline-flex rounded-full px-2 py-0.5 text-[11px] font-medium", s.tone)}>{s.label}</span></Td>
+                    <Td>
+                      <span
+                        className={cn(
+                          "inline-flex rounded-full px-2 py-0.5 text-[11px] font-medium",
+                          s.tone,
+                        )}
+                      >
+                        {s.label}
+                      </span>
+                    </Td>
                     <Td className="text-muted-foreground">{p.source}</Td>
                     <Td className="text-muted-foreground tabular-nums">{p.lastVisit}</Td>
                     <Td className="text-foreground/80">{p.nextAction}</Td>
-                    <Td className="text-right tabular-nums font-medium">R$ {p.ltv.toLocaleString("pt-BR")}</Td>
+                    <Td className="text-right tabular-nums font-medium">
+                      R$ {p.ltv.toLocaleString("pt-BR")}
+                    </Td>
                     <Td>
                       <div className="flex flex-wrap gap-1">
-                        {p.tags.slice(0,2).map((t) => (
-                          <span key={t} className="inline-flex rounded-md bg-accent text-accent-foreground px-1.5 py-0.5 text-[10.5px]">{t}</span>
+                        {p.tags.slice(0, 2).map((t) => (
+                          <span
+                            key={t}
+                            className="inline-flex rounded-md bg-accent text-accent-foreground px-1.5 py-0.5 text-[10.5px]"
+                          >
+                            {t}
+                          </span>
                         ))}
                       </div>
                     </Td>
@@ -143,7 +191,11 @@ function Pacientes() {
 }
 
 function Th({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <th className={cn("text-left font-medium px-4 py-2.5 first:pl-4 last:pr-4", className)}>{children}</th>;
+  return (
+    <th className={cn("text-left font-medium px-4 py-2.5 first:pl-4 last:pr-4", className)}>
+      {children}
+    </th>
+  );
 }
 function Td({ children, className }: { children: React.ReactNode; className?: string }) {
   return <td className={cn("px-4 py-3 align-middle", className)}>{children}</td>;
@@ -158,25 +210,55 @@ function PatientDrawer({ patient, onClose }: { patient: Patient; onClose: () => 
     { t: "Cadastro do paciente", date: "08/01/2026", icon: ShieldCheck },
   ];
   return (
-    <div className="fixed inset-0 z-50 bg-foreground/10 backdrop-blur-sm flex justify-end" onClick={onClose}>
-      <div className="w-full max-w-md bg-surface border-l border-border flex flex-col" onClick={(e) => e.stopPropagation()}>
+    <div
+      className="fixed inset-0 z-50 bg-foreground/10 backdrop-blur-sm flex justify-end"
+      onClick={onClose}
+    >
+      <div
+        className="w-full max-w-md bg-surface border-l border-border flex flex-col"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="h-16 border-b border-border flex items-center justify-between px-5">
           <div className="flex items-center gap-3 min-w-0">
             <div className="size-10 rounded-full bg-gradient-to-br from-primary to-chart-2 text-primary-foreground flex items-center justify-center text-[12px] font-semibold">
-              {patient.name.split(" ").map(n => n[0]).slice(0,2).join("")}
+              {patient.name
+                .split(" ")
+                .map((n) => n[0])
+                .slice(0, 2)
+                .join("")}
             </div>
             <div className="min-w-0">
               <div className="text-[14px] font-semibold truncate">{patient.name}</div>
               <div className="text-[11.5px] text-muted-foreground truncate">{patient.phone}</div>
             </div>
           </div>
-          <button onClick={onClose} className="size-8 rounded-md hover:bg-muted flex items-center justify-center"><X className="size-4"/></button>
+          <button
+            onClick={onClose}
+            className="size-8 rounded-md hover:bg-muted flex items-center justify-center"
+          >
+            <X className="size-4" />
+          </button>
         </div>
         <div className="flex-1 overflow-y-auto p-5 space-y-5">
           <div className="grid grid-cols-2 gap-3">
-            <Stat label="Status" value={<span className={cn("inline-flex rounded-full px-2 py-0.5 text-[11px] font-medium", s.tone)}>{s.label}</span>} />
+            <Stat
+              label="Status"
+              value={
+                <span
+                  className={cn(
+                    "inline-flex rounded-full px-2 py-0.5 text-[11px] font-medium",
+                    s.tone,
+                  )}
+                >
+                  {s.label}
+                </span>
+              }
+            />
             <Stat label="Origem" value={patient.source} />
-            <Stat label="LTV" value={<span className="tabular-nums">R$ {patient.ltv.toLocaleString("pt-BR")}</span>} />
+            <Stat
+              label="LTV"
+              value={<span className="tabular-nums">R$ {patient.ltv.toLocaleString("pt-BR")}</span>}
+            />
             <Stat label="Última visita" value={patient.lastVisit} />
           </div>
 
@@ -184,13 +266,17 @@ function PatientDrawer({ patient, onClose }: { patient: Patient; onClose: () => 
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-2">
                 {patient.consent ? (
-                  <ShieldCheck className="size-4 text-success"/>
+                  <ShieldCheck className="size-4 text-success" />
                 ) : (
-                  <ShieldAlert className="size-4 text-warning-foreground"/>
+                  <ShieldAlert className="size-4 text-warning-foreground" />
                 )}
                 <div>
                   <div className="text-[12.5px] font-medium">Consentimento LGPD</div>
-                  <div className="text-[11px] text-muted-foreground">{patient.consent ? "Autorizado para contato e marketing" : "Pendente — não enviar campanhas"}</div>
+                  <div className="text-[11px] text-muted-foreground">
+                    {patient.consent
+                      ? "Autorizado para contato e marketing"
+                      : "Pendente — não enviar campanhas"}
+                  </div>
                 </div>
               </div>
               <button className="text-[11.5px] text-primary hover:underline">Exportar dados</button>
@@ -198,14 +284,18 @@ function PatientDrawer({ patient, onClose }: { patient: Patient; onClose: () => 
           </div>
 
           <div>
-            <h4 className="text-[12px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">Timeline</h4>
+            <h4 className="text-[12px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+              Timeline
+            </h4>
             <ol className="relative border-l border-border ml-2 space-y-4">
               {timeline.map((e, i) => {
                 const Icon = e.icon;
                 return (
                   <li key={i} className="ml-4">
                     <div className="absolute -left-[7px] mt-1 size-3.5 rounded-full bg-surface border-2 border-primary"></div>
-                    <div className="text-[12.5px] font-medium flex items-center gap-1.5"><Icon className="size-3.5 text-muted-foreground"/> {e.t}</div>
+                    <div className="text-[12.5px] font-medium flex items-center gap-1.5">
+                      <Icon className="size-3.5 text-muted-foreground" /> {e.t}
+                    </div>
                     <div className="text-[11px] text-muted-foreground">{e.date}</div>
                   </li>
                 );
@@ -214,15 +304,21 @@ function PatientDrawer({ patient, onClose }: { patient: Patient; onClose: () => 
           </div>
 
           <div>
-            <h4 className="text-[12px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">Campanhas recebidas</h4>
-            <div className="text-[12.5px] text-muted-foreground">Confirmação 24h antes · Pedido de avaliação Google</div>
+            <h4 className="text-[12px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+              Campanhas recebidas
+            </h4>
+            <div className="text-[12.5px] text-muted-foreground">
+              Confirmação 24h antes · Pedido de avaliação Google
+            </div>
           </div>
         </div>
         <div className="border-t border-border p-4 flex gap-2">
           <button className="flex-1 h-9 rounded-md bg-primary text-primary-foreground text-[12.5px] font-medium hover:opacity-90 inline-flex items-center justify-center gap-1.5">
-            <MessageCircle className="size-4"/> Abrir conversa
+            <MessageCircle className="size-4" /> Abrir conversa
           </button>
-          <button className="h-9 px-3 rounded-md border border-input bg-background text-[12.5px] hover:bg-muted">Anonimizar</button>
+          <button className="h-9 px-3 rounded-md border border-input bg-background text-[12.5px] hover:bg-muted">
+            Anonimizar
+          </button>
         </div>
       </div>
     </div>

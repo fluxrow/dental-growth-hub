@@ -64,8 +64,11 @@ function AuthPage() {
         </Link>
         <div>
           <h2 className="font-display text-3xl font-semibold tracking-tight leading-tight">
-            Pare de perder<br />
-            <span className="bg-gradient-to-r from-primary to-chart-2 bg-clip-text text-transparent">os pacientes que já chegam.</span>
+            Pare de perder
+            <br />
+            <span className="bg-gradient-to-r from-primary to-chart-2 bg-clip-text text-transparent">
+              os pacientes que já chegam.
+            </span>
           </h2>
           <p className="mt-4 text-[14px] text-muted-foreground max-w-sm">
             Centralize WhatsApp, follow-up, confirmações, cobranças e avaliações em um único lugar.
@@ -88,7 +91,9 @@ function AuthPage() {
                 onClick={() => setMode(m)}
                 className={
                   "px-3 h-8 rounded-md text-[12.5px] font-medium transition-colors " +
-                  (mode === m ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground")
+                  (mode === m
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:text-foreground")
                 }
               >
                 {m === "login" ? "Entrar" : "Criar conta"}
@@ -106,29 +111,57 @@ function AuthPage() {
           <form onSubmit={submit} className="mt-6 space-y-3">
             {mode === "signup" && (
               <Field label="Seu nome">
-                <input required value={name} onChange={(e) => setName(e.target.value)} className={inputCls} placeholder="Dra. Marina Lopes" />
+                <input
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className={inputCls}
+                  placeholder="Dra. Marina Lopes"
+                />
               </Field>
             )}
             <Field label="E-mail">
-              <input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} className={inputCls} placeholder="voce@clinica.com" />
+              <input
+                required
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className={inputCls}
+                placeholder="voce@clinica.com"
+              />
             </Field>
             <Field label="Senha">
-              <input required type="password" minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} className={inputCls} placeholder="Mínimo 6 caracteres" />
+              <input
+                required
+                type="password"
+                minLength={6}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className={inputCls}
+                placeholder="Mínimo 6 caracteres"
+              />
             </Field>
             <button
               type="submit"
               disabled={loading}
               className="w-full h-10 rounded-md bg-primary text-primary-foreground text-[13px] font-medium hover:opacity-90 inline-flex items-center justify-center gap-1.5 disabled:opacity-60"
             >
-              {loading ? <Loader2 className="size-4 animate-spin" /> : (
-                <>{mode === "login" ? "Entrar" : "Criar conta"} <ArrowRight className="size-3.5" /></>
+              {loading ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : (
+                <>
+                  {mode === "login" ? "Entrar" : "Criar conta"} <ArrowRight className="size-3.5" />
+                </>
               )}
             </button>
           </form>
 
           <p className="mt-5 text-center text-[12px] text-muted-foreground">
             {mode === "login" ? "Novo no DentalFlux? " : "Já tem conta? "}
-            <button onClick={() => setMode(mode === "login" ? "signup" : "login")} className="text-primary hover:underline font-medium">
+            <button
+              onClick={() => setMode(mode === "login" ? "signup" : "login")}
+              className="text-primary hover:underline font-medium"
+            >
               {mode === "login" ? "Criar conta grátis" : "Entrar"}
             </button>
           </p>
@@ -139,7 +172,8 @@ function AuthPage() {
   );
 }
 
-const inputCls = "w-full h-10 rounded-md border border-input bg-background px-3 text-[13px] focus:outline-none focus:ring-2 focus:ring-ring";
+const inputCls =
+  "w-full h-10 rounded-md border border-input bg-background px-3 text-[13px] focus:outline-none focus:ring-2 focus:ring-ring";
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (

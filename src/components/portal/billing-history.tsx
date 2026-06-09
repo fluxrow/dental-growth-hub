@@ -9,11 +9,11 @@ const CHANNEL_ICON: Record<PortalChargeChannel, typeof MessageSquare> = {
 };
 
 const STATUS_META: Record<PortalChargeStatus, { label: string; cls: string }> = {
-  enviada:    { label: "Enviada",    cls: "bg-muted text-foreground/70" },
-  lida:       { label: "Lida",       cls: "bg-info/10 text-info" },
+  enviada: { label: "Enviada", cls: "bg-muted text-foreground/70" },
+  lida: { label: "Lida", cls: "bg-info/10 text-info" },
   respondida: { label: "Respondida", cls: "bg-primary/10 text-primary" },
-  paga:       { label: "Paga",       cls: "bg-success/10 text-success" },
-  falhou:     { label: "Falhou",     cls: "bg-warning/15 text-warning-foreground" },
+  paga: { label: "Paga", cls: "bg-success/10 text-success" },
+  falhou: { label: "Falhou", cls: "bg-warning/15 text-warning-foreground" },
 };
 
 export function BillingHistory({ items }: { items: PortalChargeHistory[] }) {
@@ -35,7 +35,12 @@ export function BillingHistory({ items }: { items: PortalChargeHistory[] }) {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between gap-2">
                   <div className="text-[12.5px] font-medium truncate">{h.message}</div>
-                  <span className={cn("shrink-0 rounded-full px-2 py-0.5 text-[10.5px] font-medium", meta.cls)}>
+                  <span
+                    className={cn(
+                      "shrink-0 rounded-full px-2 py-0.5 text-[10.5px] font-medium",
+                      meta.cls,
+                    )}
+                  >
                     {meta.label}
                   </span>
                 </div>
@@ -46,7 +51,9 @@ export function BillingHistory({ items }: { items: PortalChargeHistory[] }) {
                   {h.value > 0 && (
                     <>
                       <span>·</span>
-                      <span className="tabular-nums">R$ {h.value.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</span>
+                      <span className="tabular-nums">
+                        R$ {h.value.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+                      </span>
                     </>
                   )}
                 </div>

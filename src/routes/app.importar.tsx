@@ -6,11 +6,14 @@ import { AppShell } from "@/components/app/app-shell";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
-  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
-import {
-  Tooltip, TooltipContent, TooltipProvider, TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
@@ -64,10 +67,14 @@ function ImportarPage() {
     <AppShell title="Importar pacientes" subtitle="Migre sua base de pacientes em minutos">
       <div className="max-w-4xl mx-auto space-y-6">
         <div
-          onDragOver={(e) => { e.preventDefault(); setDrag(true); }}
+          onDragOver={(e) => {
+            e.preventDefault();
+            setDrag(true);
+          }}
           onDragLeave={() => setDrag(false)}
           onDrop={(e) => {
-            e.preventDefault(); setDrag(false);
+            e.preventDefault();
+            setDrag(false);
             const f = e.dataTransfer.files?.[0];
             if (f) handleFile(f);
           }}
@@ -79,7 +86,9 @@ function ImportarPage() {
           <div className="mx-auto size-12 rounded-full bg-primary/10 text-primary flex items-center justify-center">
             <Upload className="size-6" />
           </div>
-          <h3 className="mt-4 text-[15px] font-semibold">Arraste seu arquivo ou clique para selecionar</h3>
+          <h3 className="mt-4 text-[15px] font-semibold">
+            Arraste seu arquivo ou clique para selecionar
+          </h3>
           <p className="mt-1 text-[12px] text-muted-foreground">CSV, XLSX ou XLS — até 50MB</p>
           <input
             ref={inputRef}
@@ -104,7 +113,12 @@ function ImportarPage() {
                 {(file.size / 1024).toFixed(1)} KB
               </div>
             </div>
-            <Button variant="ghost" size="icon" onClick={() => setFile(null)} aria-label="Remover arquivo">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setFile(null)}
+              aria-label="Remover arquivo"
+            >
               <X className="size-4" />
             </Button>
             <TooltipProvider>
@@ -128,7 +142,9 @@ function ImportarPage() {
           {jobsQuery.isLoading ? (
             <p className="px-5 py-6 text-[12px] text-muted-foreground">Carregando…</p>
           ) : !jobsQuery.data || jobsQuery.data.length === 0 ? (
-            <p className="px-5 py-6 text-[12px] text-muted-foreground">Nenhuma importação anterior</p>
+            <p className="px-5 py-6 text-[12px] text-muted-foreground">
+              Nenhuma importação anterior
+            </p>
           ) : (
             <Table>
               <TableHeader>
@@ -146,9 +162,13 @@ function ImportarPage() {
                     <TableCell className="font-medium truncate max-w-[220px]">
                       {j.source_filename ?? "Importação"}
                     </TableCell>
-                    <TableCell><StatusBadge status={j.status} /></TableCell>
+                    <TableCell>
+                      <StatusBadge status={j.status} />
+                    </TableCell>
                     <TableCell className="text-right tabular-nums">{j.total_rows ?? 0}</TableCell>
-                    <TableCell className="text-right tabular-nums">{j.imported_rows ?? 0}</TableCell>
+                    <TableCell className="text-right tabular-nums">
+                      {j.imported_rows ?? 0}
+                    </TableCell>
                     <TableCell className="text-right text-muted-foreground text-[12px]">
                       {new Date(j.created_at).toLocaleDateString("pt-BR")}
                     </TableCell>
@@ -172,5 +192,9 @@ function StatusBadge({ status }: { status: string }) {
     uploaded: { label: "Enviado", cls: "bg-muted text-muted-foreground border-border" },
   };
   const v = map[status] ?? { label: status, cls: "bg-muted text-muted-foreground border-border" };
-  return <Badge variant="outline" className={cn("text-[10.5px] border", v.cls)}>{v.label}</Badge>;
+  return (
+    <Badge variant="outline" className={cn("text-[10.5px] border", v.cls)}>
+      {v.label}
+    </Badge>
+  );
 }
