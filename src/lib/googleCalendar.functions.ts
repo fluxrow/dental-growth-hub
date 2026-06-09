@@ -37,7 +37,6 @@ function resolveRedirectOrigin(appOrigin?: string): string {
   return originFromHost();
 }
 
-
 export const startGoogleCalendarConnect = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: { clinicId: string; loginHint?: string; appOrigin?: string }) => {
@@ -57,6 +56,10 @@ export const startGoogleCalendarConnect = createServerFn({ method: "POST" })
       nonce,
       redirectOrigin,
       exp: Math.floor(Date.now() / 1000) + 600,
+      // Store the exact origin used to build redirectUri so the callback can
+      // reconstruct the same value — avoids redirect_uri_mismatch when the
+      // server's internal host differs from the public-facing origin.
+      redirectOrigin,
     };
     const b64 = (s: string | Buffer) =>
       Buffer.from(s).toString("base64").replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");

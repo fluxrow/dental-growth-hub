@@ -16,17 +16,24 @@ function b64urlDecode(s: string): string {
   return Buffer.from(s, "base64").toString("utf8");
 }
 
-function verifyState(state: string, secret: string): {
+function verifyState(
+  state: string,
+  secret: string,
+): {
   clinicId: string;
   userId: string;
   nonce: string;
   redirectOrigin?: string;
   exp: number;
+  redirectOrigin?: string;
 } | null {
   const [data, sig] = state.split(".");
   if (!data || !sig) return null;
   const expected = createHmac("sha256", secret).update(data).digest();
-  const got = Buffer.from(sig.replace(/-/g, "+").replace(/_/g, "/") + "===".slice((sig.length + 3) % 4), "base64");
+  const got = Buffer.from(
+    sig.replace(/-/g, "+").replace(/_/g, "/") + "===".slice((sig.length + 3) % 4),
+    "base64",
+  );
   if (got.length !== expected.length || !timingSafeEqual(got, expected)) return null;
   try {
     const payload = JSON.parse(b64urlDecode(data));
@@ -54,8 +61,8 @@ function htmlResponse(payload: { ok: boolean; email?: string | null; error?: str
     status: 200,
     headers: {
       "content-type": "text/html; charset=utf-8",
-      // Preserve window.opener so postMessage works back to the parent popup opener.
-      // Lovable/Cloudflare default to COOP: same-origin which severs window.opener.
+      // Required: prevents Cloudflare/Lovable edge from injecting COOP: same-origin,
+      // which severs window.opener inside the popup → postMessage fails silently.
       "cross-origin-opener-policy": "unsafe-none",
     },
   });
@@ -82,9 +89,9 @@ export const Route = createFileRoute("/api/public/google/callback")({
         const stateData = verifyState(state, clientSecret);
         if (!stateData) return htmlResponse({ ok: false, error: "invalid_state" });
 
-        // Use the same origin that was used to build the auth URL (carried in the signed state),
-        // otherwise Google returns redirect_uri_mismatch when the runtime request.url origin differs
-        // from the browser-facing origin (proxy/preview environments).
+        // Use the exact origin stored in the signed state (set by startGoogleCalendarConnect).
+        // This avoids redirect_uri_mismatch when Cloudflare/Lovable rewrites the request URL
+        // and url.origin differs from the public-facing origin used to initiate the flow.
         const redirectUri = `${stateData.redirectOrigin ?? url.origin}/api/public/google/callback`;
 
         const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
@@ -129,24 +136,22 @@ export const Route = createFileRoute("/api/public/google/callback")({
 
         const expiresAt = new Date(Date.now() + (tokens.expires_in - 60) * 1000).toISOString();
 
-        const { error: dbErr } = await supabaseAdmin
-          .from("clinic_integrations")
-          .upsert(
-            {
-              clinic_id: stateData.clinicId,
-              provider: "google_calendar",
-              status: "connected",
-              access_token: tokens.access_token,
-              refresh_token: tokens.refresh_token ?? null,
-              expires_at: expiresAt,
-              scope: tokens.scope ?? SCOPES.join(" "),
-              calendar_id: email,
-              connected_by_user_id: stateData.userId,
-              connected_at: new Date().toISOString(),
-              metadata: { account_email: email },
-            },
-            { onConflict: "clinic_id,provider" },
-          );
+        const { error: dbErr } = await supabaseAdmin.from("clinic_integrations").upsert(
+          {
+            clinic_id: stateData.clinicId,
+            provider: "google_calendar",
+            status: "connected",
+            access_token: tokens.access_token,
+            refresh_token: tokens.refresh_token ?? null,
+            expires_at: expiresAt,
+            scope: tokens.scope ?? SCOPES.join(" "),
+            calendar_id: email,
+            connected_by_user_id: stateData.userId,
+            connected_at: new Date().toISOString(),
+            metadata: { account_email: email },
+          },
+          { onConflict: "clinic_id,provider" },
+        );
 
         if (dbErr) {
           console.error("[google oauth] db upsert failed", dbErr);
