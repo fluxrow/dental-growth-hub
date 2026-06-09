@@ -608,12 +608,18 @@ function StepAgenda({
   setState,
   clinicId,
   onEnsureClinic,
+  loginEmail,
+  loginProvider,
 }: {
   state: OnboardingState;
   setState: React.Dispatch<React.SetStateAction<OnboardingState>>;
   clinicId: string | null;
   onEnsureClinic: () => Promise<string | null>;
+  loginEmail: string | null;
+  loginProvider: string | null;
 }) {
+  const isGoogleLogin = loginProvider === "google" && !!loginEmail;
+  const [useLoginAccount, setUseLoginAccount] = useState(true);
   const benefits = [
     "Lembretes automáticos de consulta (24h e 2h antes) via WhatsApp.",
     "Confirmação de presença com resposta caindo direto no CRM.",
