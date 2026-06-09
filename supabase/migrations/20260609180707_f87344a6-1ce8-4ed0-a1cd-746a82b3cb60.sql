@@ -1,0 +1,1 @@
+CREATE POLICY "clinicas_select_creator" ON public.clinicas FOR SELECT TO authenticated USING (created_by = auth.uid());
