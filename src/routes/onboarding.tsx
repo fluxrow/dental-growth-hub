@@ -294,6 +294,8 @@ function OnboardingWizard() {
                   setState={setState}
                   clinicId={createdClinicId}
                   onEnsureClinic={persist}
+                  loginEmail={user.email ?? null}
+                  loginProvider={(user.app_metadata?.provider as string) ?? null}
                 />
               )}
               {step.key === "pronto" && (
