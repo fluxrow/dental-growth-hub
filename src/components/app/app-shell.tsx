@@ -15,12 +15,16 @@ import {
   Activity as ActivityIcon,
   Eye,
   EyeOff,
+  LogOut,
 } from "lucide-react";
 import type { ReactNode } from "react";
-import { CLINIC, USER } from "@/lib/mock";
 import { cn } from "@/lib/utils";
 import { NotificationsPopover } from "./notifications-popover";
 import { useEmptyMode, toggleEmptyMode } from "@/hooks/use-empty-mode";
+import { useAuth, signOut } from "@/hooks/use-auth";
+import { useProfile } from "@/hooks/use-profile";
+import { useNavigate } from "@tanstack/react-router";
+
 
 const NAV: { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean }[] = [
   { to: "/app",                label: "Dashboard",    icon: LayoutDashboard, exact: true },
