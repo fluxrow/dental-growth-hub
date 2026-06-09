@@ -686,26 +686,26 @@ function StepAgenda({
               </div>
             )}
 
-            <CalendarConnectButton
-              clinicId={clinicId}
-              onEnsureClinic={onEnsureClinic}
-              connected={state.calendar.connected}
-              accountEmail={state.calendar.accountEmail}
-              loginHint={isGoogleLogin && useLoginAccount ? loginEmail : null}
-              expectedEmail={isGoogleLogin && useLoginAccount ? loginEmail : null}
-              onConnected={(email) =>
-                setState((p) => ({
-                  ...p,
-                  calendar: { skipped: false, connected: true, accountEmail: email },
-                }))
-              }
-              onDisconnected={() =>
-                setState((p) => ({
-                  ...p,
-                  calendar: { ...p.calendar, connected: false, accountEmail: null },
-                }))
-              }
-            />
+            <div className="mt-4">
+              <GoogleCalendarConnector
+                clinicId={clinicId}
+                onEnsureClinic={onEnsureClinic}
+                loginHint={isGoogleLogin && useLoginAccount ? loginEmail : null}
+                onConnected={(email) =>
+                  setState((p) => ({
+                    ...p,
+                    calendar: { skipped: false, connected: true, accountEmail: email },
+                  }))
+                }
+                onDisconnected={() =>
+                  setState((p) => ({
+                    ...p,
+                    calendar: { ...p.calendar, connected: false, accountEmail: null },
+                  }))
+                }
+              />
+            </div>
+
 
           </div>
         </div>
