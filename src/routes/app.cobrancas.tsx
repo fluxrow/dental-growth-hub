@@ -35,12 +35,12 @@ interface DunningItem {
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const STATUS_CONFIG: Record<string, { label: string; tone: string }> = {
-  pendente: { label: "Pendente", tone: "bg-zinc-100 text-zinc-600" },
-  vencendo: { label: "Vencendo", tone: "bg-yellow-100 text-yellow-700" },
-  atrasada: { label: "Atrasada", tone: "bg-red-100 text-red-700" },
-  recuperada: { label: "Recuperada", tone: "bg-blue-100 text-blue-700" },
-  paga: { label: "Paga", tone: "bg-emerald-100 text-emerald-700" },
-  cancelada: { label: "Cancelada", tone: "bg-zinc-100 text-zinc-400" },
+  pendente: { label: "Pendente", tone: "bg-muted text-muted-foreground" },
+  vencendo: { label: "Vencendo", tone: "bg-warning/15 text-warning-foreground" },
+  atrasada: { label: "Atrasada", tone: "bg-destructive/10 text-destructive" },
+  recuperada: { label: "Recuperada", tone: "bg-primary/10 text-primary" },
+  paga: { label: "Paga", tone: "bg-success/10 text-success" },
+  cancelada: { label: "Cancelada", tone: "bg-muted text-muted-foreground/50" },
 };
 
 type ViewTab = "fila" | "lista" | "automacoes";
@@ -98,7 +98,7 @@ function Cobrancas() {
       </div>
 
       {/* View tabs */}
-      <div className="flex items-center gap-1 mb-4 bg-zinc-100 p-1 rounded-xl w-fit">
+      <div className="flex items-center gap-1 mb-4 bg-muted p-1 rounded-xl w-fit">
         {VIEW_TABS.map(({ id, label, icon: Icon }) => (
           <button
             key={id}
@@ -106,8 +106,8 @@ function Cobrancas() {
             className={cn(
               "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all",
               view === id
-                ? "bg-white text-zinc-900 shadow-sm"
-                : "text-zinc-500 hover:text-zinc-700",
+                ? "bg-surface text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground",
             )}
           >
             <Icon className="size-3.5" />
@@ -121,8 +121,8 @@ function Cobrancas() {
         <div className="rounded-xl border border-border bg-surface overflow-hidden">
           <div className="px-5 py-4 border-b border-border flex items-center justify-between">
             <div>
-              <h2 className="font-semibold text-zinc-900 text-sm">Fila de Ação</h2>
-              <p className="text-xs text-zinc-500 mt-0.5">
+              <h2 className="font-semibold text-foreground text-sm">Fila de Ação</h2>
+              <p className="text-xs text-muted-foreground mt-0.5">
                 Cobranças priorizadas que precisam de ação agora
               </p>
             </div>
@@ -157,8 +157,8 @@ function Cobrancas() {
           </div>
 
           {cobrancas.length === 0 ? (
-            <div className="flex flex-col items-center py-16 text-zinc-400">
-              <CheckCircle2 className="size-10 mb-2 text-emerald-400" />
+            <div className="flex flex-col items-center py-16 text-muted-foreground">
+              <CheckCircle2 className="size-10 mb-2 text-success" />
               <p className="text-sm font-medium">Nenhuma cobrança encontrada</p>
             </div>
           ) : (
@@ -188,42 +188,83 @@ function Cobrancas() {
                         className="flex items-center gap-3 px-4 py-3 hover:bg-muted/30 cursor-pointer"
                         onClick={() => setExpandedRow(isExpanded ? null : c.id)}
                       >
-                        <div className="flex-1 min-w-0 grid grid-cols-12 gap-2 items-center text-sm">
-                          <div className="col-span-3 font-medium text-zinc-900 truncate">
-                            {c.paciente?.name ?? "—"}
+                        <div className="flex-1 min-w-0">
+                          {/* Mobile: stack layout */}
+                          <div className="flex items-start justify-between gap-2 md:hidden">
+                            <div className="min-w-0">
+                              <div className="text-[13px] font-medium text-foreground truncate">
+                                {c.paciente?.name ?? "—"}
+                              </div>
+                              <div className="text-[11.5px] text-muted-foreground truncate mt-0.5">
+                                {c.description}
+                              </div>
+                            </div>
+                            <div className="shrink-0 text-right">
+                              <div className="text-[13px] font-semibold tabular-nums">
+                                {new Intl.NumberFormat("pt-BR", {
+                                  style: "currency",
+                                  currency: "BRL",
+                                }).format(c.value)}
+                              </div>
+                              <span
+                                className={cn(
+                                  "inline-flex rounded-full px-2 py-0.5 text-[10.5px] font-semibold mt-0.5",
+                                  sc.tone,
+                                )}
+                              >
+                                {sc.label}
+                              </span>
+                            </div>
                           </div>
-                          <div className="col-span-4 text-zinc-500 truncate text-xs">
-                            {c.description}
-                          </div>
-                          <div className="col-span-2 text-right font-semibold tabular-nums">
-                            {new Intl.NumberFormat("pt-BR", {
-                              style: "currency",
-                              currency: "BRL",
-                            }).format(c.value)}
-                          </div>
-                          <div className="col-span-2 text-xs text-zinc-400 text-center">
+                          <div className="flex items-center gap-2 mt-1 md:hidden text-[11px] text-muted-foreground">
                             {new Date(c.due_date + "T12:00:00").toLocaleDateString("pt-BR")}
                             {daysLate > 0 && (
-                              <span className="ml-1 text-red-500">+{daysLate}d</span>
+                              <span className="text-destructive font-medium">
+                                +{daysLate}d atraso
+                              </span>
                             )}
                           </div>
-                          <div className="col-span-1 flex justify-end">
-                            <span
-                              className={cn(
-                                "inline-flex rounded-full px-2 py-0.5 text-[10px] font-semibold",
-                                sc.tone,
+
+                          {/* Desktop: grid layout */}
+                          <div className="hidden md:grid md:grid-cols-12 gap-2 items-center text-sm">
+                            <div className="col-span-3 font-medium text-foreground truncate">
+                              {c.paciente?.name ?? "—"}
+                            </div>
+                            <div className="col-span-4 text-muted-foreground truncate text-xs">
+                              {c.description}
+                            </div>
+                            <div className="col-span-2 text-right font-semibold tabular-nums">
+                              {new Intl.NumberFormat("pt-BR", {
+                                style: "currency",
+                                currency: "BRL",
+                              }).format(c.value)}
+                            </div>
+                            <div className="col-span-2 text-xs text-muted-foreground text-center">
+                              {new Date(c.due_date + "T12:00:00").toLocaleDateString("pt-BR")}
+                              {daysLate > 0 && (
+                                <span className="ml-1 text-destructive font-medium">
+                                  +{daysLate}d
+                                </span>
                               )}
-                            >
-                              {sc.label}
-                            </span>
+                            </div>
+                            <div className="col-span-1 flex justify-end">
+                              <span
+                                className={cn(
+                                  "inline-flex rounded-full px-2 py-0.5 text-[10.5px] font-semibold",
+                                  sc.tone,
+                                )}
+                              >
+                                {sc.label}
+                              </span>
+                            </div>
                           </div>
                         </div>
                       </div>
 
                       {/* Expanded timeline */}
                       {isExpanded && (
-                        <div className="px-4 pb-4 bg-zinc-50 border-t border-zinc-100">
-                          <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wide py-3">
+                        <div className="px-4 pb-4 bg-muted/40 border-t border-border">
+                          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide py-3">
                             Histórico da régua
                           </p>
                           <ChargeTimeline cobrancaId={c.id} dueDate={c.due_date} />
@@ -241,8 +282,8 @@ function Cobrancas() {
       {/* ── Automações ── */}
       {view === "automacoes" && (
         <div className="rounded-xl border border-border bg-surface p-5">
-          <h2 className="font-semibold text-zinc-900 mb-1">Régua de Cobrança Automática</h2>
-          <p className="text-xs text-zinc-500 mb-5">
+          <h2 className="font-semibold text-foreground mb-1">Régua de Cobrança Automática</h2>
+          <p className="text-xs text-muted-foreground mb-5">
             Todas as cobranças ativas seguem automaticamente esta sequência via WhatsApp
           </p>
 
@@ -289,17 +330,17 @@ function Cobrancas() {
                   <span className={cn("text-xs font-bold px-2 py-0.5 rounded-md", stage.badge)}>
                     D{stage.day >= 0 ? `+${stage.day}` : stage.day}
                   </span>
-                  <span className="flex items-center gap-1 text-xs text-emerald-600 font-medium">
-                    <span className="size-1.5 rounded-full bg-emerald-500" /> Ativa
+                  <span className="flex items-center gap-1 text-xs text-success font-medium">
+                    <span className="size-1.5 rounded-full bg-success" /> Ativa
                   </span>
                 </div>
-                <p className="font-semibold text-zinc-900 text-sm">{stage.label}</p>
-                <p className="text-xs text-zinc-500 mt-0.5">{stage.desc}</p>
+                <p className="font-semibold text-foreground text-sm">{stage.label}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">{stage.desc}</p>
               </div>
             ))}
           </div>
 
-          <div className="mt-5 rounded-xl bg-emerald-50 border border-emerald-200 px-4 py-3 text-sm text-emerald-800">
+          <div className="mt-5 rounded-xl bg-success/10 border border-success/30 px-4 py-3 text-sm text-success">
             <strong>💡 Taxa média de recuperação:</strong> clínicas com régua completa recuperam
             entre <strong>40–65%</strong> das cobranças em atraso nos primeiros 10 dias.
           </div>
