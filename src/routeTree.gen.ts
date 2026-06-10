@@ -37,6 +37,8 @@ import { Route as ApiWebhooksZapiConnectRouteImport } from './routes/api/webhook
 import { Route as ApiWebhooksMetaMessagesRouteImport } from './routes/api/webhooks/meta-messages'
 import { Route as ApiWebhooksMetaCommentsRouteImport } from './routes/api/webhooks/meta-comments'
 import { Route as ApiCronCsTouchpointsRouteImport } from './routes/api/cron/cs-touchpoints'
+import { Route as AppAdminRouteImport } from './routes/app.admin'
+import { Route as AppAdminCsQueueRouteImport } from './routes/app.admin.cs-queue'
 
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
@@ -178,6 +180,16 @@ const ApiCronCsTouchpointsRoute = ApiCronCsTouchpointsRouteImport.update({
   path: '/api/cron/cs-touchpoints',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppAdminRoute = AppAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAdminCsQueueRoute = AppAdminCsQueueRouteImport.update({
+  id: '/cs-queue',
+  path: '/cs-queue',
+  getParentRoute: () => AppAdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -208,6 +220,8 @@ export interface FileRoutesByFullPath {
   '/api/webhooks/meta-messages': typeof ApiWebhooksMetaMessagesRoute
   '/api/webhooks/meta-comments': typeof ApiWebhooksMetaCommentsRoute
   '/api/cron/cs-touchpoints': typeof ApiCronCsTouchpointsRoute
+  '/app/admin': typeof AppAdminRouteWithChildren
+  '/app/admin/cs-queue': typeof AppAdminCsQueueRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -237,6 +251,8 @@ export interface FileRoutesByTo {
   '/api/webhooks/meta-messages': typeof ApiWebhooksMetaMessagesRoute
   '/api/webhooks/meta-comments': typeof ApiWebhooksMetaCommentsRoute
   '/api/cron/cs-touchpoints': typeof ApiCronCsTouchpointsRoute
+  '/app/admin': typeof AppAdminRouteWithChildren
+  '/app/admin/cs-queue': typeof AppAdminCsQueueRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -268,6 +284,8 @@ export interface FileRoutesById {
   '/api/webhooks/meta-messages': typeof ApiWebhooksMetaMessagesRoute
   '/api/webhooks/meta-comments': typeof ApiWebhooksMetaCommentsRoute
   '/api/cron/cs-touchpoints': typeof ApiCronCsTouchpointsRoute
+  '/app/admin': typeof AppAdminRouteWithChildren
+  '/app/admin/cs-queue': typeof AppAdminCsQueueRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -300,6 +318,8 @@ export interface FileRouteTypes {
     | '/api/webhooks/meta-messages'
     | '/api/webhooks/meta-comments'
     | '/api/cron/cs-touchpoints'
+    | '/app/admin'
+    | '/app/admin/cs-queue'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -329,6 +349,8 @@ export interface FileRouteTypes {
     | '/api/webhooks/meta-messages'
     | '/api/webhooks/meta-comments'
     | '/api/cron/cs-touchpoints'
+    | '/app/admin'
+    | '/app/admin/cs-queue'
   id:
     | '__root__'
     | '/'
@@ -359,6 +381,8 @@ export interface FileRouteTypes {
     | '/api/webhooks/meta-messages'
     | '/api/webhooks/meta-comments'
     | '/api/cron/cs-touchpoints'
+    | '/app/admin'
+    | '/app/admin/cs-queue'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -577,8 +601,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiCronCsTouchpointsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/app/admin'
+      preLoaderRoute: typeof AppAdminRouteImport
+      parentRoute: typeof AppRouteImport
+    }
+    '/app/admin/cs-queue': {
+      id: '/cs-queue'
+      path: '/cs-queue'
+      fullPath: '/app/admin/cs-queue'
+      preLoaderRoute: typeof AppAdminCsQueueRouteImport
+      parentRoute: typeof AppAdminRouteImport
+    }
   }
 }
+
+interface AppAdminRouteChildren {
+  AppAdminCsQueueRoute: typeof AppAdminCsQueueRoute
+}
+
+const AppAdminRouteChildren: AppAdminRouteChildren = {
+  AppAdminCsQueueRoute: AppAdminCsQueueRoute,
+}
+
+const AppAdminRouteWithChildren = AppAdminRoute._addFileChildren(AppAdminRouteChildren)
 
 interface AppRouteChildren {
   AppAtividadeRoute: typeof AppAtividadeRoute
@@ -594,6 +642,7 @@ interface AppRouteChildren {
   AppPacientesRoute: typeof AppPacientesRoute
   AppRelatoriosRoute: typeof AppRelatoriosRoute
   AppIndexRoute: typeof AppIndexRoute
+  AppAdminRoute: typeof AppAdminRouteWithChildren
 }
 
 const AppRouteChildren: AppRouteChildren = {
@@ -610,6 +659,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppPacientesRoute: AppPacientesRoute,
   AppRelatoriosRoute: AppRelatoriosRoute,
   AppIndexRoute: AppIndexRoute,
+  AppAdminRoute: AppAdminRouteWithChildren,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
