@@ -433,7 +433,7 @@ function PlansTab() {
               </button>
             ) : (
               <a
-                href="https://wa.me/5511999999999?text=Quero%20saber%20mais%20sobre%20o%20plano%20DrFlux%20Anual"
+                href="https://wa.me/5541992361868?text=Quero%20saber%20mais%20sobre%20o%20plano%20DrFlux%20Anual"
                 target="_blank"
                 rel="noreferrer"
                 className="mt-5 h-9 rounded-md text-xs-plus font-medium border border-input bg-background hover:bg-muted flex items-center justify-center"
