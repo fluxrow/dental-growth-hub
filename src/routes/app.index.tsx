@@ -124,7 +124,7 @@ function LiveDashboard() {
   const period = usePeriod();
   const { from, to } = periodToRange(period);
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ["dashboard_live", period],
     queryFn: async () => {
       const [oppsRes, patientsRes] = await Promise.all([
@@ -140,6 +140,8 @@ function LiveDashboard() {
           .gte("created_at", from)
           .lte("created_at", to),
       ]);
+      if (oppsRes.error) throw oppsRes.error;
+      if (patientsRes.error) throw patientsRes.error;
       const opps = oppsRes.data ?? [];
       const pts = patientsRes.data ?? [];
 
@@ -173,6 +175,18 @@ function LiveDashboard() {
       <AppShell title="Visão geral" subtitle="Carregando dados da clínica…">
         <div className="flex items-center justify-center py-20">
           <Loader2 className="size-5 animate-spin text-muted-foreground" />
+        </div>
+      </AppShell>
+    );
+  }
+
+  if (isError) {
+    return (
+      <AppShell title="Visão geral" subtitle="Erro ao carregar dados">
+        <div className="flex flex-col items-center justify-center py-20 gap-3 text-center">
+          <AlertCircle className="size-8 text-destructive" />
+          <p className="text-[14px] font-medium">Não foi possível carregar o dashboard</p>
+          <p className="text-[12px] text-muted-foreground">Verifique sua conexão ou tente novamente</p>
         </div>
       </AppShell>
     );
@@ -280,8 +294,8 @@ function LiveDashboard() {
         >
           {d.nextActions.length > 0 ? (
             <ul className="divide-y divide-border">
-              {d.nextActions.map((o, i) => (
-                <li key={i} className="py-2.5 flex items-center gap-3">
+              {d.nextActions.map((o) => (
+                <li key={`${o.name}-${o.stage}`} className="py-2.5 flex items-center gap-3">
                   <div className="size-8 rounded-md bg-primary/10 text-primary flex items-center justify-center">
                     <Clock className="size-4" />
                   </div>

@@ -106,7 +106,14 @@ export const listAutomacoes = createServerFn({ method: "GET" })
       .select("id, code, name, description, enabled, config, run_count, last_run_at")
       .order("created_at", { ascending: true });
 
-    if (error) throw new Error((error as { message: string }).message);
+    if (error) {
+      const msg = (error as { message?: string }).message ?? "";
+      // Tabela ainda não criada no Supabase — retorna vazio em vez de crashar
+      if (msg.includes("schema cache") || msg.includes("relation") || msg.includes("does not exist")) {
+        return [];
+      }
+      throw new Error(msg);
+    }
 
     // Seed defaults na primeira vez que a clínica abre automações
     if (!data || (data as unknown[]).length === 0) {

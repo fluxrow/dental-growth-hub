@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { useAuth } from "@/hooks/use-auth";
+import { useProfile } from "@/hooks/use-profile";
 import {
   Loader2,
   Zap,
@@ -37,10 +39,13 @@ type ActiveStage = (typeof ACTIVE_STAGES)[number];
 function Triagem() {
   const live = useEmptyMode();
   const queryClient = useQueryClient();
+  const { user } = useAuth();
+  const { data: profileData } = useProfile(user?.id);
+  const clinicId = profileData?.clinic?.id ?? null;
 
   const { data: liveData, isLoading } = useQuery({
-    queryKey: ["triagem_live"],
-    enabled: live,
+    queryKey: ["triagem_live", clinicId],
+    enabled: live && !!clinicId,
     queryFn: async (): Promise<Opportunity[]> => {
       const { data, error } = await supabase
         .from("oportunidades")

@@ -31,6 +31,7 @@ export function RevenueLeakBanner() {
         .select(
           "total_recoverable, health_score, inactive_recovery_est, pending_charges_value, stalled_opps_value, inactive_patients, stalled_opps_count, pending_charges_count",
         )
+        .eq("clinic_id", clinicId!)
         .order("snapshot_at", { ascending: false })
         .limit(1)
         .single();
@@ -161,9 +162,35 @@ function PulseTicker({ monthlyLeak }: { monthlyLeak: number }) {
   const perSecond = monthlyLeak / (30 * 24 * 3600);
   const [elapsed, setElapsed] = useState(0); // seconds since mount
 
+  // Reset elapsed when monthlyLeak changes (new data loaded)
   useEffect(() => {
-    const id = setInterval(() => setElapsed((s) => s + 1), 1000);
-    return () => clearInterval(id);
+    setElapsed(0);
+  }, [monthlyLeak]);
+
+  // Pause ticker when tab is hidden to avoid phantom accumulation
+  useEffect(() => {
+    let id: ReturnType<typeof setInterval> | null = null;
+
+    const start = () => {
+      id = setInterval(() => {
+        if (!document.hidden) setElapsed((s) => s + 1);
+      }, 1000);
+    };
+
+    const onVisibility = () => {
+      if (document.hidden) {
+        if (id) { clearInterval(id); id = null; }
+      } else {
+        start();
+      }
+    };
+
+    start();
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      if (id) clearInterval(id);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
   }, []);
 
   const lostNow = perSecond * elapsed;

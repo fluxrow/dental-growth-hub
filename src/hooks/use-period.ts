@@ -17,7 +17,12 @@ const LS_KEY = "df_period";
 const EVENT = "df-period-change";
 
 function load(): Period {
-  return (localStorage.getItem(LS_KEY) as Period) ?? "30d";
+  if (typeof window === "undefined") return "30d"; // SSR guard
+  try {
+    return (localStorage.getItem(LS_KEY) as Period) ?? "30d";
+  } catch {
+    return "30d";
+  }
 }
 
 export function setPeriod(p: Period) {

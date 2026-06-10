@@ -80,30 +80,31 @@ export function CommandBar() {
     }
   }, [open]);
 
-  const filtered = useMemo(
-    () => COMMANDS.filter((c) => match(c, query)),
-    [query],
-  );
-
-  // Group filtered results
+  // Group filtered results (preserving group order)
   const groups = useMemo(() => {
     const map = new Map<string, Cmd[]>();
-    filtered.forEach((c) => {
+    COMMANDS.filter((c) => match(c, query)).forEach((c) => {
       if (!map.has(c.group)) map.set(c.group, []);
       map.get(c.group)!.push(c);
     });
     return [...map.entries()];
-  }, [filtered]);
+  }, [query]);
+
+  // Flat list in exact group-render order — used for keyboard nav
+  const flatOrdered = useMemo(
+    () => groups.flatMap(([, items]) => items),
+    [groups],
+  );
 
   const handleKey = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      setSel((v) => Math.min(v + 1, filtered.length - 1));
+      setSel((v) => Math.min(v + 1, flatOrdered.length - 1));
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       setSel((v) => Math.max(v - 1, 0));
-    } else if (e.key === "Enter" && filtered[sel]) {
-      execute(filtered[sel]);
+    } else if (e.key === "Enter" && flatOrdered[sel]) {
+      execute(flatOrdered[sel]);
     }
   };
 
@@ -113,8 +114,6 @@ export function CommandBar() {
   };
 
   if (!open) return null;
-
-  let flatIdx = 0;
 
   return (
     <>
@@ -144,7 +143,7 @@ export function CommandBar() {
 
         {/* Results */}
         <div className="max-h-80 overflow-y-auto py-2">
-          {filtered.length === 0 ? (
+          {flatOrdered.length === 0 ? (
             <p className="text-[12px] text-muted-foreground text-center py-8">
               Nenhum resultado para "{query}"
             </p>
@@ -155,7 +154,7 @@ export function CommandBar() {
                   {groupName}
                 </div>
                 {items.map((cmd) => {
-                  const idx = flatIdx++;
+                  const idx = flatOrdered.indexOf(cmd);
                   const Icon = cmd.icon;
                   const isSelected = idx === sel;
                   return (

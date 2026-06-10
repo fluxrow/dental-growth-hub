@@ -1,5 +1,6 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Link } from "@tanstack/react-router";
+import { useAuth } from "@/hooks/use-auth";
 import {
   CheckCircle2,
   Circle,
@@ -79,33 +80,42 @@ const STEPS: Step[] = [
   },
 ];
 
-// ─── localStorage helpers ──────────────────────────────────────────────────────
+// ─── localStorage helpers (userId-namespaced, SSR-safe) ──────────────────────
 
-const LS_KEY = "df_onboarding_v1";
-const LS_DISMISS = "df_onboarding_dismissed";
+function lsKey(userId: string) { return `df_onboarding_v1_${userId}`; }
+function lsDismiss(userId: string) { return `df_onboarding_dismissed_${userId}`; }
 
-function loadDone(): Set<string> {
+function loadDone(userId: string): Set<string> {
+  if (typeof window === "undefined") return new Set(["account"]); // SSR
   try {
-    const raw = localStorage.getItem(LS_KEY);
-    const arr = raw ? (JSON.parse(raw) as string[]) : ["account"];
-    return new Set(arr);
+    const raw = localStorage.getItem(lsKey(userId));
+    return new Set(raw ? (JSON.parse(raw) as string[]) : ["account"]);
   } catch {
     return new Set(["account"]);
   }
 }
 
-function saveDone(done: Set<string>) {
-  localStorage.setItem(LS_KEY, JSON.stringify([...done]));
+function saveDone(userId: string, done: Set<string>) {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(lsKey(userId), JSON.stringify([...done]));
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export function OnboardingChecklist() {
-  const [done, setDone] = useState<Set<string>>(loadDone);
+  const { user } = useAuth();
+  const userId = user?.id ?? "anonymous";
+
+  // Deferred load from localStorage (client-only, userId-namespaced)
+  const [done, setDone] = useState<Set<string>>(() => new Set(["account"]));
+  const [dismissed, setDismissed] = useState(false);
   const [expanded, setExpanded] = useState(true);
-  const [dismissed, setDismissed] = useState(
-    () => localStorage.getItem(LS_DISMISS) === "1",
-  );
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    setDone(loadDone(userId));
+    setDismissed(localStorage.getItem(lsDismiss(userId)) === "1");
+  }, [userId]);
 
   const completedCount = done.size;
   const total = STEPS.length;
@@ -122,15 +132,15 @@ export function OnboardingChecklist() {
         } else {
           next.add(id);
         }
-        saveDone(next);
+        saveDone(userId, next);
         return next;
       });
     },
-    [],
+    [userId],
   );
 
   const dismiss = () => {
-    localStorage.setItem(LS_DISMISS, "1");
+    if (typeof window !== "undefined") localStorage.setItem(lsDismiss(userId), "1");
     setDismissed(true);
   };
 
