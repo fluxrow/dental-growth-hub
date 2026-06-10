@@ -30,7 +30,7 @@ function Dashboard() {
       <AppShell title="Visão geral" subtitle="Saúde da operação · últimos 30 dias">
         <OnboardingChecklist />
         <RevenueLeakBanner />
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
           {FINANCIAL_KPIS.map((k) => (
             <KpiCard key={k.key} k={k} large />
           ))}
@@ -43,7 +43,7 @@ function Dashboard() {
         <div className="mb-6">
           <FunnelChart />
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Panel
             title="Precisa de resposta agora"
             subtitle={`${needReply.length} conversas paradas`}
@@ -134,11 +134,7 @@ function LiveDashboard() {
           .neq("stage", "perdida")
           .gte("created_at", from)
           .lte("created_at", to),
-        supabase
-          .from("pacientes")
-          .select("status")
-          .gte("created_at", from)
-          .lte("created_at", to),
+        supabase.from("pacientes").select("status").gte("created_at", from).lte("created_at", to),
       ]);
       if (oppsRes.error) throw oppsRes.error;
       if (patientsRes.error) throw patientsRes.error;
@@ -186,7 +182,9 @@ function LiveDashboard() {
         <div className="flex flex-col items-center justify-center py-20 gap-3 text-center">
           <AlertCircle className="size-8 text-destructive" />
           <p className="text-[14px] font-medium">Não foi possível carregar o dashboard</p>
-          <p className="text-[12px] text-muted-foreground">Verifique sua conexão ou tente novamente</p>
+          <p className="text-[12px] text-muted-foreground">
+            Verifique sua conexão ou tente novamente
+          </p>
         </div>
       </AppShell>
     );
@@ -271,7 +269,7 @@ function LiveDashboard() {
     <AppShell title="Visão geral" subtitle={`Saúde da operação · ${periodLabel(period)}`}>
       <OnboardingChecklist />
       <RevenueLeakBanner />
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
         {liveFinancial.map((k) => (
           <KpiCard key={k.key} k={k} large />
         ))}
@@ -284,7 +282,7 @@ function LiveDashboard() {
       <div className="mb-6">
         <FunnelChart />
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Panel
           title="Próximas ações"
           subtitle={`${d.nextActions.length} oportunidades com consultas`}
