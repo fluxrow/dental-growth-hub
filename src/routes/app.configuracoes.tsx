@@ -11,6 +11,7 @@ import { updateClinic } from "@/lib/clinicas.functions";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
+import { CancelFlowModal } from "@/components/app/cancel-flow-modal";
 
 export const Route = createFileRoute("/app/configuracoes")({
   head: () => ({ meta: [{ title: "Configurações · DentalFlux" }] }),
@@ -391,47 +392,76 @@ function IntegrationsTab() {
 }
 
 function PlansTab() {
+  const { user } = useAuth();
+  const { data } = useProfile(user?.id);
+  const clinicId = data?.profile?.clinic_id ?? "";
+  const [showCancelModal, setShowCancelModal] = useState(false);
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      {PLANS.map((p) => (
-        <div
-          key={p.id}
-          className={cn(
-            "rounded-xl border p-5 flex flex-col",
-            p.highlighted
-              ? "border-primary/40 bg-gradient-to-br from-primary/5 to-chart-2/5 shadow-[0_8px_24px_-12px_oklch(0.55_0.2_275/0.3)]"
-              : "border-border bg-background",
-          )}
-        >
-          {p.highlighted && (
-            <div className="inline-block self-start text-[10.5px] font-semibold uppercase tracking-wider text-primary mb-2">
-              Mais escolhido
-            </div>
-          )}
-          <div className="font-display text-xl font-semibold">{p.name}</div>
-          <div className="mt-2 flex items-baseline gap-1">
-            <span className="font-display text-3xl font-semibold tabular-nums">{p.price}</span>
-            <span className="text-[12px] text-muted-foreground">{p.per}</span>
-          </div>
-          <ul className="mt-4 space-y-2 flex-1">
-            {p.features.map((f) => (
-              <li key={f} className="flex items-start gap-2 text-[13px]">
-                <Check className="size-3.5 text-success mt-0.5 shrink-0" /> {f}
-              </li>
-            ))}
-          </ul>
-          <button
+    <>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {PLANS.map((p) => (
+          <div
+            key={p.id}
             className={cn(
-              "mt-5 h-9 rounded-md text-[12.5px] font-medium",
+              "rounded-xl border p-5 flex flex-col",
               p.highlighted
-                ? "bg-primary text-primary-foreground hover:opacity-90"
-                : "border border-input bg-background hover:bg-muted",
+                ? "border-primary/40 bg-gradient-to-br from-primary/5 to-chart-2/5 shadow-[0_8px_24px_-12px_oklch(0.55_0.2_275/0.3)]"
+                : "border-border bg-background",
             )}
           >
-            {p.highlighted ? "Plano atual" : "Trocar plano"}
+            {p.highlighted && (
+              <div className="inline-block self-start text-[10.5px] font-semibold uppercase tracking-wider text-primary mb-2">
+                Mais escolhido
+              </div>
+            )}
+            <div className="font-display text-xl font-semibold">{p.name}</div>
+            <div className="mt-2 flex items-baseline gap-1">
+              <span className="font-display text-3xl font-semibold tabular-nums">{p.price}</span>
+              <span className="text-[12px] text-muted-foreground">{p.per}</span>
+            </div>
+            <ul className="mt-4 space-y-2 flex-1">
+              {p.features.map((f) => (
+                <li key={f} className="flex items-start gap-2 text-[13px]">
+                  <Check className="size-3.5 text-success mt-0.5 shrink-0" /> {f}
+                </li>
+              ))}
+            </ul>
+            <button
+              className={cn(
+                "mt-5 h-9 rounded-md text-[12.5px] font-medium",
+                p.highlighted
+                  ? "bg-primary text-primary-foreground hover:opacity-90"
+                  : "border border-input bg-background hover:bg-muted",
+              )}
+            >
+              {p.highlighted ? "Plano atual" : "Trocar plano"}
+            </button>
+          </div>
+        ))}
+      </div>
+
+      {/* Cancel subscription link — only visible when there's a clinic (active subscriber) */}
+      {clinicId && (
+        <div className="mt-6 pt-5 border-t border-border flex items-center justify-between">
+          <div>
+            <p className="text-[13px] font-medium">Cancelar assinatura</p>
+            <p className="text-[12px] text-muted-foreground mt-0.5">
+              Seu acesso ficará ativo até o final do período pago.
+            </p>
+          </div>
+          <button
+            onClick={() => setShowCancelModal(true)}
+            className="h-8 px-3.5 rounded-md border border-destructive/40 text-destructive text-[12.5px] font-medium hover:bg-destructive/5 transition-colors"
+          >
+            Cancelar plano
           </button>
         </div>
-      ))}
-    </div>
+      )}
+
+      {showCancelModal && clinicId && (
+        <CancelFlowModal clinicId={clinicId} onClose={() => setShowCancelModal(false)} />
+      )}
+    </>
   );
 }
