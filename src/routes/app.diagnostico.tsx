@@ -21,6 +21,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { useProfile } from "@/hooks/use-profile";
 import { cn } from "@/lib/utils";
+import { runClinicDiagnostic } from "@/lib/diagnostics.functions";
 import type { DiagnosticSnapshot } from "@/lib/types/migration";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -63,11 +64,7 @@ function DiagnosticoPage() {
     if (!clinicId) return;
     setRunning(true);
     try {
-      const { error } = await supabase.rpc("calculate_and_save_diagnostic", {
-        p_clinic_id: clinicId,
-        p_triggered_by: "manual",
-      });
-      if (error) throw error;
+      await runClinicDiagnostic({ data: { clinicId } });
       toast.success("Diagnóstico atualizado");
       diagQuery.refetch();
     } catch (e) {
@@ -276,7 +273,9 @@ function HealthScoreCard({ score }: { score: number }) {
 
   return (
     <div className="rounded-xl border border-border bg-surface p-6 flex flex-col items-center justify-center gap-0">
-      <h3 className="text-sm-minus font-semibold text-muted-foreground mb-4">Clinic Health Score</h3>
+      <h3 className="text-sm-minus font-semibold text-muted-foreground mb-4">
+        Clinic Health Score
+      </h3>
       <div className="relative size-36">
         <svg className="size-full -rotate-90" viewBox="0 0 120 120">
           <circle
