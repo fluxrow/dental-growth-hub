@@ -7,6 +7,7 @@ export type Profile = {
   email: string | null;
   name: string | null;
   avatar_url: string | null;
+  role: string | null;
 };
 
 export type Clinic = {
@@ -25,13 +26,15 @@ export function useProfile(userId: string | undefined) {
     queryKey: ["profile", userId],
     enabled: !!userId,
     queryFn: async (): Promise<{ profile: Profile | null; clinic: Clinic | null }> => {
-      const { data: profile, error } = await supabase
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data: raw, error } = await (supabase as any)
         .from("profiles")
-        .select("id, clinic_id, email, name, avatar_url")
+        .select("id, clinic_id, email, name, avatar_url, role")
         .eq("id", userId!)
         .maybeSingle();
       if (error) throw error;
-      if (!profile?.clinic_id) return { profile: profile ?? null, clinic: null };
+      const profile = raw as Profile | null;
+      if (!profile?.clinic_id) return { profile, clinic: null };
       const { data: clinic } = await supabase
         .from("clinicas")
         .select("id, name, city, slug, onboarded, tone, phone, address")

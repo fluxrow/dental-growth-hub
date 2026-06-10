@@ -21,6 +21,7 @@ import {
   MoreHorizontal,
   X,
   Crosshair,
+  ShieldCheck,
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { CommandBar } from "./command-bar";
@@ -151,6 +152,27 @@ export function AppShell({
               })}
             </div>
           ))}
+
+          {/* Admin-only section */}
+          {data?.profile?.role === "admin" && (
+            <div>
+              <div className="px-2 py-1.5 text-[10px] font-semibold tracking-wider text-muted-foreground/60 uppercase">
+                Admin
+              </div>
+              <Link
+                to="/app/admin/cs-queue"
+                className={cn(
+                  "flex items-center gap-2.5 px-2.5 py-2 rounded-md text-[13px] transition-colors",
+                  pathname.startsWith("/app/admin")
+                    ? "bg-primary/10 text-primary font-medium"
+                    : "text-sidebar-foreground/85 hover:bg-sidebar-accent hover:text-sidebar-foreground",
+                )}
+              >
+                <ShieldCheck className="size-4 shrink-0" />
+                <span className="truncate">CS Queue</span>
+              </Link>
+            </div>
+          )}
         </nav>
         <div className="border-t border-sidebar-border p-3">
           <div className="flex items-center gap-2.5">
@@ -176,7 +198,6 @@ export function AppShell({
             Gerenciar agenda Google →
           </Link>
         </div>
-
       </aside>
 
       {/* Main */}
@@ -200,7 +221,11 @@ export function AppShell({
               <input
                 placeholder="Buscar… (⌘K)"
                 readOnly
-                onClick={() => window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true, bubbles: true }))}
+                onClick={() =>
+                  window.dispatchEvent(
+                    new KeyboardEvent("keydown", { key: "k", metaKey: true, bubbles: true }),
+                  )
+                }
                 className="h-8 w-56 rounded-md border border-input bg-surface pl-8 pr-3 text-[12px] placeholder:text-muted-foreground/70 cursor-pointer focus:outline-none focus:ring-2 focus:ring-ring"
               />
             </div>
@@ -210,7 +235,9 @@ export function AppShell({
             {actions}
           </div>
         </header>
-        <main className={cn(flush ? "pb-16 lg:pb-0" : "p-4 pb-20 lg:p-6 lg:pb-6", "flex-1 min-w-0")}>
+        <main
+          className={cn(flush ? "pb-16 lg:pb-0" : "p-4 pb-20 lg:p-6 lg:pb-6", "flex-1 min-w-0")}
+        >
           {children}
         </main>
       </div>
