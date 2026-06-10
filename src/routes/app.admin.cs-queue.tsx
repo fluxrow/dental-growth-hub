@@ -22,6 +22,9 @@ import {
   Building2,
   TrendingUp,
   MessageCircle,
+  HeartPulse,
+  TriangleAlert,
+  Flame,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { createServerFn } from "@tanstack/react-start";
@@ -70,6 +73,17 @@ export const adminGetCsStats = createServerFn({ method: "GET" }).handler(async (
   return { total, sent, pending, failed, byTouchpoint };
 });
 
+// Health scores de todas as clínicas (Sprint 5)
+export const adminGetHealthScores = createServerFn({ method: "GET" }).handler(async () => {
+  const { data, error } = await db()
+    .from("clinic_health_scores")
+    .select("*")
+    .order("score", { ascending: true }); // mais crítico primeiro
+
+  if (error) throw error;
+  return (data ?? []) as HealthScore[];
+});
+
 export const adminTriggerTouchpoint = createServerFn({ method: "POST" })
   .inputValidator((input: { touchpointId: string }) => {
     if (!input?.touchpointId) throw new Error("touchpointId obrigatório");
@@ -105,6 +119,18 @@ export const adminTriggerTouchpoint = createServerFn({ method: "POST" })
   });
 
 // ─── Types ────────────────────────────────────────────────────────────────────
+
+interface HealthScore {
+  clinic_id: string;
+  clinic_name: string;
+  login_score: number;
+  feature_score: number;
+  billing_score: number;
+  engagement_score: number;
+  score: number;
+  status: "healthy" | "attention" | "at_risk" | "critical";
+  calculated_at: string;
+}
 
 interface Touchpoint {
   id: string;
@@ -184,10 +210,42 @@ export const Route = createFileRoute("/app/admin/cs-queue")({
   component: CsQueueAdmin,
 });
 
+const HEALTH_STATUS_CONFIG = {
+  healthy: {
+    label: "Saudável",
+    color: "text-emerald-700",
+    bg: "bg-emerald-50 border-emerald-200",
+    bar: "bg-emerald-500",
+    icon: CheckCircle2,
+  },
+  attention: {
+    label: "Atenção",
+    color: "text-yellow-700",
+    bg: "bg-yellow-50 border-yellow-200",
+    bar: "bg-yellow-400",
+    icon: TriangleAlert,
+  },
+  at_risk: {
+    label: "Em risco",
+    color: "text-orange-700",
+    bg: "bg-orange-50 border-orange-200",
+    bar: "bg-orange-500",
+    icon: AlertTriangle,
+  },
+  critical: {
+    label: "Crítico",
+    color: "text-red-700",
+    bg: "bg-red-50 border-red-200",
+    bar: "bg-red-500",
+    icon: Flame,
+  },
+};
+
 function CsQueueAdmin() {
   const queryClient = useQueryClient();
   const [expandedClinic, setExpandedClinic] = useState<string | null>(null);
   const [triggerError, setTriggerError] = useState<string | null>(null);
+  const [showHealthScores, setShowHealthScores] = useState(false);
 
   const { data: touchpoints = [], isLoading: loadingTp } = useQuery({
     queryKey: ["admin-cs-touchpoints"],
@@ -201,6 +259,17 @@ function CsQueueAdmin() {
     queryFn: () => adminGetCsStats(),
     staleTime: 60_000,
   });
+
+  const { data: healthScores = [] } = useQuery({
+    queryKey: ["admin-health-scores"],
+    queryFn: () => adminGetHealthScores(),
+    staleTime: 5 * 60_000, // 5 min
+    enabled: showHealthScores,
+  });
+
+  const atRiskCount = (healthScores as HealthScore[]).filter(
+    (h) => h.status === "at_risk" || h.status === "critical",
+  ).length;
 
   const triggerMut = useMutation({
     mutationFn: (touchpointId: string) => adminTriggerTouchpoint({ data: { touchpointId } }),
@@ -300,6 +369,95 @@ function CsQueueAdmin() {
             <span className="ml-1 opacity-70">({stats?.byTouchpoint?.[key] ?? 0})</span>
           </div>
         ))}
+      </div>
+
+      {/* ── Health Scores collapsible ── */}
+      <div className="mb-6 rounded-xl border border-border bg-surface overflow-hidden">
+        <button
+          onClick={() => setShowHealthScores(!showHealthScores)}
+          className="w-full flex items-center gap-3 px-5 py-4 hover:bg-zinc-50 transition-colors text-left"
+        >
+          <HeartPulse className="size-5 text-rose-500 shrink-0" />
+          <div className="flex-1 min-w-0">
+            <p className="font-semibold text-zinc-900 text-sm">Health Scores — todas as clínicas</p>
+            <p className="text-xs text-zinc-500 mt-0.5">
+              Score composto: login (30%) + features (25%) + billing (25%) + engajamento (20%)
+            </p>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            {atRiskCount > 0 && (
+              <span className="flex items-center gap-1 text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-medium">
+                <AlertTriangle className="size-3" /> {atRiskCount} em risco
+              </span>
+            )}
+            {showHealthScores ? (
+              <ChevronDown className="size-4 text-zinc-400" />
+            ) : (
+              <ChevronRight className="size-4 text-zinc-400" />
+            )}
+          </div>
+        </button>
+
+        {showHealthScores && (
+          <div className="border-t border-border divide-y divide-zinc-50 max-h-[480px] overflow-y-auto">
+            {(healthScores as HealthScore[]).length === 0 ? (
+              <div className="py-8 text-center text-zinc-400 text-sm">
+                Nenhum dado disponível — certifique-se de que a migration foi aplicada.
+              </div>
+            ) : (
+              (healthScores as HealthScore[]).map((h) => {
+                const hCfg = HEALTH_STATUS_CONFIG[h.status] ?? HEALTH_STATUS_CONFIG.attention;
+                const HIcon = hCfg.icon;
+                return (
+                  <div key={h.clinic_id} className="flex items-center gap-4 px-5 py-3">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-medium text-sm text-zinc-900 truncate">
+                          {h.clinic_name}
+                        </span>
+                        <span
+                          className={cn(
+                            "flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full border",
+                            hCfg.bg,
+                            hCfg.color,
+                          )}
+                        >
+                          <HIcon className="size-3" />
+                          {hCfg.label}
+                        </span>
+                      </div>
+                      {/* Score bar */}
+                      <div className="flex items-center gap-2">
+                        <div className="flex-1 h-1.5 bg-zinc-100 rounded-full overflow-hidden">
+                          <div
+                            className={cn("h-full rounded-full transition-all", hCfg.bar)}
+                            style={{ width: `${h.score}%` }}
+                          />
+                        </div>
+                        <span className="text-xs font-bold text-zinc-700 w-8 text-right tabular-nums">
+                          {h.score}
+                        </span>
+                      </div>
+                      {/* Sub-scores */}
+                      <div className="flex gap-3 mt-1 flex-wrap">
+                        {[
+                          { label: "Login", value: h.login_score },
+                          { label: "Features", value: h.feature_score },
+                          { label: "Billing", value: h.billing_score },
+                          { label: "Engaj.", value: h.engagement_score },
+                        ].map((s) => (
+                          <span key={s.label} className="text-[10px] text-zinc-400">
+                            {s.label}: <span className="font-medium text-zinc-600">{s.value}</span>
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })
+            )}
+          </div>
+        )}
       </div>
 
       {triggerError && (
