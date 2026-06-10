@@ -29,6 +29,14 @@ import { Route as AppAutomacoesRouteImport } from './routes/app.automacoes'
 import { Route as AppAtividadeRouteImport } from './routes/app.atividade'
 import { Route as ApiPublicGoogleCallbackRouteImport } from './routes/api/public/google/callback'
 import { Route as ApiWebhooksMetaLeadsRouteImport } from './routes/api/webhooks/meta-leads'
+import { Route as ApiWebhooksStripeRouteImport } from './routes/api/webhooks/stripe'
+import { Route as ApiWebhooksZapiReceiveRouteImport } from './routes/api/webhooks/zapi-receive'
+import { Route as ApiWebhooksZapiStatusRouteImport } from './routes/api/webhooks/zapi-status'
+import { Route as ApiWebhooksZapiDisconnectRouteImport } from './routes/api/webhooks/zapi-disconnect'
+import { Route as ApiWebhooksZapiConnectRouteImport } from './routes/api/webhooks/zapi-connect'
+import { Route as ApiWebhooksMetaMessagesRouteImport } from './routes/api/webhooks/meta-messages'
+import { Route as ApiWebhooksMetaCommentsRouteImport } from './routes/api/webhooks/meta-comments'
+import { Route as ApiCronCsTouchpointsRouteImport } from './routes/api/cron/cs-touchpoints'
 
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
@@ -130,6 +138,46 @@ const ApiWebhooksMetaLeadsRoute = ApiWebhooksMetaLeadsRouteImport.update({
   path: '/api/webhooks/meta-leads',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiWebhooksStripeRoute = ApiWebhooksStripeRouteImport.update({
+  id: '/api/webhooks/stripe',
+  path: '/api/webhooks/stripe',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiWebhooksZapiReceiveRoute = ApiWebhooksZapiReceiveRouteImport.update({
+  id: '/api/webhooks/zapi-receive',
+  path: '/api/webhooks/zapi-receive',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiWebhooksZapiStatusRoute = ApiWebhooksZapiStatusRouteImport.update({
+  id: '/api/webhooks/zapi-status',
+  path: '/api/webhooks/zapi-status',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiWebhooksZapiDisconnectRoute = ApiWebhooksZapiDisconnectRouteImport.update({
+  id: '/api/webhooks/zapi-disconnect',
+  path: '/api/webhooks/zapi-disconnect',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiWebhooksZapiConnectRoute = ApiWebhooksZapiConnectRouteImport.update({
+  id: '/api/webhooks/zapi-connect',
+  path: '/api/webhooks/zapi-connect',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiWebhooksMetaMessagesRoute = ApiWebhooksMetaMessagesRouteImport.update({
+  id: '/api/webhooks/meta-messages',
+  path: '/api/webhooks/meta-messages',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiWebhooksMetaCommentsRoute = ApiWebhooksMetaCommentsRouteImport.update({
+  id: '/api/webhooks/meta-comments',
+  path: '/api/webhooks/meta-comments',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCronCsTouchpointsRoute = ApiCronCsTouchpointsRouteImport.update({
+  id: '/api/cron/cs-touchpoints',
+  path: '/api/cron/cs-touchpoints',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -152,6 +200,14 @@ export interface FileRoutesByFullPath {
   '/app/': typeof AppIndexRoute
   '/api/public/google/callback': typeof ApiPublicGoogleCallbackRoute
   '/api/webhooks/meta-leads': typeof ApiWebhooksMetaLeadsRoute
+  '/api/webhooks/stripe': typeof ApiWebhooksStripeRoute
+  '/api/webhooks/zapi-receive': typeof ApiWebhooksZapiReceiveRoute
+  '/api/webhooks/zapi-status': typeof ApiWebhooksZapiStatusRoute
+  '/api/webhooks/zapi-disconnect': typeof ApiWebhooksZapiDisconnectRoute
+  '/api/webhooks/zapi-connect': typeof ApiWebhooksZapiConnectRoute
+  '/api/webhooks/meta-messages': typeof ApiWebhooksMetaMessagesRoute
+  '/api/webhooks/meta-comments': typeof ApiWebhooksMetaCommentsRoute
+  '/api/cron/cs-touchpoints': typeof ApiCronCsTouchpointsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -173,6 +229,14 @@ export interface FileRoutesByTo {
   '/app': typeof AppIndexRoute
   '/api/public/google/callback': typeof ApiPublicGoogleCallbackRoute
   '/api/webhooks/meta-leads': typeof ApiWebhooksMetaLeadsRoute
+  '/api/webhooks/stripe': typeof ApiWebhooksStripeRoute
+  '/api/webhooks/zapi-receive': typeof ApiWebhooksZapiReceiveRoute
+  '/api/webhooks/zapi-status': typeof ApiWebhooksZapiStatusRoute
+  '/api/webhooks/zapi-disconnect': typeof ApiWebhooksZapiDisconnectRoute
+  '/api/webhooks/zapi-connect': typeof ApiWebhooksZapiConnectRoute
+  '/api/webhooks/meta-messages': typeof ApiWebhooksMetaMessagesRoute
+  '/api/webhooks/meta-comments': typeof ApiWebhooksMetaCommentsRoute
+  '/api/cron/cs-touchpoints': typeof ApiCronCsTouchpointsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -196,6 +260,14 @@ export interface FileRoutesById {
   '/app/': typeof AppIndexRoute
   '/api/public/google/callback': typeof ApiPublicGoogleCallbackRoute
   '/api/webhooks/meta-leads': typeof ApiWebhooksMetaLeadsRoute
+  '/api/webhooks/stripe': typeof ApiWebhooksStripeRoute
+  '/api/webhooks/zapi-receive': typeof ApiWebhooksZapiReceiveRoute
+  '/api/webhooks/zapi-status': typeof ApiWebhooksZapiStatusRoute
+  '/api/webhooks/zapi-disconnect': typeof ApiWebhooksZapiDisconnectRoute
+  '/api/webhooks/zapi-connect': typeof ApiWebhooksZapiConnectRoute
+  '/api/webhooks/meta-messages': typeof ApiWebhooksMetaMessagesRoute
+  '/api/webhooks/meta-comments': typeof ApiWebhooksMetaCommentsRoute
+  '/api/cron/cs-touchpoints': typeof ApiCronCsTouchpointsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -220,6 +292,14 @@ export interface FileRouteTypes {
     | '/app/'
     | '/api/public/google/callback'
     | '/api/webhooks/meta-leads'
+    | '/api/webhooks/stripe'
+    | '/api/webhooks/zapi-receive'
+    | '/api/webhooks/zapi-status'
+    | '/api/webhooks/zapi-disconnect'
+    | '/api/webhooks/zapi-connect'
+    | '/api/webhooks/meta-messages'
+    | '/api/webhooks/meta-comments'
+    | '/api/cron/cs-touchpoints'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -241,6 +321,14 @@ export interface FileRouteTypes {
     | '/app'
     | '/api/public/google/callback'
     | '/api/webhooks/meta-leads'
+    | '/api/webhooks/stripe'
+    | '/api/webhooks/zapi-receive'
+    | '/api/webhooks/zapi-status'
+    | '/api/webhooks/zapi-disconnect'
+    | '/api/webhooks/zapi-connect'
+    | '/api/webhooks/meta-messages'
+    | '/api/webhooks/meta-comments'
+    | '/api/cron/cs-touchpoints'
   id:
     | '__root__'
     | '/'
@@ -263,6 +351,14 @@ export interface FileRouteTypes {
     | '/app/'
     | '/api/public/google/callback'
     | '/api/webhooks/meta-leads'
+    | '/api/webhooks/stripe'
+    | '/api/webhooks/zapi-receive'
+    | '/api/webhooks/zapi-status'
+    | '/api/webhooks/zapi-disconnect'
+    | '/api/webhooks/zapi-connect'
+    | '/api/webhooks/meta-messages'
+    | '/api/webhooks/meta-comments'
+    | '/api/cron/cs-touchpoints'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -273,6 +369,14 @@ export interface RootRouteChildren {
   PTokenRoute: typeof PTokenRoute
   ApiPublicGoogleCallbackRoute: typeof ApiPublicGoogleCallbackRoute
   ApiWebhooksMetaLeadsRoute: typeof ApiWebhooksMetaLeadsRoute
+  ApiWebhooksStripeRoute: typeof ApiWebhooksStripeRoute
+  ApiWebhooksZapiReceiveRoute: typeof ApiWebhooksZapiReceiveRoute
+  ApiWebhooksZapiStatusRoute: typeof ApiWebhooksZapiStatusRoute
+  ApiWebhooksZapiDisconnectRoute: typeof ApiWebhooksZapiDisconnectRoute
+  ApiWebhooksZapiConnectRoute: typeof ApiWebhooksZapiConnectRoute
+  ApiWebhooksMetaMessagesRoute: typeof ApiWebhooksMetaMessagesRoute
+  ApiWebhooksMetaCommentsRoute: typeof ApiWebhooksMetaCommentsRoute
+  ApiCronCsTouchpointsRoute: typeof ApiCronCsTouchpointsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -417,6 +521,62 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiWebhooksMetaLeadsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/webhooks/stripe': {
+      id: '/api/webhooks/stripe'
+      path: '/api/webhooks/stripe'
+      fullPath: '/api/webhooks/stripe'
+      preLoaderRoute: typeof ApiWebhooksStripeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/webhooks/zapi-receive': {
+      id: '/api/webhooks/zapi-receive'
+      path: '/api/webhooks/zapi-receive'
+      fullPath: '/api/webhooks/zapi-receive'
+      preLoaderRoute: typeof ApiWebhooksZapiReceiveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/webhooks/zapi-status': {
+      id: '/api/webhooks/zapi-status'
+      path: '/api/webhooks/zapi-status'
+      fullPath: '/api/webhooks/zapi-status'
+      preLoaderRoute: typeof ApiWebhooksZapiStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/webhooks/zapi-disconnect': {
+      id: '/api/webhooks/zapi-disconnect'
+      path: '/api/webhooks/zapi-disconnect'
+      fullPath: '/api/webhooks/zapi-disconnect'
+      preLoaderRoute: typeof ApiWebhooksZapiDisconnectRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/webhooks/zapi-connect': {
+      id: '/api/webhooks/zapi-connect'
+      path: '/api/webhooks/zapi-connect'
+      fullPath: '/api/webhooks/zapi-connect'
+      preLoaderRoute: typeof ApiWebhooksZapiConnectRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/webhooks/meta-messages': {
+      id: '/api/webhooks/meta-messages'
+      path: '/api/webhooks/meta-messages'
+      fullPath: '/api/webhooks/meta-messages'
+      preLoaderRoute: typeof ApiWebhooksMetaMessagesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/webhooks/meta-comments': {
+      id: '/api/webhooks/meta-comments'
+      path: '/api/webhooks/meta-comments'
+      fullPath: '/api/webhooks/meta-comments'
+      preLoaderRoute: typeof ApiWebhooksMetaCommentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/cron/cs-touchpoints': {
+      id: '/api/cron/cs-touchpoints'
+      path: '/api/cron/cs-touchpoints'
+      fullPath: '/api/cron/cs-touchpoints'
+      preLoaderRoute: typeof ApiCronCsTouchpointsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -462,6 +622,14 @@ const rootRouteChildren: RootRouteChildren = {
   PTokenRoute: PTokenRoute,
   ApiPublicGoogleCallbackRoute: ApiPublicGoogleCallbackRoute,
   ApiWebhooksMetaLeadsRoute: ApiWebhooksMetaLeadsRoute,
+  ApiWebhooksStripeRoute: ApiWebhooksStripeRoute,
+  ApiWebhooksZapiReceiveRoute: ApiWebhooksZapiReceiveRoute,
+  ApiWebhooksZapiStatusRoute: ApiWebhooksZapiStatusRoute,
+  ApiWebhooksZapiDisconnectRoute: ApiWebhooksZapiDisconnectRoute,
+  ApiWebhooksZapiConnectRoute: ApiWebhooksZapiConnectRoute,
+  ApiWebhooksMetaMessagesRoute: ApiWebhooksMetaMessagesRoute,
+  ApiWebhooksMetaCommentsRoute: ApiWebhooksMetaCommentsRoute,
+  ApiCronCsTouchpointsRoute: ApiCronCsTouchpointsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
