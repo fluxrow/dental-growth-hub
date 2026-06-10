@@ -33,8 +33,8 @@ function Avaliacoes() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
-        <section className="lg:col-span-2 rounded-xl border border-border bg-surface overflow-hidden">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-5">
+        <section className="md:col-span-2 rounded-xl border border-border bg-surface overflow-hidden">
           <div className="px-4 h-12 border-b border-border flex items-center justify-between">
             <div>
               <div className="text-sm-minus font-semibold tracking-tight">Pacientes elegíveis</div>
@@ -72,7 +72,7 @@ function Avaliacoes() {
           </ul>
         </section>
 
-        <section className="lg:col-span-3 rounded-xl border border-border bg-surface overflow-hidden">
+        <section className="md:col-span-3 rounded-xl border border-border bg-surface overflow-hidden">
           <div className="px-4 h-12 border-b border-border flex items-center justify-between">
             <div>
               <div className="text-sm-minus font-semibold tracking-tight">

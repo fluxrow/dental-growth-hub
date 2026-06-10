@@ -39,7 +39,7 @@ function Relatorios() {
   }
   return (
     <AppShell title="Relatórios" subtitle="Painel executivo · visão consolidada da operação">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
         <div className="lg:col-span-2">
           <FunnelChart />
         </div>
@@ -77,7 +77,7 @@ function Relatorios() {
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <Card title="Taxa de comparecimento" subtitle="% de pacientes confirmados que compareceram">
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">

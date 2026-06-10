@@ -299,11 +299,12 @@ export function CancelFlowModal({ clinicId, onClose }: CancelFlowModalProps) {
   // ── Render ─────────────────────────────────────────────────────────────────
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
       {/* Backdrop */}
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
 
-      <div className="relative w-full max-w-md bg-background rounded-2xl border border-border shadow-2xl overflow-hidden">
+      {/* Mobile: bottom-sheet · sm+: modal centralizado */}
+      <div className="relative w-full max-w-md bg-background rounded-t-2xl rounded-b-none sm:rounded-2xl border border-border shadow-2xl overflow-hidden max-h-[90dvh] overflow-y-auto pb-[env(safe-area-inset-bottom)]">
         {/* Header */}
         <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-border">
           <h2 className="text-[15px] font-semibold">
