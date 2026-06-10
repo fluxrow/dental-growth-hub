@@ -8,6 +8,7 @@ import { RevenueLeakBanner } from "@/components/app/revenue-leak-banner";
 import { useEmptyMode } from "@/hooks/use-empty-mode";
 import { KPIS, FINANCIAL_KPIS, CONVERSATIONS, OPPORTUNITIES } from "@/lib/mock";
 import { supabase } from "@/integrations/supabase/client";
+import { OnboardingChecklist } from "@/components/app/onboarding-checklist";
 
 export const Route = createFileRoute("/app/")({
   head: () => ({ meta: [{ title: "Dashboard · DentalFlux" }] }),
@@ -26,6 +27,7 @@ function Dashboard() {
 
     return (
       <AppShell title="Visão geral" subtitle="Saúde da operação · últimos 30 dias">
+        <OnboardingChecklist />
         <RevenueLeakBanner />
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
           {FINANCIAL_KPIS.map((k) => (
@@ -243,6 +245,7 @@ function LiveDashboard() {
 
   return (
     <AppShell title="Visão geral" subtitle="Saúde da operação · tempo real">
+      <OnboardingChecklist />
       <RevenueLeakBanner />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
         {liveFinancial.map((k) => (
