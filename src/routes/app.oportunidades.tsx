@@ -157,12 +157,16 @@ function Oportunidades() {
       </div>
 
       <div className="overflow-x-auto">
-        <div className="flex gap-3 p-4 lg:p-6 min-w-max">
+        {/* Colunas fixas com scroll horizontal; em telas largas (2xl) esticam para preencher */}
+        <div className="flex gap-3 p-4 lg:p-6 min-w-max 2xl:min-w-0">
           {OPP_STAGES.map((stage) => {
             const stageItems = byStage.get(stage.id) ?? [];
             const total = stageItems.reduce((s, o) => s + o.value, 0);
             return (
-              <div key={stage.id} className="w-[280px] shrink-0">
+              <div
+                key={stage.id}
+                className="w-[280px] shrink-0 2xl:w-auto 2xl:flex-1 2xl:min-w-[260px]"
+              >
                 <div className="flex items-center justify-between mb-2 px-1">
                   <div className="flex items-center gap-2 min-w-0">
                     <span
