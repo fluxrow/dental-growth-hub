@@ -134,8 +134,8 @@ function Oportunidades() {
       }
       flush
     >
-      <div className="flex items-center justify-between border-b border-border bg-background px-4 lg:px-6 h-12">
-        <div className="flex items-center gap-2">
+      <div className="flex items-center justify-between border-b border-border bg-background px-4 lg:px-6 h-12 overflow-x-auto">
+        <div className="flex items-center gap-2 shrink-0">
           <button className="inline-flex items-center gap-1.5 h-7 px-2.5 rounded-md border border-input bg-surface text-[12px]">
             <Filter className="size-3.5" /> Filtros
           </button>
@@ -195,54 +195,54 @@ function Oportunidades() {
                             : "border-border";
                     const urgencyLabel =
                       o.daysInStage >= 10 ? (
-                        <span className="inline-flex items-center gap-0.5 rounded-full bg-destructive/10 text-destructive px-1.5 py-0.5 text-[9.5px] font-semibold uppercase tracking-wide">
+                        <span className="inline-flex items-center gap-0.5 rounded-full bg-destructive/10 text-destructive px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide">
                           ● Frio
                         </span>
                       ) : o.daysInStage >= 6 ? (
-                        <span className="inline-flex items-center gap-0.5 rounded-full bg-orange-500/10 text-orange-600 px-1.5 py-0.5 text-[9.5px] font-semibold uppercase tracking-wide">
+                        <span className="inline-flex items-center gap-0.5 rounded-full bg-orange-500/10 text-orange-600 px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide">
                           Atrasado
                         </span>
                       ) : null;
                     return (
-                    <div
-                      key={o.id}
-                      className={cn(
-                        "group rounded-lg border bg-surface p-3 hover:shadow-[0_4px_12px_-6px_oklch(0.55_0.2_275/0.15)] transition-shadow cursor-pointer",
-                        urgencyBorder,
-                      )}
-                    >
-                      <div className="flex items-center justify-between gap-2 mb-1.5">
-                        <div className="text-[13px] font-medium truncate">{o.name}</div>
-                        <div className="flex items-center gap-1">
-                          <div className="text-[11px] font-semibold tabular-nums text-foreground/80">
-                            R$ {o.value.toLocaleString("pt-BR")}
-                          </div>
-                          <OpportunityCardActions opp={o} onAdvance={advance} onLose={lose} />
-                        </div>
-                      </div>
-                      <div className="text-[11.5px] text-muted-foreground truncate mb-2">
-                        {o.nextAction}
-                      </div>
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-1.5 min-w-0">
-                          <span className="text-[10.5px] inline-flex items-center gap-1 rounded-md bg-muted px-1.5 py-0.5 text-foreground/70">
-                            {o.source}
-                          </span>
-                          {urgencyLabel}
-                        </div>
-                        <div className="flex items-center gap-1.5 shrink-0">
-                          <span className="text-[10.5px] text-muted-foreground tabular-nums">
-                            {o.daysInStage}d
-                          </span>
-                          <div className="size-5 rounded-full bg-gradient-to-br from-primary to-chart-2 text-primary-foreground text-[9px] font-semibold flex items-center justify-center">
-                            {o.owner
-                              .split(" ")
-                              .map((n) => n[0])
-                              .slice(0, 1)}
+                      <div
+                        key={o.id}
+                        className={cn(
+                          "group rounded-lg border bg-surface p-3 hover:shadow-[0_4px_12px_-6px_oklch(0.55_0.2_275/0.15)] transition-shadow cursor-pointer",
+                          urgencyBorder,
+                        )}
+                      >
+                        <div className="flex items-center justify-between gap-2 mb-1.5">
+                          <div className="text-[13px] font-medium truncate">{o.name}</div>
+                          <div className="flex items-center gap-1">
+                            <div className="text-[11px] font-semibold tabular-nums text-foreground/80">
+                              R$ {o.value.toLocaleString("pt-BR")}
+                            </div>
+                            <OpportunityCardActions opp={o} onAdvance={advance} onLose={lose} />
                           </div>
                         </div>
+                        <div className="text-[11.5px] text-muted-foreground truncate mb-2">
+                          {o.nextAction}
+                        </div>
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="flex items-center gap-1.5 min-w-0">
+                            <span className="text-[10.5px] inline-flex items-center gap-1 rounded-md bg-muted px-1.5 py-0.5 text-foreground/70">
+                              {o.source}
+                            </span>
+                            {urgencyLabel}
+                          </div>
+                          <div className="flex items-center gap-1.5 shrink-0">
+                            <span className="text-[10.5px] text-muted-foreground tabular-nums">
+                              {o.daysInStage}d
+                            </span>
+                            <div className="size-5 rounded-full bg-gradient-to-br from-primary to-chart-2 text-primary-foreground text-[9px] font-semibold flex items-center justify-center">
+                              {o.owner
+                                .split(" ")
+                                .map((n) => n[0])
+                                .slice(0, 1)}
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                    </div>
                     );
                   })}
                   <button className="w-full rounded-lg border border-dashed border-border text-[12px] text-muted-foreground py-2 hover:border-primary/40 hover:text-primary">
