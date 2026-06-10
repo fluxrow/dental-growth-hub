@@ -240,7 +240,12 @@ function Conversas() {
                 <textarea
                   rows={1}
                   placeholder="Escreva uma mensagem…"
-                  className="w-full resize-none bg-transparent text-[13.5px] focus:outline-none"
+                  onInput={(e) => {
+                    const el = e.currentTarget;
+                    el.style.height = "auto";
+                    el.style.height = `${Math.min(el.scrollHeight, 120)}px`;
+                  }}
+                  className="w-full resize-none bg-transparent text-[13.5px] focus:outline-none max-h-[120px]"
                 />
               </div>
               <button className="size-9 rounded-md hover:bg-muted flex items-center justify-center">
