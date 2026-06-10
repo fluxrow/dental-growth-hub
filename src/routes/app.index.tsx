@@ -6,6 +6,7 @@ import { KpiCard } from "@/components/app/kpi-card";
 import { FunnelChart } from "@/components/app/funnel";
 import { RevenueLeakBanner } from "@/components/app/revenue-leak-banner";
 import { useEmptyMode } from "@/hooks/use-empty-mode";
+import { usePeriod, periodToRange, periodLabel } from "@/hooks/use-period";
 import { KPIS, FINANCIAL_KPIS, CONVERSATIONS, OPPORTUNITIES } from "@/lib/mock";
 import { supabase } from "@/integrations/supabase/client";
 import { OnboardingChecklist } from "@/components/app/onboarding-checklist";
@@ -120,15 +121,24 @@ function Dashboard() {
 // ─── Live Dashboard ───────────────────────────────────────────────────────────
 
 function LiveDashboard() {
+  const period = usePeriod();
+  const { from, to } = periodToRange(period);
+
   const { data, isLoading } = useQuery({
-    queryKey: ["dashboard_live"],
+    queryKey: ["dashboard_live", period],
     queryFn: async () => {
       const [oppsRes, patientsRes] = await Promise.all([
         supabase
           .from("oportunidades")
           .select("stage, value, name, next_action")
-          .neq("stage", "perdida"),
-        supabase.from("pacientes").select("status"),
+          .neq("stage", "perdida")
+          .gte("created_at", from)
+          .lte("created_at", to),
+        supabase
+          .from("pacientes")
+          .select("status")
+          .gte("created_at", from)
+          .lte("created_at", to),
       ]);
       const opps = oppsRes.data ?? [];
       const pts = patientsRes.data ?? [];
@@ -244,7 +254,7 @@ function LiveDashboard() {
   ];
 
   return (
-    <AppShell title="Visão geral" subtitle="Saúde da operação · tempo real">
+    <AppShell title="Visão geral" subtitle={`Saúde da operação · ${periodLabel(period)}`}>
       <OnboardingChecklist />
       <RevenueLeakBanner />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">

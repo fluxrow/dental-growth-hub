@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { CommandBar } from "./command-bar";
+import { usePeriod, setPeriod, PERIOD_LABELS, type Period } from "@/hooks/use-period";
 import { cn } from "@/lib/utils";
 import { NotificationsPopover } from "./notifications-popover";
 import { useEmptyMode, toggleEmptyMode } from "@/hooks/use-empty-mode";
@@ -65,8 +66,6 @@ const NAV_GROUPS: NavGroup[] = [
     ],
   },
 ];
-
-const PERIODS = ["Hoje", "7 dias", "30 dias", "90 dias"] as const;
 
 export function AppShell({
   title,
@@ -355,19 +354,23 @@ function EmptyModeToggle() {
 }
 
 function PeriodSelector() {
+  const current = usePeriod();
+  const periods = Object.entries(PERIOD_LABELS) as [Period, string][];
+
   return (
     <div className="hidden md:flex h-8 rounded-md border border-input bg-surface overflow-hidden">
-      {PERIODS.map((p, i) => (
+      {periods.map(([key, label]) => (
         <button
-          key={p}
+          key={key}
+          onClick={() => setPeriod(key)}
           className={cn(
-            "px-2.5 text-[11.5px] font-medium border-r border-input last:border-r-0",
-            i === 2
+            "px-2.5 text-[11.5px] font-medium border-r border-input last:border-r-0 transition-colors",
+            current === key
               ? "bg-primary/10 text-primary"
               : "text-muted-foreground hover:text-foreground hover:bg-muted",
           )}
         >
-          {p}
+          {label}
         </button>
       ))}
     </div>
