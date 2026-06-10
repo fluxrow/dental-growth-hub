@@ -215,6 +215,12 @@ export function AppShell({
             )}
             {subtitle && <p className="text-[12px] text-muted-foreground truncate">{subtitle}</p>}
           </div>
+          {/* Mobile-only: mode toggle + notifications always accessible */}
+          <div className="flex items-center gap-1.5 md:hidden">
+            <EmptyModeToggle />
+            <NotificationsPopover />
+          </div>
+          {/* Desktop: search + period + mode toggle + notifications + page actions */}
           <div className="hidden md:flex items-center gap-2">
             <div className="relative">
               <Search className="size-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />

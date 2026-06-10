@@ -1,6 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Search, Send, Paperclip, Smile, Phone, MoreVertical, Sparkles, Tag } from "lucide-react";
+import {
+  Search,
+  Send,
+  Paperclip,
+  Smile,
+  Phone,
+  MoreVertical,
+  Sparkles,
+  Tag,
+  ArrowLeft,
+} from "lucide-react";
 import { AppShell } from "@/components/app/app-shell";
 import { EmptyState } from "@/components/app/empty-state";
 import { EMPTY_STATES } from "@/lib/empty-states";
@@ -23,6 +33,8 @@ const STATUS_LABEL: Record<string, { label: string; tone: string }> = {
 function Conversas() {
   const __empty = useEmptyMode();
   const [activeId, setActiveId] = useState(CONVERSATIONS[0].id);
+  // Mobile: toggle between list and thread panels
+  const [showThread, setShowThread] = useState(false);
   if (__empty) {
     return (
       <AppShell title="Conversas" subtitle="Inbox unificado">
@@ -35,9 +47,18 @@ function Conversas() {
 
   return (
     <AppShell title="Conversas" subtitle="Inbox unificado · WhatsApp + canais conectados" flush>
-      <div className="grid grid-cols-12 h-[calc(100vh-4rem)]">
+      {/* h: subtract header(4rem) + mobile bottom nav(4rem). lg: only header */}
+      <div className="grid grid-cols-12 h-[calc(100vh-8rem)] lg:h-[calc(100vh-4rem)]">
         {/* List */}
-        <aside className="col-span-12 md:col-span-4 lg:col-span-3 border-r border-border bg-surface flex flex-col min-w-0">
+        <aside
+          className={cn(
+            "border-r border-border bg-surface flex-col min-w-0",
+            // Desktop: always 4-col flex sidebar
+            "md:flex md:col-span-4 lg:col-span-3",
+            // Mobile: full-width list, hidden when thread is open
+            showThread ? "hidden" : "flex col-span-12",
+          )}
+        >
           <div className="p-3 border-b border-border">
             <div className="relative">
               <Search className="size-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
@@ -68,7 +89,10 @@ function Conversas() {
               return (
                 <button
                   key={c.id}
-                  onClick={() => setActiveId(c.id)}
+                  onClick={() => {
+                    setActiveId(c.id);
+                    setShowThread(true);
+                  }}
                   className={cn(
                     "w-full text-left flex items-start gap-3 px-3 py-3 border-b border-border/60 hover:bg-muted/40",
                     activeId === c.id && "bg-primary/5",
@@ -94,14 +118,14 @@ function Conversas() {
                     <div className="mt-1 flex items-center gap-1.5">
                       <span
                         className={cn(
-                          "inline-flex rounded-full px-1.5 py-0.5 text-[9.5px] font-medium",
+                          "inline-flex rounded-full px-1.5 py-0.5 text-[11px] font-medium",
                           s.tone,
                         )}
                       >
                         {s.label}
                       </span>
                       {c.unread > 0 && (
-                        <span className="ml-auto size-4 rounded-full bg-primary text-primary-foreground text-[9.5px] font-semibold flex items-center justify-center tabular-nums">
+                        <span className="ml-auto size-5 rounded-full bg-primary text-primary-foreground text-[10.5px] font-semibold flex items-center justify-center tabular-nums">
                           {c.unread}
                         </span>
                       )}
@@ -114,9 +138,24 @@ function Conversas() {
         </aside>
 
         {/* Thread */}
-        <section className="hidden md:flex col-span-8 lg:col-span-6 flex-col bg-background min-w-0">
-          <div className="h-14 border-b border-border flex items-center justify-between px-4">
-            <div className="flex items-center gap-3 min-w-0">
+        <section
+          className={cn(
+            "flex-col bg-background min-w-0",
+            // Desktop: always visible as 8-col (lg: 6-col)
+            "md:flex md:col-span-8 lg:col-span-6",
+            // Mobile: full-width when thread selected, hidden otherwise
+            showThread ? "flex col-span-12" : "hidden",
+          )}
+        >
+          <div className="h-14 border-b border-border flex items-center gap-2 px-4">
+            {/* Back to list — mobile only */}
+            <button
+              className="md:hidden size-8 rounded-md hover:bg-muted flex items-center justify-center shrink-0"
+              onClick={() => setShowThread(false)}
+            >
+              <ArrowLeft className="size-4 text-muted-foreground" />
+            </button>
+            <div className="flex items-center gap-3 min-w-0 flex-1">
               <div className="size-9 rounded-full bg-gradient-to-br from-muted to-accent flex items-center justify-center text-[11px] font-semibold">
                 {active.patientName
                   .split(" ")
