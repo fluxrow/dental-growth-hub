@@ -27,7 +27,7 @@ const getStripe = () =>
 
 /** Aplica cupom de desconto à subscription ativa do clinic */
 export const applyCancelSaveOffer = createServerFn({ method: "POST" })
-  .validator((d: unknown) => d as { clinicId: string; couponId: string; reason: string })
+  .inputValidator((d: unknown) => d as { clinicId: string; couponId: string; reason: string })
   .handler(async ({ data }) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data: sub } = await (supabaseAdmin as any)
@@ -58,7 +58,7 @@ export const applyCancelSaveOffer = createServerFn({ method: "POST" })
 
 /** Pausa a subscription por N meses */
 export const pauseSubscription = createServerFn({ method: "POST" })
-  .validator((d: unknown) => d as { clinicId: string; months: number; reason: string })
+  .inputValidator((d: unknown) => d as { clinicId: string; months: number; reason: string })
   .handler(async ({ data }) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data: sub } = await (supabaseAdmin as any)
@@ -95,7 +95,7 @@ export const pauseSubscription = createServerFn({ method: "POST" })
 
 /** Cancela subscription ao final do período */
 export const cancelSubscription = createServerFn({ method: "POST" })
-  .validator((d: unknown) => d as { clinicId: string; reason: string })
+  .inputValidator((d: unknown) => d as { clinicId: string; reason: string })
   .handler(async ({ data }) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data: sub } = await (supabaseAdmin as any)
