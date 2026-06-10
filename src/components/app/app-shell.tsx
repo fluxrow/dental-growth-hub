@@ -20,6 +20,7 @@ import {
   Stethoscope,
   MoreHorizontal,
   X,
+  Crosshair,
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
@@ -36,6 +37,7 @@ const NAV_GROUPS: NavGroup[] = [
   {
     label: "Hoje",
     items: [
+      { to: "/app/triagem", label: "Triagem", icon: Crosshair },
       { to: "/app/oportunidades", label: "Oportunidades", icon: Target },
       { to: "/app/conversas", label: "Conversas", icon: MessagesSquare },
       { to: "/app/atividade", label: "Atividade", icon: ActivityIcon },
@@ -220,9 +222,9 @@ export function AppShell({
 // ─── Mobile Bottom Nav ────────────────────────────────────────────────────────
 
 const BOTTOM_TABS = [
+  { to: "/app/triagem", label: "Triagem", icon: Crosshair },
   { to: "/app/oportunidades", label: "Pipeline", icon: Target },
   { to: "/app/conversas", label: "Conversas", icon: MessagesSquare },
-  { to: "/app/pacientes", label: "Pacientes", icon: Users },
 ];
 
 const MORE_ITEMS = [
