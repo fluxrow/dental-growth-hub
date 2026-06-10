@@ -154,37 +154,71 @@ export const Route = createFileRoute("/api/webhooks/meta-leads")({
               });
               if (evtErr) console.error("[meta-leads] webhook_events insert error", evtErr);
 
-              // 3. Verificar duplicata por leadgen_id via webhook_events
-              // (meta_leadgen_id será adicionado a oportunidades em migration futura)
+              // 3. Verificar duplicata por meta_leadgen_id em oportunidades (idempotência)
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               const { data: existing } = await (supabaseAdmin as any)
-                .from("webhook_events")
+                .from("oportunidades")
                 .select("id")
-                .eq("source", "meta_leads")
-                .eq("payload->>leadgen_id", lead.leadgen_id)
+                .eq("meta_leadgen_id", lead.leadgen_id)
                 .maybeSingle();
 
               if (existing) {
-                console.log(`[meta-leads] leadgen_id ${lead.leadgen_id} already processed`);
+                console.log(
+                  `[meta-leads] leadgen_id ${lead.leadgen_id} already processed (oportunidade ${existing.id})`,
+                );
                 continue;
               }
 
               // 4. Resolver clinic_id via page_id → clinicas.meta_page_id
-              // TODO: adicionar campo meta_page_id em clinicas na próxima migration
-              // Por ora: busca primeira clínica que tenha a integração Meta ativa
-              const { data: integration } = await supabaseAdmin
-                .from("clinic_integrations")
-                .select("clinic_id")
-                .eq("provider", "meta_ads")
-                .eq("status", "connected")
-                .maybeSingle();
+              //    Tenta 3 estratégias em ordem:
+              //    a) clinicas.meta_page_id direto (mais rápido)
+              //    b) clinic_integrations.credentials->page_id (meta_fb/meta_ig)
+              //    c) fallback: primeira integração meta_ads ativa
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              const db = supabaseAdmin as any;
 
-              if (!integration) {
+              let clinicId: string | null = null;
+
+              // Estratégia A: coluna meta_page_id na tabela clinicas
+              if (lead.page_id) {
+                const { data: clinicByPage } = await db
+                  .from("clinicas")
+                  .select("id")
+                  .eq("meta_page_id", lead.page_id)
+                  .maybeSingle();
+
+                if (clinicByPage) clinicId = clinicByPage.id;
+              }
+
+              // Estratégia B: credentials JSONB em clinic_integrations
+              if (!clinicId && lead.page_id) {
+                const { data: integByPage } = await db
+                  .from("clinic_integrations")
+                  .select("clinic_id")
+                  .in("provider", ["meta_fb", "meta_ig", "meta_ads"])
+                  .eq("status", "connected")
+                  .contains("credentials", { page_id: lead.page_id })
+                  .maybeSingle();
+
+                if (integByPage) clinicId = integByPage.clinic_id;
+              }
+
+              // Estratégia C: primeira integração meta ativa (fallback)
+              if (!clinicId) {
+                const { data: fallback } = await db
+                  .from("clinic_integrations")
+                  .select("clinic_id")
+                  .in("provider", ["meta_fb", "meta_ig", "meta_ads"])
+                  .eq("status", "connected")
+                  .maybeSingle();
+
+                if (fallback) clinicId = fallback.clinic_id;
+              }
+
+              if (!clinicId) {
                 console.warn(`[meta-leads] no clinic found for page_id ${lead.page_id}`);
                 continue;
               }
-
-              const clinicId = integration.clinic_id;
 
               // 5. Extrair campos do formulário
               const fieldData = lead.field_data ?? [];
@@ -197,16 +231,16 @@ export const Route = createFileRoute("/api/webhooks/meta-leads")({
               );
               const email = extractField(fieldData, "email");
 
-              // 6. Criar oportunidade
-              const { error: oppErr } = await supabaseAdmin.from("oportunidades").insert({
+              // 6. Criar oportunidade (ON CONFLICT via unique index em meta_leadgen_id)
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              const { error: oppErr } = await (supabaseAdmin as any).from("oportunidades").insert({
                 clinic_id: clinicId,
                 name: name.trim(),
                 phone,
                 source: lead.campaign_name ? `Meta · ${lead.campaign_name}` : "Meta Ads",
                 stage: "novo",
                 stage_changed_at: new Date().toISOString(),
-                // meta_leadgen_id: lead.leadgen_id, — campo a adicionar na próxima migration
-                // O campo meta_leadgen_id será indexado para idempotency
+                meta_leadgen_id: lead.leadgen_id,
               });
 
               if (oppErr) {
