@@ -128,7 +128,7 @@ function Oportunidades() {
       title="Oportunidades"
       subtitle="Pipeline completo · jornada Lead → Paciente Ativo"
       actions={
-        <button className="hidden md:inline-flex items-center gap-1.5 h-8 px-3 rounded-md bg-primary text-primary-foreground text-xs-plus font-medium hover:opacity-90">
+        <button className="inline-flex shadow-lg md:shadow-none items-center gap-1.5 h-8 px-3 rounded-md bg-primary text-primary-foreground text-xs-plus font-medium hover:opacity-90">
           <Plus className="size-3.5" /> Nova oportunidade
         </button>
       }

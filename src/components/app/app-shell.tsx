@@ -240,8 +240,20 @@ export function AppShell({
               </p>
             )}
           </div>
-          {/* Mobile-only: mode toggle + notifications always accessible */}
+          {/* Mobile-only: search + period + mode toggle + notifications */}
           <div className="flex items-center gap-1.5 md:hidden">
+            <button
+              title="Buscar"
+              onClick={() =>
+                window.dispatchEvent(
+                  new KeyboardEvent("keydown", { key: "k", metaKey: true, bubbles: true }),
+                )
+              }
+              className="size-9 rounded-md border border-input bg-surface flex items-center justify-center text-muted-foreground"
+            >
+              <Search className="size-4" />
+            </button>
+            <MobilePeriodSelect />
             <EmptyModeToggle />
             <NotificationsPopover />
           </div>
@@ -277,6 +289,13 @@ export function AppShell({
           {children}
         </main>
       </div>
+
+      {/* Mobile FAB: ações primárias da página, acima do bottom nav */}
+      {actions && (
+        <div className="md:hidden fixed right-4 bottom-[calc(5rem+env(safe-area-inset-bottom))] z-20">
+          {actions}
+        </div>
+      )}
 
       {/* Mobile bottom nav */}
       <MobileBottomNav />
@@ -414,6 +433,25 @@ function EmptyModeToggle() {
       {live ? <Eye className="size-3.5" /> : <EyeOff className="size-3.5" />}
       <span className="hidden md:inline">{live ? "Real" : "Demo"}</span>
     </button>
+  );
+}
+
+// Seletor de período compacto para mobile (select nativo = melhor UX touch)
+function MobilePeriodSelect() {
+  const current = usePeriod();
+  return (
+    <select
+      value={current}
+      onChange={(e) => setPeriod(e.target.value as Period)}
+      aria-label="Período"
+      className="h-9 rounded-md border border-input bg-surface px-1.5 text-2xs font-medium text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+    >
+      {(Object.entries(PERIOD_LABELS) as [Period, string][]).map(([key, label]) => (
+        <option key={key} value={key}>
+          {label}
+        </option>
+      ))}
+    </select>
   );
 }
 

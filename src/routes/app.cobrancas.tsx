@@ -85,7 +85,7 @@ function Cobrancas() {
       title="Cobranças"
       subtitle="Régua D-3 → D+10 · cobrança automática por WhatsApp"
       actions={
-        <button className="hidden md:inline-flex items-center gap-1.5 h-8 px-3 rounded-lg bg-primary text-primary-foreground text-xs-plus font-medium hover:opacity-90 transition-opacity">
+        <button className="inline-flex shadow-lg md:shadow-none items-center gap-1.5 h-8 px-3 rounded-lg bg-primary text-primary-foreground text-xs-plus font-medium hover:opacity-90 transition-opacity">
           <Plus className="size-3.5" /> Nova cobrança
         </button>
       }
