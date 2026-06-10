@@ -31,7 +31,7 @@ export const applyCancelSaveOffer = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data: sub } = await (supabaseAdmin as any)
-      .from("subscriptions")
+      .from("clinic_subscriptions")
       .select("stripe_subscription_id")
       .eq("clinic_id", data.clinicId)
       .eq("status", "active")
@@ -62,7 +62,7 @@ export const pauseSubscription = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data: sub } = await (supabaseAdmin as any)
-      .from("subscriptions")
+      .from("clinic_subscriptions")
       .select("stripe_subscription_id")
       .eq("clinic_id", data.clinicId)
       .eq("status", "active")
@@ -99,7 +99,7 @@ export const cancelSubscription = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data: sub } = await (supabaseAdmin as any)
-      .from("subscriptions")
+      .from("clinic_subscriptions")
       .select("stripe_subscription_id")
       .eq("clinic_id", data.clinicId)
       .eq("status", "active")
