@@ -59,7 +59,7 @@ export function KpiCard({ k, large = false }: { k: Kpi; large?: boolean }) {
           {k.delta.toFixed(1)}%
         </div>
       </div>
-      <div className={cn("mt-2 -mx-1", large ? "h-14" : "h-10")}>
+      <div className={cn("mt-2 -mx-1", large ? "h-12 md:h-16" : "h-10 md:h-12")}>
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data}>
             <defs>

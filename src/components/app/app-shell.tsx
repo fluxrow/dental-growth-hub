@@ -211,9 +211,15 @@ export function AppShell({
           </div>
           <div className="flex-1 min-w-0">
             {title && (
-              <h1 className="text-[15px] font-semibold tracking-tight truncate">{title}</h1>
+              <h1 className="text-[15px] font-semibold tracking-tight truncate" title={title}>
+                {title}
+              </h1>
             )}
-            {subtitle && <p className="text-[12px] text-muted-foreground truncate">{subtitle}</p>}
+            {subtitle && (
+              <p className="text-[12px] text-muted-foreground truncate" title={subtitle}>
+                {subtitle}
+              </p>
+            )}
           </div>
           {/* Mobile-only: mode toggle + notifications always accessible */}
           <div className="flex items-center gap-1.5 md:hidden">
@@ -242,7 +248,10 @@ export function AppShell({
           </div>
         </header>
         <main
-          className={cn(flush ? "pb-16 lg:pb-0" : "p-4 pb-20 lg:p-6 lg:pb-6", "flex-1 min-w-0")}
+          className={cn(
+            flush ? "pb-16 lg:pb-0" : "p-4 pb-[4.5rem] lg:p-6 lg:pb-6",
+            "flex-1 min-w-0",
+          )}
         >
           {children}
         </main>
