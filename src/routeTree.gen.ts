@@ -468,30 +468,6 @@ export interface RootRouteChildren {
   ApiCronAf07AvaliacaoRoute: typeof ApiCronAf07AvaliacaoRoute
 }
 
-const rootRouteChildrenFull: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  AppRoute: AppRouteWithChildren,
-  AuthRoute: AuthRoute,
-  OnboardingRoute: OnboardingRoute,
-  PTokenRoute: PTokenRoute,
-  ApiPublicGoogleCallbackRoute: ApiPublicGoogleCallbackRoute,
-  ApiWebhooksMetaLeadsRoute: ApiWebhooksMetaLeadsRoute,
-  ApiWebhooksStripeRoute: ApiWebhooksStripeRoute,
-  ApiWebhooksZapiReceiveRoute: ApiWebhooksZapiReceiveRoute,
-  ApiWebhooksZapiStatusRoute: ApiWebhooksZapiStatusRoute,
-  ApiWebhooksZapiDisconnectRoute: ApiWebhooksZapiDisconnectRoute,
-  ApiWebhooksZapiConnectRoute: ApiWebhooksZapiConnectRoute,
-  ApiWebhooksMetaMessagesRoute: ApiWebhooksMetaMessagesRoute,
-  ApiWebhooksMetaCommentsRoute: ApiWebhooksMetaCommentsRoute,
-  ApiCronCsTouchpointsRoute: ApiCronCsTouchpointsRoute,
-  ApiCronAf02ConfirmacaoRoute: ApiCronAf02ConfirmacaoRoute,
-  ApiCronAf03LeadFrioRoute: ApiCronAf03LeadFrioRoute,
-  ApiCronAf04ReativacaoRoute: ApiCronAf04ReativacaoRoute,
-  ApiCronAf06PosConsultaRoute: ApiCronAf06PosConsultaRoute,
-  ApiCronAf07AvaliacaoRoute: ApiCronAf07AvaliacaoRoute,
-}
-void rootRouteChildrenFull // used below
-
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/onboarding': {
