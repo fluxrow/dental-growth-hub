@@ -47,8 +47,8 @@ function Conversas() {
 
   return (
     <AppShell title="Conversas" subtitle="Inbox unificado · WhatsApp + canais conectados" flush>
-      {/* h: subtract header(4rem) + mobile bottom nav(4rem). lg: only header */}
-      <div className="grid grid-cols-12 h-[calc(100vh-8rem)] lg:h-[calc(100vh-4rem)]">
+      {/* h: subtract header(4rem) + mobile bottom nav(4rem). md+: only header (sidebar takes over) */}
+      <div className="grid grid-cols-12 h-[calc(100vh-8rem)] md:h-[calc(100vh-4rem)]">
         {/* List */}
         <aside
           className={cn(

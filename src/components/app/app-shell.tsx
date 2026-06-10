@@ -108,12 +108,18 @@ export function AppShell({
   return (
     <div className="flex min-h-screen w-full bg-background text-foreground">
       {/* Sidebar */}
-      <aside className="hidden lg:flex w-[240px] shrink-0 flex-col border-r border-border bg-sidebar">
-        <Link to="/" className="flex items-center gap-2 px-5 h-16 border-b border-sidebar-border">
+      {/* md: compact icon-only rail · lg: full 240px sidebar */}
+      <aside className="hidden md:flex md:w-16 lg:w-[240px] shrink-0 flex-col border-r border-border bg-sidebar">
+        <Link
+          to="/"
+          className="flex items-center gap-2 h-16 border-b border-sidebar-border justify-center px-0 lg:justify-start lg:px-5"
+        >
           <Logo />
-          <span className="font-display font-semibold tracking-tight">DentalFlux</span>
+          <span className="font-display font-semibold tracking-tight hidden lg:inline">
+            DentalFlux
+          </span>
         </Link>
-        <div className="px-3 py-2">
+        <div className="hidden lg:block px-3 py-2">
           <button className="w-full flex items-center gap-2 px-2.5 py-2 rounded-md hover:bg-sidebar-accent text-left">
             <div className="size-7 rounded-md bg-primary/10 text-primary flex items-center justify-center text-[11px] font-semibold">
               {clinicInitials}
@@ -128,7 +134,7 @@ export function AppShell({
         <nav className="flex-1 overflow-y-auto px-2 pb-4 pt-2 space-y-1">
           {NAV_GROUPS.map((group) => (
             <div key={group.label}>
-              <div className="px-2 py-1.5 text-[10px] font-semibold tracking-wider text-muted-foreground/60 uppercase">
+              <div className="hidden lg:block px-2 py-1.5 text-[10px] font-semibold tracking-wider text-muted-foreground/60 uppercase">
                 {group.label}
               </div>
               {group.items.map((item) => {
@@ -138,15 +144,16 @@ export function AppShell({
                   <Link
                     key={item.to}
                     to={item.to as never}
+                    title={item.label}
                     className={cn(
-                      "flex items-center gap-2.5 px-2.5 py-2 rounded-md text-[13px] transition-colors",
+                      "flex items-center gap-2.5 px-2.5 py-2 rounded-md text-[13px] transition-colors justify-center lg:justify-start",
                       active
                         ? "bg-primary/10 text-primary font-medium"
                         : "text-sidebar-foreground/85 hover:bg-sidebar-accent hover:text-sidebar-foreground",
                     )}
                   >
                     <Icon className="size-4 shrink-0" />
-                    <span className="truncate">{item.label}</span>
+                    <span className="truncate hidden lg:inline">{item.label}</span>
                   </Link>
                 );
               })}
@@ -156,30 +163,34 @@ export function AppShell({
           {/* Admin-only section */}
           {data?.profile?.role === "admin" && (
             <div>
-              <div className="px-2 py-1.5 text-[10px] font-semibold tracking-wider text-muted-foreground/60 uppercase">
+              <div className="hidden lg:block px-2 py-1.5 text-[10px] font-semibold tracking-wider text-muted-foreground/60 uppercase">
                 Admin
               </div>
               <Link
                 to="/app/admin/cs-queue"
+                title="CS Queue"
                 className={cn(
-                  "flex items-center gap-2.5 px-2.5 py-2 rounded-md text-[13px] transition-colors",
+                  "flex items-center gap-2.5 px-2.5 py-2 rounded-md text-[13px] transition-colors justify-center lg:justify-start",
                   pathname.startsWith("/app/admin")
                     ? "bg-primary/10 text-primary font-medium"
                     : "text-sidebar-foreground/85 hover:bg-sidebar-accent hover:text-sidebar-foreground",
                 )}
               >
                 <ShieldCheck className="size-4 shrink-0" />
-                <span className="truncate">CS Queue</span>
+                <span className="truncate hidden lg:inline">CS Queue</span>
               </Link>
             </div>
           )}
         </nav>
         <div className="border-t border-sidebar-border p-3">
-          <div className="flex items-center gap-2.5">
-            <div className="size-8 rounded-full bg-gradient-to-br from-primary to-chart-2 flex items-center justify-center text-primary-foreground text-[11px] font-semibold">
+          <div className="flex items-center gap-2.5 flex-col lg:flex-row">
+            <div
+              title={userName}
+              className="size-8 rounded-full bg-gradient-to-br from-primary to-chart-2 flex items-center justify-center text-primary-foreground text-[11px] font-semibold"
+            >
               {userInitials}
             </div>
-            <div className="flex-1 min-w-0">
+            <div className="flex-1 min-w-0 hidden lg:block">
               <div className="text-[12px] font-medium truncate">{userName}</div>
               <div className="text-[11px] text-muted-foreground truncate">{user?.email}</div>
             </div>
@@ -193,7 +204,7 @@ export function AppShell({
           </div>
           <Link
             to="/app/configuracoes"
-            className="mt-2 block text-[11px] text-muted-foreground hover:text-primary"
+            className="mt-2 hidden lg:block text-[11px] text-muted-foreground hover:text-primary"
           >
             Gerenciar agenda Google →
           </Link>
@@ -203,7 +214,7 @@ export function AppShell({
       {/* Main */}
       <div className="flex-1 flex flex-col min-w-0">
         <header className="sticky top-0 z-10 h-16 border-b border-border bg-background/80 backdrop-blur flex items-center gap-3 px-4 lg:px-6">
-          <div className="lg:hidden">
+          <div className="md:hidden">
             <Link to="/" className="flex items-center gap-2">
               <Logo />
               <span className="font-display font-semibold">DentalFlux</span>
@@ -249,7 +260,7 @@ export function AppShell({
         </header>
         <main
           className={cn(
-            flush ? "pb-16 lg:pb-0" : "p-4 pb-[4.5rem] lg:p-6 lg:pb-6",
+            flush ? "pb-16 md:pb-0" : "p-4 pb-[4.5rem] md:pb-4 lg:p-6 lg:pb-6",
             "flex-1 min-w-0",
           )}
         >
@@ -268,14 +279,15 @@ export function AppShell({
 
 // ─── Mobile Bottom Nav ────────────────────────────────────────────────────────
 
-const BOTTOM_TABS = [
+const BOTTOM_TABS: NavItem[] = [
+  { to: "/app", label: "Início", icon: LayoutDashboard, exact: true },
   { to: "/app/triagem", label: "Triagem", icon: Crosshair },
   { to: "/app/oportunidades", label: "Pipeline", icon: Target },
   { to: "/app/conversas", label: "Conversas", icon: MessagesSquare },
 ];
 
-const MORE_ITEMS = [
-  { to: "/app", label: "Dashboard", icon: LayoutDashboard, exact: true },
+const MORE_ITEMS: NavItem[] = [
+  { to: "/app/pacientes", label: "Pacientes", icon: Users },
   { to: "/app/diagnostico", label: "Diagnóstico", icon: Stethoscope },
   { to: "/app/automacoes", label: "Automações", icon: Zap },
   { to: "/app/campanhas", label: "Campanhas", icon: Megaphone },
@@ -295,7 +307,7 @@ function MobileBottomNav() {
       {/* Overlay */}
       {open && (
         <div
-          className="lg:hidden fixed inset-0 z-30 bg-black/40 backdrop-blur-sm"
+          className="md:hidden fixed inset-0 z-30 bg-black/40 backdrop-blur-sm"
           onClick={() => setOpen(false)}
         />
       )}
@@ -303,7 +315,7 @@ function MobileBottomNav() {
       {/* "Mais" drawer slide-up */}
       <div
         className={cn(
-          "lg:hidden fixed bottom-16 inset-x-0 z-40 bg-background border-t border-border rounded-t-2xl transition-transform duration-300",
+          "md:hidden fixed bottom-16 inset-x-0 z-40 bg-background border-t border-border rounded-t-2xl transition-transform duration-300",
           open ? "translate-y-0" : "translate-y-full pointer-events-none",
         )}
       >
@@ -342,9 +354,9 @@ function MobileBottomNav() {
       </div>
 
       {/* Bottom tab bar */}
-      <nav className="lg:hidden fixed bottom-0 inset-x-0 z-30 h-16 bg-background/90 backdrop-blur border-t border-border flex items-stretch">
+      <nav className="md:hidden fixed bottom-0 inset-x-0 z-30 h-16 bg-background/90 backdrop-blur border-t border-border flex items-stretch">
         {BOTTOM_TABS.map((tab) => {
-          const active = pathname.startsWith(tab.to);
+          const active = tab.exact ? pathname === tab.to : pathname.startsWith(tab.to);
           const Icon = tab.icon;
           return (
             <Link
