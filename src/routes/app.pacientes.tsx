@@ -107,7 +107,7 @@ function Pacientes() {
       actions={
         <button
           onClick={() => setShowNew(true)}
-          className="hidden md:inline-flex items-center gap-1.5 h-8 px-3 rounded-md bg-primary text-primary-foreground text-[12.5px] font-medium hover:opacity-90"
+          className="hidden md:inline-flex items-center gap-1.5 h-8 px-3 rounded-md bg-primary text-primary-foreground text-xs-plus font-medium hover:opacity-90"
         >
           <Plus className="size-3.5" /> Novo paciente
         </button>
@@ -121,19 +121,19 @@ function Pacientes() {
               value={q}
               onChange={(e) => setQ(e.target.value)}
               placeholder="Buscar por nome ou telefone…"
-              className="h-8 w-full rounded-md border border-input bg-background pl-8 pr-3 text-[12px] focus:outline-none focus:ring-2 focus:ring-ring"
+              className="h-8 w-full rounded-md border border-input bg-background pl-8 pr-3 text-xs focus:outline-none focus:ring-2 focus:ring-ring"
             />
           </div>
-          <button className="inline-flex items-center gap-1.5 h-8 px-2.5 rounded-md border border-input bg-background text-[12px]">
+          <button className="inline-flex items-center gap-1.5 h-8 px-2.5 rounded-md border border-input bg-background text-xs">
             <Filter className="size-3.5" /> Filtros
           </button>
-          <div className="ml-auto text-[11.5px] text-muted-foreground tabular-nums">
+          <div className="ml-auto text-2xs text-muted-foreground tabular-nums">
             {filtered.length} resultado{filtered.length !== 1 ? "s" : ""}
           </div>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full text-[13px]">
-            <thead className="text-[11px] uppercase tracking-wider text-muted-foreground bg-surface-muted/40">
+          <table className="w-full text-sm-minus">
+            <thead className="text-2xs uppercase tracking-wider text-muted-foreground bg-surface-muted/40">
               <tr>
                 <Th>Paciente</Th>
                 <Th>Status</Th>
@@ -155,7 +155,7 @@ function Pacientes() {
                   >
                     <Td>
                       <div className="flex items-center gap-2.5">
-                        <div className="size-7 rounded-full bg-gradient-to-br from-muted to-accent flex items-center justify-center text-[10.5px] font-semibold">
+                        <div className="size-7 rounded-full bg-gradient-to-br from-muted to-accent flex items-center justify-center text-3xs font-semibold">
                           {p.name
                             .split(" ")
                             .map((n) => n[0])
@@ -164,7 +164,7 @@ function Pacientes() {
                         </div>
                         <div className="min-w-0">
                           <div className="font-medium truncate">{p.name}</div>
-                          <div className="text-[11px] text-muted-foreground tabular-nums">
+                          <div className="text-2xs text-muted-foreground tabular-nums">
                             {p.phone}
                           </div>
                         </div>
@@ -173,7 +173,7 @@ function Pacientes() {
                     <Td>
                       <span
                         className={cn(
-                          "inline-flex rounded-full px-2 py-0.5 text-[11px] font-medium",
+                          "inline-flex rounded-full px-2 py-0.5 text-2xs font-medium",
                           s.tone,
                         )}
                       >
@@ -191,7 +191,7 @@ function Pacientes() {
                         {p.tags.slice(0, 2).map((t) => (
                           <span
                             key={t}
-                            className="inline-flex rounded-md bg-accent text-accent-foreground px-1.5 py-0.5 text-[10.5px]"
+                            className="inline-flex rounded-md bg-accent text-accent-foreground px-1.5 py-0.5 text-3xs"
                           >
                             {t}
                           </span>
@@ -251,7 +251,7 @@ function PatientDrawer({ patient, onClose }: { patient: Patient; onClose: () => 
       >
         <div className="h-16 border-b border-border flex items-center justify-between px-5">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="size-10 rounded-full bg-gradient-to-br from-primary to-chart-2 text-primary-foreground flex items-center justify-center text-[12px] font-semibold">
+            <div className="size-10 rounded-full bg-gradient-to-br from-primary to-chart-2 text-primary-foreground flex items-center justify-center text-xs font-semibold">
               {patient.name
                 .split(" ")
                 .map((n) => n[0])
@@ -259,8 +259,8 @@ function PatientDrawer({ patient, onClose }: { patient: Patient; onClose: () => 
                 .join("")}
             </div>
             <div className="min-w-0">
-              <div className="text-[14px] font-semibold truncate">{patient.name}</div>
-              <div className="text-[11.5px] text-muted-foreground truncate">{patient.phone}</div>
+              <div className="text-sm font-semibold truncate">{patient.name}</div>
+              <div className="text-2xs text-muted-foreground truncate">{patient.phone}</div>
             </div>
           </div>
           <button
@@ -277,7 +277,7 @@ function PatientDrawer({ patient, onClose }: { patient: Patient; onClose: () => 
               value={
                 <span
                   className={cn(
-                    "inline-flex rounded-full px-2 py-0.5 text-[11px] font-medium",
+                    "inline-flex rounded-full px-2 py-0.5 text-2xs font-medium",
                     s.tone,
                   )}
                 >
@@ -302,20 +302,20 @@ function PatientDrawer({ patient, onClose }: { patient: Patient; onClose: () => 
                   <ShieldAlert className="size-4 text-warning-foreground" />
                 )}
                 <div>
-                  <div className="text-[12.5px] font-medium">Consentimento LGPD</div>
-                  <div className="text-[11px] text-muted-foreground">
+                  <div className="text-xs-plus font-medium">Consentimento LGPD</div>
+                  <div className="text-2xs text-muted-foreground">
                     {patient.consent
                       ? "Autorizado para contato e marketing"
                       : "Pendente — não enviar campanhas"}
                   </div>
                 </div>
               </div>
-              <button className="text-[11.5px] text-primary hover:underline">Exportar dados</button>
+              <button className="text-2xs text-primary hover:underline">Exportar dados</button>
             </div>
           </div>
 
           <div>
-            <h4 className="text-[12px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+            <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
               Timeline
             </h4>
             <ol className="relative border-l border-border ml-2 space-y-4">
@@ -324,10 +324,10 @@ function PatientDrawer({ patient, onClose }: { patient: Patient; onClose: () => 
                 return (
                   <li key={i} className="ml-4">
                     <div className="absolute -left-[7px] mt-1 size-3.5 rounded-full bg-surface border-2 border-primary"></div>
-                    <div className="text-[12.5px] font-medium flex items-center gap-1.5">
+                    <div className="text-xs-plus font-medium flex items-center gap-1.5">
                       <Icon className="size-3.5 text-muted-foreground" /> {e.t}
                     </div>
-                    <div className="text-[11px] text-muted-foreground">{e.date}</div>
+                    <div className="text-2xs text-muted-foreground">{e.date}</div>
                   </li>
                 );
               })}
@@ -335,19 +335,19 @@ function PatientDrawer({ patient, onClose }: { patient: Patient; onClose: () => 
           </div>
 
           <div>
-            <h4 className="text-[12px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+            <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
               Campanhas recebidas
             </h4>
-            <div className="text-[12.5px] text-muted-foreground">
+            <div className="text-xs-plus text-muted-foreground">
               Confirmação 24h antes · Pedido de avaliação Google
             </div>
           </div>
         </div>
         <div className="border-t border-border p-4 flex gap-2">
-          <button className="flex-1 h-9 rounded-md bg-primary text-primary-foreground text-[12.5px] font-medium hover:opacity-90 inline-flex items-center justify-center gap-1.5">
+          <button className="flex-1 h-9 rounded-md bg-primary text-primary-foreground text-xs-plus font-medium hover:opacity-90 inline-flex items-center justify-center gap-1.5">
             <MessageCircle className="size-4" /> Abrir conversa
           </button>
-          <button className="h-9 px-3 rounded-md border border-input bg-background text-[12.5px] hover:bg-muted">
+          <button className="h-9 px-3 rounded-md border border-input bg-background text-xs-plus hover:bg-muted">
             Anonimizar
           </button>
         </div>
@@ -359,8 +359,8 @@ function PatientDrawer({ patient, onClose }: { patient: Patient; onClose: () => 
 function Stat({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div className="rounded-lg border border-border bg-background p-3">
-      <div className="text-[10.5px] uppercase tracking-wider text-muted-foreground">{label}</div>
-      <div className="mt-1 text-[13px] font-medium">{value}</div>
+      <div className="text-3xs uppercase tracking-wider text-muted-foreground">{label}</div>
+      <div className="mt-1 text-sm-minus font-medium">{value}</div>
     </div>
   );
 }
@@ -423,7 +423,7 @@ function NewPatientModal({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="h-14 border-b border-border flex items-center justify-between px-5">
-          <div className="text-[14px] font-semibold">Novo paciente</div>
+          <div className="text-sm font-semibold">Novo paciente</div>
           <button
             onClick={onClose}
             className="size-8 rounded-md hover:bg-muted flex items-center justify-center"
@@ -433,7 +433,7 @@ function NewPatientModal({
         </div>
         <form onSubmit={handleSubmit} className="p-5 space-y-4">
           <label className="block">
-            <span className="text-[11.5px] font-medium text-foreground/70 uppercase tracking-wider">
+            <span className="text-2xs font-medium text-foreground/70 uppercase tracking-wider">
               Nome *
             </span>
             <input
@@ -442,29 +442,29 @@ function NewPatientModal({
               required
               autoFocus
               placeholder="Nome completo"
-              className="mt-1.5 h-9 w-full rounded-md border border-input bg-background px-3 text-[13px] focus:outline-none focus:ring-2 focus:ring-ring"
+              className="mt-1.5 h-9 w-full rounded-md border border-input bg-background px-3 text-sm-minus focus:outline-none focus:ring-2 focus:ring-ring"
             />
           </label>
           <label className="block">
-            <span className="text-[11.5px] font-medium text-foreground/70 uppercase tracking-wider">
+            <span className="text-2xs font-medium text-foreground/70 uppercase tracking-wider">
               Telefone
             </span>
             <input
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="+55 11 99999-9999"
-              className="mt-1.5 h-9 w-full rounded-md border border-input bg-background px-3 text-[13px] focus:outline-none focus:ring-2 focus:ring-ring"
+              className="mt-1.5 h-9 w-full rounded-md border border-input bg-background px-3 text-sm-minus focus:outline-none focus:ring-2 focus:ring-ring"
             />
           </label>
           <div className="grid grid-cols-2 gap-3">
             <label className="block">
-              <span className="text-[11.5px] font-medium text-foreground/70 uppercase tracking-wider">
+              <span className="text-2xs font-medium text-foreground/70 uppercase tracking-wider">
                 Status
               </span>
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value as NewStatus)}
-                className="mt-1.5 h-9 w-full rounded-md border border-input bg-background px-3 text-[13px] focus:outline-none focus:ring-2 focus:ring-ring"
+                className="mt-1.5 h-9 w-full rounded-md border border-input bg-background px-3 text-sm-minus focus:outline-none focus:ring-2 focus:ring-ring"
               >
                 <option value="lead">Lead</option>
                 <option value="ativo">Ativo</option>
@@ -473,14 +473,14 @@ function NewPatientModal({
               </select>
             </label>
             <label className="block">
-              <span className="text-[11.5px] font-medium text-foreground/70 uppercase tracking-wider">
+              <span className="text-2xs font-medium text-foreground/70 uppercase tracking-wider">
                 Origem
               </span>
               <input
                 value={source}
                 onChange={(e) => setSource(e.target.value)}
                 placeholder="Instagram, Google…"
-                className="mt-1.5 h-9 w-full rounded-md border border-input bg-background px-3 text-[13px] focus:outline-none focus:ring-2 focus:ring-ring"
+                className="mt-1.5 h-9 w-full rounded-md border border-input bg-background px-3 text-sm-minus focus:outline-none focus:ring-2 focus:ring-ring"
               />
             </label>
           </div>
@@ -488,14 +488,14 @@ function NewPatientModal({
             <button
               type="button"
               onClick={onClose}
-              className="h-9 px-4 rounded-md border border-input bg-background text-[12.5px] hover:bg-muted"
+              className="h-9 px-4 rounded-md border border-input bg-background text-xs-plus hover:bg-muted"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={saving || !name.trim()}
-              className="h-9 px-4 rounded-md bg-primary text-primary-foreground text-[12.5px] font-medium hover:opacity-90 disabled:opacity-50 inline-flex items-center gap-1.5"
+              className="h-9 px-4 rounded-md bg-primary text-primary-foreground text-xs-plus font-medium hover:opacity-90 disabled:opacity-50 inline-flex items-center gap-1.5"
             >
               {saving && <Loader2 className="size-3.5 animate-spin" />}
               Criar paciente

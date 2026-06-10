@@ -54,7 +54,7 @@ function Dashboard() {
             <ul className="divide-y divide-border">
               {needReply.map((c) => (
                 <li key={c.id} className="py-2.5 flex items-center gap-3">
-                  <div className="size-8 rounded-full bg-muted flex items-center justify-center text-[11px] font-semibold">
+                  <div className="size-8 rounded-full bg-muted flex items-center justify-center text-2xs font-semibold">
                     {c.patientName
                       .split(" ")
                       .map((n) => n[0])
@@ -63,17 +63,17 @@ function Dashboard() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-baseline justify-between gap-3">
-                      <span className="text-[13px] font-medium truncate">{c.patientName}</span>
-                      <span className="text-[10.5px] text-muted-foreground tabular-nums">
+                      <span className="text-sm-minus font-medium truncate">{c.patientName}</span>
+                      <span className="text-3xs text-muted-foreground tabular-nums">
                         {c.lastTime}
                       </span>
                     </div>
-                    <div className="text-[12px] text-muted-foreground truncate">
+                    <div className="text-xs text-muted-foreground truncate">
                       {c.lastMessage}
                     </div>
                   </div>
                   {c.unread > 0 && (
-                    <span className="size-5 rounded-full bg-primary text-primary-foreground text-[10.5px] font-semibold flex items-center justify-center tabular-nums">
+                    <span className="size-5 rounded-full bg-primary text-primary-foreground text-3xs font-semibold flex items-center justify-center tabular-nums">
                       {c.unread}
                     </span>
                   )}
@@ -96,12 +96,12 @@ function Dashboard() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-baseline justify-between gap-3">
-                      <span className="text-[13px] font-medium truncate">{o.name}</span>
-                      <span className="text-[11px] text-foreground/70 tabular-nums">
+                      <span className="text-sm-minus font-medium truncate">{o.name}</span>
+                      <span className="text-2xs text-foreground/70 tabular-nums">
                         R$ {o.value.toLocaleString("pt-BR")}
                       </span>
                     </div>
-                    <div className="text-[12px] text-muted-foreground truncate">
+                    <div className="text-xs text-muted-foreground truncate">
                       {o.nextAction} · {o.owner}
                     </div>
                   </div>
@@ -181,8 +181,8 @@ function LiveDashboard() {
       <AppShell title="Visão geral" subtitle="Erro ao carregar dados">
         <div className="flex flex-col items-center justify-center py-20 gap-3 text-center">
           <AlertCircle className="size-8 text-destructive" />
-          <p className="text-[14px] font-medium">Não foi possível carregar o dashboard</p>
-          <p className="text-[12px] text-muted-foreground">
+          <p className="text-sm font-medium">Não foi possível carregar o dashboard</p>
+          <p className="text-xs text-muted-foreground">
             Verifique sua conexão ou tente novamente
           </p>
         </div>
@@ -299,12 +299,12 @@ function LiveDashboard() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-baseline justify-between gap-3">
-                      <span className="text-[13px] font-medium truncate">{o.name}</span>
-                      <span className="text-[11px] text-foreground/70 tabular-nums">
+                      <span className="text-sm-minus font-medium truncate">{o.name}</span>
+                      <span className="text-2xs text-foreground/70 tabular-nums">
                         R$ {Number(o.value ?? 0).toLocaleString("pt-BR")}
                       </span>
                     </div>
-                    <div className="text-[12px] text-muted-foreground truncate">
+                    <div className="text-xs text-muted-foreground truncate">
                       {o.next_action ?? "—"}
                     </div>
                   </div>
@@ -312,7 +312,7 @@ function LiveDashboard() {
               ))}
             </ul>
           ) : (
-            <p className="text-[12px] text-muted-foreground py-4 text-center">
+            <p className="text-xs text-muted-foreground py-4 text-center">
               Nenhuma consulta agendada hoje
             </p>
           )}
@@ -325,7 +325,7 @@ function LiveDashboard() {
           href="/app/pacientes"
           cta="Ver pacientes"
         >
-          <div className="py-4 text-center text-[12px] text-muted-foreground">
+          <div className="py-4 text-center text-xs text-muted-foreground">
             {d.inactiveCount === 0 ? (
               "Nenhum paciente inativo 🎉"
             ) : (
@@ -378,13 +378,13 @@ function Panel({
             <Icon className="size-4" />
           </div>
           <div>
-            <h3 className="text-[14px] font-semibold tracking-tight">{title}</h3>
-            {subtitle && <p className="text-[12px] text-muted-foreground">{subtitle}</p>}
+            <h3 className="text-sm font-semibold tracking-tight">{title}</h3>
+            {subtitle && <p className="text-xs text-muted-foreground">{subtitle}</p>}
           </div>
         </div>
         <Link
           to={href as never}
-          className="text-[12px] text-primary font-medium inline-flex items-center gap-0.5 hover:underline"
+          className="text-xs text-primary font-medium inline-flex items-center gap-0.5 hover:underline"
         >
           {cta} <ArrowRight className="size-3.5" />
         </Link>

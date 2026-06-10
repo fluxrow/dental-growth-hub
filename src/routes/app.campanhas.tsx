@@ -36,7 +36,7 @@ function Campanhas() {
       title="Campanhas"
       subtitle="Campanhas únicas e disparos manuais"
       actions={
-        <button className="hidden md:inline-flex items-center gap-1.5 h-8 px-3 rounded-md bg-primary text-primary-foreground text-[12.5px] font-medium hover:opacity-90">
+        <button className="hidden md:inline-flex items-center gap-1.5 h-8 px-3 rounded-md bg-primary text-primary-foreground text-xs-plus font-medium hover:opacity-90">
           <Plus className="size-3.5" /> Nova campanha
         </button>
       }
@@ -53,9 +53,9 @@ function Campanhas() {
               >
                 <Icon className="size-4.5" />
               </div>
-              <div className="text-[11px] text-muted-foreground">{t.label}</div>
+              <div className="text-2xs text-muted-foreground">{t.label}</div>
               <div className="font-display text-2xl font-semibold tabular-nums">{total}</div>
-              <div className="text-[11px] text-muted-foreground mt-0.5">campanhas ativas</div>
+              <div className="text-2xs text-muted-foreground mt-0.5">campanhas ativas</div>
             </div>
           );
         })}
@@ -72,13 +72,13 @@ function Campanhas() {
 
       <div className="rounded-xl border border-border bg-surface overflow-hidden">
         <div className="px-4 h-12 border-b border-border flex items-center justify-between">
-          <div className="text-[13px] font-semibold tracking-tight">Todas as campanhas</div>
-          <div className="text-[11px] text-muted-foreground tabular-nums">
+          <div className="text-sm-minus font-semibold tracking-tight">Todas as campanhas</div>
+          <div className="text-2xs text-muted-foreground tabular-nums">
             {CAMPAIGNS.length} resultados
           </div>
         </div>
-        <table className="w-full text-[13px]">
-          <thead className="text-[11px] uppercase tracking-wider text-muted-foreground bg-surface-muted/40">
+        <table className="w-full text-sm-minus">
+          <thead className="text-2xs uppercase tracking-wider text-muted-foreground bg-surface-muted/40">
             <tr>
               <th className="text-left font-medium px-4 py-2.5">Campanha</th>
               <th className="text-left font-medium px-4 py-2.5">Tipo</th>
@@ -103,7 +103,7 @@ function Campanhas() {
                   <td className="px-4 py-3">
                     <span
                       className={cn(
-                        "inline-flex rounded-full px-2 py-0.5 text-[11px] font-medium",
+                        "inline-flex rounded-full px-2 py-0.5 text-2xs font-medium",
                         t.tone,
                       )}
                     >
@@ -113,7 +113,7 @@ function Campanhas() {
                   <td className="px-4 py-3">
                     <span
                       className={cn(
-                        "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium",
+                        "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-2xs font-medium",
                         c.status === "ativa"
                           ? "bg-success/10 text-success"
                           : c.status === "pausada"
@@ -153,7 +153,7 @@ function Campanhas() {
 function Highlight({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-xl border border-border bg-gradient-to-br from-surface to-accent/20 p-5">
-      <div className="text-[11px] uppercase tracking-wider text-muted-foreground">{label}</div>
+      <div className="text-2xs uppercase tracking-wider text-muted-foreground">{label}</div>
       <div className="mt-1 font-display text-2xl font-semibold tabular-nums">{value}</div>
     </div>
   );

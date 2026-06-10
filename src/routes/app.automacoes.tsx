@@ -134,7 +134,7 @@ function Automacoes() {
       title="Automações"
       subtitle="Fluxos automáticos da clínica · impacto financeiro em tempo real"
       actions={
-        <button className="hidden md:inline-flex items-center gap-1.5 h-8 px-3 rounded-md bg-primary text-primary-foreground text-[12.5px] font-medium hover:opacity-90">
+        <button className="hidden md:inline-flex items-center gap-1.5 h-8 px-3 rounded-md bg-primary text-primary-foreground text-xs-plus font-medium hover:opacity-90">
           <Plus className="size-3.5" /> Nova automação
         </button>
       }
@@ -143,7 +143,7 @@ function Automacoes() {
       <div className="rounded-xl border border-primary/30 bg-gradient-to-br from-primary/5 via-surface to-chart-2/5 p-5 mb-5">
         <div className="flex items-center gap-2 mb-3">
           <Zap className="size-4 text-primary" />
-          <div className="text-[12px] font-semibold uppercase tracking-wider text-primary">
+          <div className="text-xs font-semibold uppercase tracking-wider text-primary">
             {live ? "Automações configuradas" : "Impacto das automações · últimos 30 dias"}
           </div>
         </div>
@@ -183,8 +183,8 @@ function Automacoes() {
                     <Icon className="size-4.5" />
                   </div>
                   <div>
-                    <div className="text-[14px] font-semibold tracking-tight">{cat.label}</div>
-                    <div className="text-[11.5px] text-muted-foreground">
+                    <div className="text-sm font-semibold tracking-tight">{cat.label}</div>
+                    <div className="text-2xs text-muted-foreground">
                       {catItems.length} fluxos · {catActive} ativo{catActive !== 1 ? "s" : ""}
                     </div>
                   </div>
@@ -208,7 +208,7 @@ function Automacoes() {
                         ) : (
                           <span
                             className={cn(
-                              "inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10.5px] font-medium",
+                              "inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-3xs font-medium",
                               a.enabled
                                 ? "bg-success/10 text-success"
                                 : "bg-muted text-muted-foreground",
@@ -218,9 +218,9 @@ function Automacoes() {
                             {a.enabled ? "ativa" : "pausada"}
                           </span>
                         )}
-                        <div className="text-[13px] font-medium">{a.name}</div>
+                        <div className="text-sm-minus font-medium">{a.name}</div>
                       </div>
-                      <div className="mt-1 text-[11.5px] text-muted-foreground pl-1">
+                      <div className="mt-1 text-2xs text-muted-foreground pl-1">
                         Gatilho: {a.triggerLabel}
                       </div>
                     </div>
@@ -293,7 +293,7 @@ function Impact({
 }) {
   return (
     <div>
-      <div className="text-[11px] uppercase tracking-wider text-muted-foreground">{label}</div>
+      <div className="text-2xs uppercase tracking-wider text-muted-foreground">{label}</div>
       <div
         className={cn(
           "mt-1 font-display text-2xl lg:text-3xl font-semibold tabular-nums tracking-tight",
@@ -309,8 +309,8 @@ function Impact({
 function Metric({ label, value, accent }: { label: string; value: string; accent?: boolean }) {
   return (
     <div className="col-span-3 md:col-span-2 lg:col-span-2 text-right md:text-left">
-      <div className="text-[10.5px] uppercase tracking-wider text-muted-foreground">{label}</div>
-      <div className={cn("text-[13px] tabular-nums font-medium", accent && "text-success")}>
+      <div className="text-3xs uppercase tracking-wider text-muted-foreground">{label}</div>
+      <div className={cn("text-sm-minus tabular-nums font-medium", accent && "text-success")}>
         {value}
       </div>
     </div>

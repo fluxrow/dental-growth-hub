@@ -46,13 +46,13 @@ export function BillingCard({
       <div className="px-5 pt-5 pb-4 flex items-center justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-2">
           <CreditCard className="size-4 text-primary" />
-          <h2 className="text-[14px] font-semibold tracking-tight">Pagamentos & cobranças</h2>
+          <h2 className="text-sm font-semibold tracking-tight">Pagamentos & cobranças</h2>
         </div>
         <div className="flex items-center gap-2">
           <ToneSelect tone={tone} onChange={setTone} />
           <span
             className={cn(
-              "inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[11px] font-medium",
+              "inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-2xs font-medium",
               meta.cls,
             )}
           >
@@ -64,7 +64,7 @@ export function BillingCard({
 
       <div className="px-5">
         <div className="rounded-xl bg-gradient-to-br from-primary/8 via-accent to-background border border-border p-5">
-          <div className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">
+          <div className="text-2xs uppercase tracking-wider text-muted-foreground font-medium">
             {billing.status === "pago" ? "Valor pago" : "Valor pendente"}
           </div>
           <div className="mt-1 font-display text-3xl font-semibold tabular-nums">
@@ -73,9 +73,9 @@ export function BillingCard({
               minimumFractionDigits: 2,
             })}
           </div>
-          <div className="mt-1 text-[12.5px] text-muted-foreground">{billing.description}</div>
+          <div className="mt-1 text-xs-plus text-muted-foreground">{billing.description}</div>
 
-          <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-[12.5px]">
+          <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-xs-plus">
             <div className="flex items-center gap-1.5 text-muted-foreground">
               <Calendar className="size-3.5" />
               <span>Vencimento</span>
@@ -90,7 +90,7 @@ export function BillingCard({
           </div>
         </div>
 
-        <div className="mt-4 rounded-lg bg-muted/60 border border-border px-4 py-3 text-[13px] leading-relaxed text-foreground/85 flex gap-2">
+        <div className="mt-4 rounded-lg bg-muted/60 border border-border px-4 py-3 text-sm-minus leading-relaxed text-foreground/85 flex gap-2">
           <MessageSquareHeart className="size-4 text-primary mt-0.5 shrink-0" />
           <span>{message}</span>
         </div>
@@ -100,18 +100,18 @@ export function BillingCard({
         <button
           onClick={() => setOpen(true)}
           disabled={billing.status === "pago"}
-          className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-md bg-primary text-primary-foreground text-[13px] font-medium hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed"
+          className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-md bg-primary text-primary-foreground text-sm-minus font-medium hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed"
         >
           <CreditCard className="size-3.5" />
           {billing.status === "pago" ? "Pagamento concluído" : "Ver formas de pagamento"}
         </button>
         <a
           href="#"
-          className="inline-flex items-center gap-1.5 h-9 px-3 rounded-md border border-input bg-background text-[12.5px] hover:bg-muted"
+          className="inline-flex items-center gap-1.5 h-9 px-3 rounded-md border border-input bg-background text-xs-plus hover:bg-muted"
         >
           <HelpCircle className="size-3.5" /> Falar com a clínica
         </a>
-        <span className="ml-auto text-[11.5px] text-muted-foreground">Olá, {firstName} 💜</span>
+        <span className="ml-auto text-2xs text-muted-foreground">Olá, {firstName} 💜</span>
       </div>
 
       <PaymentMethodsDialog
@@ -126,12 +126,12 @@ export function BillingCard({
 
 function ToneSelect({ tone, onChange }: { tone: ClinicTone; onChange: (t: ClinicTone) => void }) {
   return (
-    <label className="inline-flex items-center gap-1.5 text-[11px] text-muted-foreground">
+    <label className="inline-flex items-center gap-1.5 text-2xs text-muted-foreground">
       <span className="hidden sm:inline">Tom da clínica:</span>
       <select
         value={tone}
         onChange={(e) => onChange(e.target.value as ClinicTone)}
-        className="h-7 rounded-md border border-input bg-background px-2 text-[11.5px] font-medium focus:outline-none focus:ring-2 focus:ring-ring"
+        className="h-7 rounded-md border border-input bg-background px-2 text-2xs font-medium focus:outline-none focus:ring-2 focus:ring-ring"
       >
         {CLINIC_TONES.map((t) => (
           <option key={t.id} value={t.id}>

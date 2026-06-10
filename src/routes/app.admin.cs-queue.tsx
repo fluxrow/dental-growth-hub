@@ -446,7 +446,7 @@ function CsQueueAdmin() {
                           { label: "Billing", value: h.billing_score },
                           { label: "Engaj.", value: h.engagement_score },
                         ].map((s) => (
-                          <span key={s.label} className="text-[10px] text-zinc-400">
+                          <span key={s.label} className="text-3xs text-zinc-400">
                             {s.label}: <span className="font-medium text-zinc-600">{s.value}</span>
                           </span>
                         ))}

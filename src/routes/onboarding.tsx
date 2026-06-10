@@ -226,7 +226,7 @@ function OnboardingWizard() {
           <h1 className="mt-10 font-display text-3xl font-semibold tracking-tight">
             Vamos configurar sua clínica.
           </h1>
-          <p className="mt-2 text-[13.5px] text-muted-foreground max-w-sm">
+          <p className="mt-2 text-sm-minus text-muted-foreground max-w-sm">
             Em 4 passos rápidos seu time começa a parar de perder pacientes.
           </p>
           <ol className="mt-10 space-y-1.5">
@@ -238,7 +238,7 @@ function OnboardingWizard() {
                 <li
                   key={s.key}
                   className={cn(
-                    "flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] transition-colors",
+                    "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm-minus transition-colors",
                     active && "bg-primary/10 text-primary",
                     !active && done && "text-foreground/80",
                     !active && !done && "text-muted-foreground",
@@ -246,7 +246,7 @@ function OnboardingWizard() {
                 >
                   <span
                     className={cn(
-                      "size-7 rounded-full flex items-center justify-center text-[11px] font-semibold border",
+                      "size-7 rounded-full flex items-center justify-center text-2xs font-semibold border",
                       active && "bg-primary text-primary-foreground border-primary",
                       done && "bg-success text-success-foreground border-success",
                       !active && !done && "border-border bg-surface",
@@ -260,7 +260,7 @@ function OnboardingWizard() {
             })}
           </ol>
         </div>
-        <p className="text-[11px] text-muted-foreground">
+        <p className="text-2xs text-muted-foreground">
           WhatsApp, avaliações no Google e e-mail transacional são configurados pela nossa equipe
           durante a implementação — fazem parte do plano de suporte e manutenção.
         </p>
@@ -269,7 +269,7 @@ function OnboardingWizard() {
       <main className="flex flex-col">
         <div className="flex-1 flex items-start justify-center p-6 lg:p-12">
           <div className="w-full max-w-xl">
-            <div className="hidden lg:block text-[12px] text-muted-foreground mb-2">
+            <div className="hidden lg:block text-xs text-muted-foreground mb-2">
               Passo {stepIdx + 1} de {STEPS.length}
             </div>
             <h2 className="font-display text-2xl font-semibold tracking-tight">
@@ -278,7 +278,7 @@ function OnboardingWizard() {
               {step.key === "agenda" && "Conecte a agenda da clínica"}
               {step.key === "pronto" && "Tudo pronto! 💜"}
             </h2>
-            <p className="mt-1 text-[13px] text-muted-foreground">
+            <p className="mt-1 text-sm-minus text-muted-foreground">
               {step.key === "clinica" && "Essas informações aparecem para seus pacientes."}
               {step.key === "responsaveis" &&
                 "Você é o admin. Convites por e-mail vêm em uma próxima etapa."}
@@ -319,7 +319,7 @@ function OnboardingWizard() {
           <button
             onClick={() => setStepIdx((i) => Math.max(0, i - 1))}
             disabled={stepIdx === 0 || saving}
-            className="inline-flex items-center gap-1.5 h-9 px-3 rounded-md text-[13px] text-muted-foreground hover:text-foreground disabled:opacity-40"
+            className="inline-flex items-center gap-1.5 h-9 px-3 rounded-md text-sm-minus text-muted-foreground hover:text-foreground disabled:opacity-40"
           >
             <ArrowLeft className="size-3.5" /> Voltar
           </button>
@@ -328,7 +328,7 @@ function OnboardingWizard() {
               <button
                 onClick={next}
                 disabled={saving}
-                className="inline-flex items-center gap-1.5 h-9 px-4 rounded-md bg-primary text-primary-foreground text-[13px] font-medium hover:opacity-90 disabled:opacity-60"
+                className="inline-flex items-center gap-1.5 h-9 px-4 rounded-md bg-primary text-primary-foreground text-sm-minus font-medium hover:opacity-90 disabled:opacity-60"
               >
                 {saving ? (
                   <Loader2 className="size-3.5 animate-spin" />
@@ -342,7 +342,7 @@ function OnboardingWizard() {
             {stepIdx === STEPS.length - 1 && (
               <button
                 onClick={finish}
-                className="inline-flex items-center gap-1.5 h-9 px-4 rounded-md bg-primary text-primary-foreground text-[13px] font-medium hover:opacity-90"
+                className="inline-flex items-center gap-1.5 h-9 px-4 rounded-md bg-primary text-primary-foreground text-sm-minus font-medium hover:opacity-90"
               >
                 Entrar no Dashboard <ArrowRight className="size-3.5" />
               </button>
@@ -366,15 +366,15 @@ function Field({
 }) {
   return (
     <label className="block">
-      <span className="block text-[12px] font-medium text-foreground/80 mb-1.5">{label}</span>
+      <span className="block text-xs font-medium text-foreground/80 mb-1.5">{label}</span>
       {children}
-      {hint && <span className="block mt-1 text-[11px] text-muted-foreground">{hint}</span>}
+      {hint && <span className="block mt-1 text-2xs text-muted-foreground">{hint}</span>}
     </label>
   );
 }
 
 const inputCls =
-  "w-full h-10 rounded-md border border-input bg-background px-3 text-[13px] focus:outline-none focus:ring-2 focus:ring-ring";
+  "w-full h-10 rounded-md border border-input bg-background px-3 text-sm-minus focus:outline-none focus:ring-2 focus:ring-ring";
 
 function StepClinic({
   state,
@@ -465,12 +465,12 @@ function StepClinic({
             type="button"
             onClick={() => fileRef.current?.click()}
             disabled={uploading}
-            className="h-8 px-3 rounded-md border border-input bg-surface text-[12.5px] font-medium hover:bg-muted disabled:opacity-50 inline-flex items-center gap-1.5"
+            className="h-8 px-3 rounded-md border border-input bg-surface text-xs-plus font-medium hover:bg-muted disabled:opacity-50 inline-flex items-center gap-1.5"
           >
             {uploading && <Loader2 className="size-3 animate-spin" />}
             {c.logoPreview ? "Trocar logo" : "Enviar logo"}
           </button>
-          <p className="mt-1 text-[11px] text-muted-foreground">PNG, JPG ou SVG · até 2MB</p>
+          <p className="mt-1 text-2xs text-muted-foreground">PNG, JPG ou SVG · até 2MB</p>
         </div>
       </div>
       <Field label="Nome da clínica *">
@@ -515,7 +515,7 @@ function StepClinic({
                 type="button"
                 onClick={() => toggle(s)}
                 className={cn(
-                  "h-7 px-2.5 rounded-full text-[11.5px] font-medium border transition-colors",
+                  "h-7 px-2.5 rounded-full text-2xs font-medium border transition-colors",
                   active
                     ? "bg-primary text-primary-foreground border-primary"
                     : "border-border bg-surface text-foreground/70 hover:bg-muted",
@@ -549,7 +549,7 @@ function StepTeam({
     setState((p) => ({ ...p, team: p.team.map((m, idx) => (idx === i ? { ...m, ...patch } : m)) }));
   return (
     <div className="space-y-3">
-      <p className="text-[12px] text-muted-foreground rounded-md border border-dashed border-border bg-surface-muted/40 p-3">
+      <p className="text-xs text-muted-foreground rounded-md border border-dashed border-border bg-surface-muted/40 p-3">
         Você é o admin desta clínica. Convidar outros usuários por e-mail virá em breve — por
         enquanto, registre apenas seu papel.
       </p>
@@ -600,7 +600,7 @@ function StepTeam({
         type="button"
         onClick={add}
         disabled={state.team.length >= 5}
-        className="w-full h-10 rounded-md border border-dashed border-border text-[12.5px] text-muted-foreground hover:border-primary/40 hover:text-primary inline-flex items-center justify-center gap-1.5 disabled:opacity-40"
+        className="w-full h-10 rounded-md border border-dashed border-border text-xs-plus text-muted-foreground hover:border-primary/40 hover:text-primary inline-flex items-center justify-center gap-1.5 disabled:opacity-40"
       >
         <Plus className="size-3.5" /> Adicionar pessoa ({state.team.length}/5)
       </button>
@@ -640,14 +640,14 @@ function StepAgenda({
             <Calendar className="size-5" />
           </div>
           <div className="flex-1">
-            <div className="text-[14px] font-semibold">Google Calendar da clínica</div>
-            <p className="mt-1 text-[12.5px] text-muted-foreground">
+            <div className="text-sm font-semibold">Google Calendar da clínica</div>
+            <p className="mt-1 text-xs-plus text-muted-foreground">
               Sem a agenda conectada, as funcionalidades abaixo ficam pausadas. É o coração da
               automação do DentalFlux.
             </p>
             <ul className="mt-3 space-y-1.5">
               {benefits.map((b) => (
-                <li key={b} className="flex gap-2 text-[12.5px] text-foreground/80">
+                <li key={b} className="flex gap-2 text-xs-plus text-foreground/80">
                   <Check className="size-3.5 mt-0.5 text-primary shrink-0" />
                   <span>{b}</span>
                 </li>
@@ -656,10 +656,10 @@ function StepAgenda({
 
             {isGoogleLogin && !state.calendar.connected && (
               <div className="mt-4 rounded-lg border border-border bg-background p-3">
-                <div className="text-[12.5px] font-medium">
+                <div className="text-xs-plus font-medium">
                   Você entrou com <span className="text-primary">{loginEmail}</span>
                 </div>
-                <p className="mt-0.5 text-[11.5px] text-muted-foreground">
+                <p className="mt-0.5 text-2xs text-muted-foreground">
                   Usar essa mesma conta como agenda da clínica? (1 clique pra autorizar o Calendar)
                 </p>
                 <div className="mt-2 inline-flex rounded-md border border-border bg-surface p-0.5">
@@ -667,7 +667,7 @@ function StepAgenda({
                     type="button"
                     onClick={() => setUseLoginAccount(true)}
                     className={cn(
-                      "px-3 h-7 rounded text-[11.5px] font-medium transition-colors",
+                      "px-3 h-7 rounded text-2xs font-medium transition-colors",
                       useLoginAccount
                         ? "bg-primary text-primary-foreground"
                         : "text-muted-foreground hover:text-foreground",
@@ -679,7 +679,7 @@ function StepAgenda({
                     type="button"
                     onClick={() => setUseLoginAccount(false)}
                     className={cn(
-                      "px-3 h-7 rounded text-[11.5px] font-medium transition-colors",
+                      "px-3 h-7 rounded text-2xs font-medium transition-colors",
                       !useLoginAccount
                         ? "bg-primary text-primary-foreground"
                         : "text-muted-foreground hover:text-foreground",
@@ -720,7 +720,7 @@ function StepAgenda({
           setState((p) => ({ ...p, calendar: { ...p.calendar, skipped: !p.calendar.skipped } }))
         }
         className={cn(
-          "w-full text-left rounded-lg border p-3 text-[12px] transition-colors",
+          "w-full text-left rounded-lg border p-3 text-xs transition-colors",
           state.calendar.skipped
             ? "border-warning/40 bg-warning/5 text-foreground"
             : "border-dashed border-border bg-surface text-muted-foreground hover:bg-muted/40",
@@ -769,10 +769,10 @@ function StepDone({
   return (
     <div className="space-y-4">
       <div className="rounded-xl border border-border bg-surface p-5">
-        <div className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">
+        <div className="text-2xs uppercase tracking-wider text-muted-foreground font-medium">
           Resumo
         </div>
-        <dl className="mt-2 grid grid-cols-2 gap-y-2 text-[13px]">
+        <dl className="mt-2 grid grid-cols-2 gap-y-2 text-sm-minus">
           <dt className="text-muted-foreground">Clínica</dt>
           <dd className="font-medium text-right">{state.clinic.name || "—"}</dd>
           <dt className="text-muted-foreground">Especialidades</dt>
@@ -785,7 +785,7 @@ function StepDone({
       </div>
 
       <div className="rounded-xl border border-border bg-surface p-5">
-        <div className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">
+        <div className="text-2xs uppercase tracking-wider text-muted-foreground font-medium">
           Canais de integração
         </div>
         <div className="mt-3 grid grid-cols-2 gap-2">
@@ -798,8 +798,8 @@ function StepDone({
               >
                 <Icon className="size-4 text-muted-foreground mt-0.5" />
                 <div className="flex-1">
-                  <div className="text-[12.5px] font-medium">{c.label}</div>
-                  <div className="text-[11px] text-muted-foreground">
+                  <div className="text-xs-plus font-medium">{c.label}</div>
+                  <div className="text-2xs text-muted-foreground">
                     {c.status === "skipped"
                       ? "Pulado · conectar depois"
                       : "Pendente · ativaremos na implementação"}
@@ -809,7 +809,7 @@ function StepDone({
             );
           })}
         </div>
-        <p className="mt-3 text-[11px] text-muted-foreground">
+        <p className="mt-3 text-2xs text-muted-foreground">
           Nossa equipe configura WhatsApp, avaliações do Google e e-mail transacional durante a
           implementação. Você não precisa contratar APIs separadas.
         </p>
@@ -821,8 +821,8 @@ function StepDone({
             <Database className="size-4.5" />
           </div>
           <div className="flex-1">
-            <div className="text-[13.5px] font-semibold">Carregar dados demo?</div>
-            <p className="mt-0.5 text-[12.5px] text-muted-foreground">
+            <div className="text-sm-minus font-semibold">Carregar dados demo?</div>
+            <p className="mt-0.5 text-xs-plus text-muted-foreground">
               Adiciona 20 pacientes, 15 oportunidades, atividades e notificações para explorar a
               plataforma. Você pode apagar depois.
             </p>
@@ -830,7 +830,7 @@ function StepDone({
               type="button"
               onClick={onLoadDemo}
               disabled={seeding || !demoLoaded}
-              className="mt-3 inline-flex items-center gap-1.5 h-8 px-3 rounded-md bg-primary text-primary-foreground text-[12px] font-medium hover:opacity-90 disabled:opacity-60"
+              className="mt-3 inline-flex items-center gap-1.5 h-8 px-3 rounded-md bg-primary text-primary-foreground text-xs font-medium hover:opacity-90 disabled:opacity-60"
             >
               {seeding ? (
                 <Loader2 className="size-3.5 animate-spin" />

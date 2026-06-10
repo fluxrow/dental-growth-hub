@@ -135,13 +135,13 @@ function Triagem() {
           </div>
           <div>
             <h2 className="text-[18px] font-semibold mb-1">Tudo em dia! 🎉</h2>
-            <p className="text-[13px] text-muted-foreground max-w-xs">
+            <p className="text-sm-minus text-muted-foreground max-w-xs">
               Nenhuma oportunidade parada. Ótimo trabalho.
             </p>
           </div>
           <Link
             to="/app/oportunidades"
-            className="mt-2 inline-flex items-center gap-1.5 h-9 px-4 rounded-lg bg-primary text-primary-foreground text-[13px] font-medium hover:opacity-90"
+            className="mt-2 inline-flex items-center gap-1.5 h-9 px-4 rounded-lg bg-primary text-primary-foreground text-sm-minus font-medium hover:opacity-90"
           >
             Ver pipeline completo <ChevronRight className="size-4" />
           </Link>
@@ -151,7 +151,7 @@ function Triagem() {
           {/* Header bar */}
           <div className="flex items-center gap-2.5 rounded-xl border border-warning/30 bg-warning/5 px-4 py-3 mb-5">
             <Zap className="size-4 text-warning-foreground shrink-0" />
-            <p className="text-[12.5px] text-warning-foreground font-medium">
+            <p className="text-xs-plus text-warning-foreground font-medium">
               {urgent.length} oportunidade{urgent.length !== 1 ? "s" : ""} precisam de ação agora —
               ordena das mais paradas às mais recentes
             </p>
@@ -179,15 +179,15 @@ function Triagem() {
                 {/* Row 1: rank + name + value */}
                 <div className="flex items-start justify-between gap-3 mb-2">
                   <div className="flex items-center gap-2.5 min-w-0">
-                    <span className="size-6 rounded-full bg-muted text-muted-foreground text-[11px] font-bold flex items-center justify-center shrink-0">
+                    <span className="size-6 rounded-full bg-muted text-muted-foreground text-2xs font-bold flex items-center justify-center shrink-0">
                       {rank + 1}
                     </span>
                     <div className="min-w-0">
-                      <div className="text-[14px] font-semibold truncate">{o.name}</div>
+                      <div className="text-sm font-semibold truncate">{o.name}</div>
                       <div className="flex items-center gap-2 mt-0.5">
                         <span
                           className={cn(
-                            "inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10.5px] font-medium",
+                            "inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-3xs font-medium",
                             stageObj?.tone ?? "bg-muted text-muted-foreground",
                           )}
                         >
@@ -195,7 +195,7 @@ function Triagem() {
                         </span>
                         <span
                           className={cn(
-                            "inline-flex items-center gap-1 text-[11px] font-medium",
+                            "inline-flex items-center gap-1 text-2xs font-medium",
                             urgencyColor,
                           )}
                         >
@@ -206,10 +206,10 @@ function Triagem() {
                     </div>
                   </div>
                   <div className="text-right shrink-0">
-                    <div className="text-[14px] font-semibold tabular-nums">
+                    <div className="text-sm font-semibold tabular-nums">
                       R$ {o.value.toLocaleString("pt-BR")}
                     </div>
-                    <div className="flex items-center gap-1 text-[11px] text-muted-foreground mt-0.5 justify-end">
+                    <div className="flex items-center gap-1 text-2xs text-muted-foreground mt-0.5 justify-end">
                       <Clock className="size-3" />
                       {o.daysInStage}d parado
                     </div>
@@ -217,14 +217,14 @@ function Triagem() {
                 </div>
 
                 {/* Row 2: next action */}
-                <p className="text-[12px] text-muted-foreground mb-3 pl-8">📌 {o.nextAction}</p>
+                <p className="text-xs text-muted-foreground mb-3 pl-8">📌 {o.nextAction}</p>
 
                 {/* Row 3: action buttons */}
                 <div className="flex items-center gap-2 pl-8">
                   {nextStage && (
                     <button
                       onClick={() => advance(o.id)}
-                      className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md bg-primary text-primary-foreground text-[12px] font-medium hover:opacity-90 transition-opacity"
+                      className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md bg-primary text-primary-foreground text-xs font-medium hover:opacity-90 transition-opacity"
                     >
                       <ChevronRight className="size-3.5" />
                       {nextStage.label}
@@ -233,7 +233,7 @@ function Triagem() {
                   {o.phone && (
                     <a
                       href={`tel:${o.phone.replace(/\D/g, "")}`}
-                      className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md border border-input bg-background text-[12px] font-medium hover:bg-muted transition-colors"
+                      className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md border border-input bg-background text-xs font-medium hover:bg-muted transition-colors"
                     >
                       <Phone className="size-3.5" />
                       Ligar
@@ -241,7 +241,7 @@ function Triagem() {
                   )}
                   <button
                     onClick={() => lose(o.id)}
-                    className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md border border-input bg-background text-[12px] text-muted-foreground hover:text-destructive hover:border-destructive/50 transition-colors ml-auto"
+                    className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md border border-input bg-background text-xs text-muted-foreground hover:text-destructive hover:border-destructive/50 transition-colors ml-auto"
                   >
                     <ThumbsDown className="size-3.5" />
                     Perdido
@@ -254,7 +254,7 @@ function Triagem() {
           <div className="pt-2 text-center">
             <Link
               to="/app/oportunidades"
-              className="text-[12px] text-primary hover:underline inline-flex items-center gap-1"
+              className="text-xs text-primary hover:underline inline-flex items-center gap-1"
             >
               Ver pipeline completo <ChevronRight className="size-3.5" />
             </Link>

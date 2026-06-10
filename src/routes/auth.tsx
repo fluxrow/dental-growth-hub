@@ -92,11 +92,11 @@ function AuthPage() {
               os pacientes que já chegam.
             </span>
           </h2>
-          <p className="mt-4 text-[14px] text-muted-foreground max-w-sm">
+          <p className="mt-4 text-sm text-muted-foreground max-w-sm">
             Centralize WhatsApp, follow-up, confirmações, cobranças e avaliações em um único lugar.
           </p>
         </div>
-        <p className="text-[11px] text-muted-foreground">© DentalFlux · LGPD compliant</p>
+        <p className="text-2xs text-muted-foreground">© DentalFlux · LGPD compliant</p>
       </div>
 
       <main className="flex items-center justify-center p-6">
@@ -112,7 +112,7 @@ function AuthPage() {
                 key={m}
                 onClick={() => setMode(m)}
                 className={
-                  "px-3 h-8 rounded-md text-[12.5px] font-medium transition-colors " +
+                  "px-3 h-8 rounded-md text-xs-plus font-medium transition-colors " +
                   (mode === m
                     ? "bg-primary text-primary-foreground"
                     : "text-muted-foreground hover:text-foreground")
@@ -126,7 +126,7 @@ function AuthPage() {
           <h1 className="font-display text-2xl font-semibold tracking-tight">
             {mode === "login" ? "Bem-vindo de volta" : "Crie sua conta"}
           </h1>
-          <p className="mt-1 text-[13px] text-muted-foreground">
+          <p className="mt-1 text-sm-minus text-muted-foreground">
             {mode === "login" ? "Entre para acessar sua clínica" : "14 dias grátis · sem cartão"}
           </p>
 
@@ -134,7 +134,7 @@ function AuthPage() {
             type="button"
             onClick={signInWithGoogle}
             disabled={googleLoading || loading}
-            className="mt-6 w-full h-10 rounded-md border border-input bg-background text-[13px] font-medium hover:bg-muted inline-flex items-center justify-center gap-2 disabled:opacity-60"
+            className="mt-6 w-full h-10 rounded-md border border-input bg-background text-sm-minus font-medium hover:bg-muted inline-flex items-center justify-center gap-2 disabled:opacity-60"
           >
             {googleLoading ? (
               <Loader2 className="size-4 animate-spin" />
@@ -146,7 +146,7 @@ function AuthPage() {
             )}
           </button>
 
-          <div className="my-4 flex items-center gap-3 text-[11px] uppercase tracking-wider text-muted-foreground">
+          <div className="my-4 flex items-center gap-3 text-2xs uppercase tracking-wider text-muted-foreground">
             <div className="h-px flex-1 bg-border" />
             ou
             <div className="h-px flex-1 bg-border" />
@@ -188,7 +188,7 @@ function AuthPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full h-10 rounded-md bg-primary text-primary-foreground text-[13px] font-medium hover:opacity-90 inline-flex items-center justify-center gap-1.5 disabled:opacity-60"
+              className="w-full h-10 rounded-md bg-primary text-primary-foreground text-sm-minus font-medium hover:opacity-90 inline-flex items-center justify-center gap-1.5 disabled:opacity-60"
             >
               {loading ? (
                 <Loader2 className="size-4 animate-spin" />
@@ -200,7 +200,7 @@ function AuthPage() {
             </button>
           </form>
 
-          <p className="mt-5 text-center text-[12px] text-muted-foreground">
+          <p className="mt-5 text-center text-xs text-muted-foreground">
             {mode === "login" ? "Novo no DentalFlux? " : "Já tem conta? "}
             <button
               onClick={() => setMode(mode === "login" ? "signup" : "login")}
@@ -217,12 +217,12 @@ function AuthPage() {
 }
 
 const inputCls =
-  "w-full h-10 rounded-md border border-input bg-background px-3 text-[13px] focus:outline-none focus:ring-2 focus:ring-ring";
+  "w-full h-10 rounded-md border border-input bg-background px-3 text-sm-minus focus:outline-none focus:ring-2 focus:ring-ring";
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="block text-[12px] font-medium text-foreground/80 mb-1.5">{label}</span>
+      <span className="block text-xs font-medium text-foreground/80 mb-1.5">{label}</span>
       {children}
     </label>
   );

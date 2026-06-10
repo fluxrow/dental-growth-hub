@@ -32,7 +32,7 @@ function Configuracoes() {
               key={t}
               onClick={() => setTab(t)}
               className={cn(
-                "px-3 h-7 rounded-md text-[12.5px]",
+                "px-3 h-7 rounded-md text-xs-plus",
                 tab === t
                   ? "bg-primary/10 text-primary font-medium"
                   : "text-muted-foreground hover:bg-muted",
@@ -69,8 +69,8 @@ function AgendaTab() {
             <Calendar className="size-5" />
           </div>
           <div className="flex-1">
-            <div className="text-[14px] font-semibold">Google Calendar da clínica</div>
-            <p className="mt-1 text-[12.5px] text-muted-foreground">
+            <div className="text-sm font-semibold">Google Calendar da clínica</div>
+            <p className="mt-1 text-xs-plus text-muted-foreground">
               Esta é a agenda usada para lembretes, confirmações e detecção de no-show. Você pode
               trocar a conta Google ou desconectar a qualquer momento — basta refazer a autorização.
             </p>
@@ -78,7 +78,7 @@ function AgendaTab() {
               {clinicId ? (
                 <GoogleCalendarConnector clinicId={clinicId} />
               ) : (
-                <p className="text-[12px] text-muted-foreground">
+                <p className="text-xs text-muted-foreground">
                   Termine o onboarding da clínica antes de conectar a agenda.
                 </p>
               )}
@@ -86,7 +86,7 @@ function AgendaTab() {
           </div>
         </div>
       </div>
-      <div className="mt-4 rounded-md border border-dashed border-border bg-surface p-3 text-[12px] text-muted-foreground">
+      <div className="mt-4 rounded-md border border-dashed border-border bg-surface p-3 text-xs text-muted-foreground">
         <strong className="text-foreground">Negou alguma permissão?</strong> Clique em{" "}
         <em>Conectar com Google</em> novamente e marque <strong>todas</strong> as caixas — ler e
         criar eventos. Sem isso, lembretes automáticos ficam desativados.
@@ -186,7 +186,7 @@ function ClinicTab() {
 
       {/* Tom de comunicação */}
       <div className="md:col-span-2">
-        <div className="text-[11.5px] uppercase tracking-wider text-muted-foreground mb-1.5">
+        <div className="text-2xs uppercase tracking-wider text-muted-foreground mb-1.5">
           Tom de comunicação
         </div>
         <div className="flex gap-2 flex-wrap">
@@ -196,7 +196,7 @@ function ClinicTab() {
               type="button"
               onClick={() => setTone(t)}
               className={cn(
-                "h-8 px-3 rounded-md text-[12.5px] font-medium border transition-colors",
+                "h-8 px-3 rounded-md text-xs-plus font-medium border transition-colors",
                 tone === t
                   ? "border-primary bg-primary/10 text-primary"
                   : "border-input bg-background text-muted-foreground hover:bg-muted",
@@ -206,14 +206,14 @@ function ClinicTab() {
             </button>
           ))}
         </div>
-        <p className="mt-1.5 text-[11.5px] text-muted-foreground">
+        <p className="mt-1.5 text-2xs text-muted-foreground">
           Define como as mensagens automáticas são enviadas aos seus pacientes.
         </p>
       </div>
 
       {/* Logo placeholder */}
       <div className="md:col-span-2">
-        <div className="text-[11.5px] uppercase tracking-wider text-muted-foreground mb-2">
+        <div className="text-2xs uppercase tracking-wider text-muted-foreground mb-2">
           Logo
         </div>
         <div className="flex items-center gap-4">
@@ -223,12 +223,12 @@ function ClinicTab() {
           <button
             type="button"
             disabled
-            className="h-8 px-3 rounded-md border border-input bg-background text-[12px] opacity-40 cursor-not-allowed"
+            className="h-8 px-3 rounded-md border border-input bg-background text-xs opacity-40 cursor-not-allowed"
             title="Upload de logo em breve"
           >
             Trocar logo
           </button>
-          <span className="text-[11.5px] text-muted-foreground">Upload em breve</span>
+          <span className="text-2xs text-muted-foreground">Upload em breve</span>
         </div>
       </div>
 
@@ -236,7 +236,7 @@ function ClinicTab() {
         <button
           type="submit"
           disabled={saving || !name.trim()}
-          className="inline-flex items-center gap-1.5 h-9 px-4 rounded-md bg-primary text-primary-foreground text-[12.5px] font-medium hover:opacity-90 disabled:opacity-50"
+          className="inline-flex items-center gap-1.5 h-9 px-4 rounded-md bg-primary text-primary-foreground text-xs-plus font-medium hover:opacity-90 disabled:opacity-50"
         >
           {saving && <Loader2 className="size-3.5 animate-spin" />}
           {saving ? "Salvando…" : "Salvar alterações"}
@@ -267,7 +267,7 @@ function Field({
 }) {
   return (
     <div className={cn(full && "md:col-span-2")}>
-      <div className="text-[11.5px] uppercase tracking-wider text-muted-foreground mb-1.5">
+      <div className="text-2xs uppercase tracking-wider text-muted-foreground mb-1.5">
         {label}
       </div>
       <input
@@ -277,11 +277,11 @@ function Field({
         required={required}
         placeholder={placeholder}
         className={cn(
-          "w-full h-9 rounded-md border border-input bg-background px-3 text-[13px] focus:outline-none focus:ring-2 focus:ring-ring",
+          "w-full h-9 rounded-md border border-input bg-background px-3 text-sm-minus focus:outline-none focus:ring-2 focus:ring-ring",
           readOnly && "opacity-50 cursor-not-allowed bg-muted",
         )}
       />
-      {hint && <p className="mt-1 text-[11px] text-muted-foreground">{hint}</p>}
+      {hint && <p className="mt-1 text-2xs text-muted-foreground">{hint}</p>}
     </div>
   );
 }
@@ -290,14 +290,14 @@ function UsersTab() {
   return (
     <div>
       <div className="flex items-center justify-between mb-3">
-        <div className="text-[13px] text-muted-foreground">{TEAM.length} usuários no time</div>
-        <button className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md bg-primary text-primary-foreground text-[12.5px] font-medium hover:opacity-90">
+        <div className="text-sm-minus text-muted-foreground">{TEAM.length} usuários no time</div>
+        <button className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md bg-primary text-primary-foreground text-xs-plus font-medium hover:opacity-90">
           <Plus className="size-3.5" /> Convidar usuário
         </button>
       </div>
       <div className="rounded-lg border border-border overflow-hidden">
-        <table className="w-full text-[13px]">
-          <thead className="text-[11px] uppercase tracking-wider text-muted-foreground bg-surface-muted/40">
+        <table className="w-full text-sm-minus">
+          <thead className="text-2xs uppercase tracking-wider text-muted-foreground bg-surface-muted/40">
             <tr>
               <th className="text-left font-medium px-4 py-2.5">Usuário</th>
               <th className="text-left font-medium px-4 py-2.5">Email</th>
@@ -311,12 +311,12 @@ function UsersTab() {
                 <td className="px-4 py-3 font-medium">{u.name}</td>
                 <td className="px-4 py-3 text-muted-foreground">{u.email}</td>
                 <td className="px-4 py-3">
-                  <span className="inline-flex rounded-md bg-accent text-accent-foreground px-2 py-0.5 text-[11.5px] font-medium">
+                  <span className="inline-flex rounded-md bg-accent text-accent-foreground px-2 py-0.5 text-2xs font-medium">
                     {u.role}
                   </span>
                 </td>
                 <td className="px-4 py-3">
-                  <span className="inline-flex items-center gap-1 text-[11.5px] text-success">
+                  <span className="inline-flex items-center gap-1 text-2xs text-success">
                     <span className="size-1.5 rounded-full bg-success" /> Ativo
                   </span>
                 </td>
@@ -340,13 +340,13 @@ function WhatsTab() {
             </svg>
           </div>
           <div className="flex-1">
-            <div className="text-[14px] font-semibold">WhatsApp Business via Z-API</div>
-            <div className="text-[12px] text-muted-foreground">
+            <div className="text-sm font-semibold">WhatsApp Business via Z-API</div>
+            <div className="text-xs text-muted-foreground">
               Conecte sua linha do WhatsApp em poucos minutos.
             </div>
           </div>
         </div>
-        <ol className="space-y-2 text-[13px] text-foreground/80 mb-4 list-decimal pl-4">
+        <ol className="space-y-2 text-sm-minus text-foreground/80 mb-4 list-decimal pl-4">
           <li>Crie uma conta gratuita na Z-API</li>
           <li>Copie o token e o ID da instância</li>
           <li>Cole nos campos abaixo e ative</li>
@@ -355,7 +355,7 @@ function WhatsTab() {
           <Field label="Instance ID" value="" />
           <Field label="Token" value="" />
         </div>
-        <button className="h-9 px-4 rounded-md bg-primary text-primary-foreground text-[12.5px] font-medium hover:opacity-90">
+        <button className="h-9 px-4 rounded-md bg-primary text-primary-foreground text-xs-plus font-medium hover:opacity-90">
           Conectar WhatsApp
         </button>
       </div>
@@ -368,15 +368,15 @@ function IntegrationsTab() {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
       {INTEGRATIONS.map((i) => (
         <div key={i.id} className="rounded-lg border border-border bg-background p-4 flex flex-col">
-          <div className="text-[13.5px] font-semibold">{i.name}</div>
-          <div className="text-[12px] text-muted-foreground mt-1 flex-1">{i.desc}</div>
+          <div className="text-sm-minus font-semibold">{i.name}</div>
+          <div className="text-xs text-muted-foreground mt-1 flex-1">{i.desc}</div>
           <div className="mt-4 flex items-center justify-between">
-            <span className="text-[11px] text-muted-foreground">
+            <span className="text-2xs text-muted-foreground">
               {i.connected ? "Conectada" : "Em breve"}
             </span>
             <button
               className={cn(
-                "h-8 px-3 rounded-md text-[12px] font-medium",
+                "h-8 px-3 rounded-md text-xs font-medium",
                 i.connected
                   ? "bg-success/10 text-success"
                   : "border border-input bg-background hover:bg-muted",
@@ -411,25 +411,25 @@ function PlansTab() {
             )}
           >
             {p.highlighted && (
-              <div className="inline-block self-start text-[10.5px] font-semibold uppercase tracking-wider text-primary mb-2">
+              <div className="inline-block self-start text-3xs font-semibold uppercase tracking-wider text-primary mb-2">
                 Mais escolhido
               </div>
             )}
             <div className="font-display text-xl font-semibold">{p.name}</div>
             <div className="mt-2 flex items-baseline gap-1">
               <span className="font-display text-3xl font-semibold tabular-nums">{p.price}</span>
-              <span className="text-[12px] text-muted-foreground">{p.per}</span>
+              <span className="text-xs text-muted-foreground">{p.per}</span>
             </div>
             <ul className="mt-4 space-y-2 flex-1">
               {p.features.map((f) => (
-                <li key={f} className="flex items-start gap-2 text-[13px]">
+                <li key={f} className="flex items-start gap-2 text-sm-minus">
                   <Check className="size-3.5 text-success mt-0.5 shrink-0" /> {f}
                 </li>
               ))}
             </ul>
             <button
               className={cn(
-                "mt-5 h-9 rounded-md text-[12.5px] font-medium",
+                "mt-5 h-9 rounded-md text-xs-plus font-medium",
                 p.highlighted
                   ? "bg-primary text-primary-foreground hover:opacity-90"
                   : "border border-input bg-background hover:bg-muted",
@@ -445,14 +445,14 @@ function PlansTab() {
       {clinicId && (
         <div className="mt-6 pt-5 border-t border-border flex items-center justify-between">
           <div>
-            <p className="text-[13px] font-medium">Cancelar assinatura</p>
-            <p className="text-[12px] text-muted-foreground mt-0.5">
+            <p className="text-sm-minus font-medium">Cancelar assinatura</p>
+            <p className="text-xs text-muted-foreground mt-0.5">
               Seu acesso ficará ativo até o final do período pago.
             </p>
           </div>
           <button
             onClick={() => setShowCancelModal(true)}
-            className="h-8 px-3.5 rounded-md border border-destructive/40 text-destructive text-[12.5px] font-medium hover:bg-destructive/5 transition-colors"
+            className="h-8 px-3.5 rounded-md border border-destructive/40 text-destructive text-xs-plus font-medium hover:bg-destructive/5 transition-colors"
           >
             Cancelar plano
           </button>

@@ -54,7 +54,7 @@ export function RevenueLeakBanner() {
     return (
       <div className="rounded-xl border border-border bg-surface px-5 py-4 flex items-center gap-3 mb-4">
         <Loader2 className="size-4 animate-spin text-muted-foreground" />
-        <span className="text-[12px] text-muted-foreground">Carregando diagnóstico…</span>
+        <span className="text-xs text-muted-foreground">Carregando diagnóstico…</span>
       </div>
     );
   }
@@ -67,15 +67,15 @@ export function RevenueLeakBanner() {
             <Sparkles className="size-4" />
           </div>
           <div>
-            <p className="text-[13px] font-semibold">Descubra quanto sua clínica pode recuperar</p>
-            <p className="text-[11.5px] text-muted-foreground">
+            <p className="text-sm-minus font-semibold">Descubra quanto sua clínica pode recuperar</p>
+            <p className="text-2xs text-muted-foreground">
               Importe sua base de pacientes para gerar o diagnóstico
             </p>
           </div>
         </div>
         <Link
           to="/app/importar"
-          className="text-[12px] text-primary font-medium inline-flex items-center gap-1 hover:underline shrink-0"
+          className="text-xs text-primary font-medium inline-flex items-center gap-1 hover:underline shrink-0"
         >
           Importar agora <ArrowRight className="size-3.5" />
         </Link>
@@ -103,14 +103,14 @@ export function RevenueLeakBanner() {
       <div className="px-5 py-3 border-b border-primary/15 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <TrendingUp className="size-4 text-primary" />
-          <span className="text-[13px] font-semibold">Revenue Leak Engine</span>
-          <span className={cn("text-[11px] font-semibold", healthColor)}>
+          <span className="text-sm-minus font-semibold">Revenue Leak Engine</span>
+          <span className={cn("text-2xs font-semibold", healthColor)}>
             · Score {diag.health_score ?? "—"}/100
           </span>
         </div>
         <Link
           to="/app/diagnostico"
-          className="text-[12px] text-primary font-medium inline-flex items-center gap-1 hover:underline"
+          className="text-xs text-primary font-medium inline-flex items-center gap-1 hover:underline"
         >
           Ver diagnóstico completo <ArrowRight className="size-3.5" />
         </Link>
@@ -219,7 +219,7 @@ function PulseTicker({ monthlyLeak }: { monthlyLeak: number }) {
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive opacity-60" />
           <span className="relative inline-flex rounded-full size-2.5 bg-destructive" />
         </span>
-        <span className="text-[12px] text-destructive font-medium truncate">
+        <span className="text-xs text-destructive font-medium truncate">
           Perdido nessa sessão
         </span>
       </div>
@@ -227,7 +227,7 @@ function PulseTicker({ monthlyLeak }: { monthlyLeak: number }) {
         <span className="font-display text-[20px] font-bold tabular-nums text-destructive tracking-tight">
           {fmtLive(lostNow)}
         </span>
-        <span className="text-[10.5px] text-muted-foreground tabular-nums hidden sm:block">
+        <span className="text-3xs text-muted-foreground tabular-nums hidden sm:block">
           {fmtRate(perSecond)}/s
         </span>
       </div>
@@ -263,8 +263,8 @@ function Metric({
       >
         {value}
       </div>
-      <div className="text-[11px] font-medium text-muted-foreground mt-0.5">{label}</div>
-      <div className="text-[10.5px] text-muted-foreground/70">{sub}</div>
+      <div className="text-2xs font-medium text-muted-foreground mt-0.5">{label}</div>
+      <div className="text-3xs text-muted-foreground/70">{sub}</div>
     </div>
   );
 }

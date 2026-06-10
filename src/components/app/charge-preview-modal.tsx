@@ -174,14 +174,14 @@ export function ChargePreviewModal({
 
           {/* WhatsApp preview */}
           <div className="rounded-xl bg-[#ECE5DD] p-3">
-            <p className="text-[10px] font-semibold text-zinc-500 mb-2 uppercase tracking-wide">
+            <p className="text-3xs font-semibold text-zinc-500 mb-2 uppercase tracking-wide">
               Prévia WhatsApp
             </p>
             <div className="bg-white rounded-xl rounded-tl-none px-3 py-2.5 shadow-sm max-w-[90%]">
               <p className="text-sm text-zinc-900 whitespace-pre-wrap leading-relaxed">
                 {preview.replace(/\*(.*?)\*/g, (_, t) => t) /* strip bold markers for preview */}
               </p>
-              <p className="text-right text-[10px] text-zinc-400 mt-1">
+              <p className="text-right text-3xs text-zinc-400 mt-1">
                 {new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
               </p>
             </div>

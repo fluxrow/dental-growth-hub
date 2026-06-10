@@ -121,12 +121,12 @@ export function AppShell({
         </Link>
         <div className="hidden lg:block px-3 py-2">
           <button className="w-full flex items-center gap-2 px-2.5 py-2 rounded-md hover:bg-sidebar-accent text-left">
-            <div className="size-7 rounded-md bg-primary/10 text-primary flex items-center justify-center text-[11px] font-semibold">
+            <div className="size-7 rounded-md bg-primary/10 text-primary flex items-center justify-center text-2xs font-semibold">
               {clinicInitials}
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-[13px] font-medium truncate">{clinicName}</div>
-              <div className="text-[11px] text-muted-foreground truncate">{clinicCity}</div>
+              <div className="text-sm-minus font-medium truncate">{clinicName}</div>
+              <div className="text-2xs text-muted-foreground truncate">{clinicCity}</div>
             </div>
             <ChevronDown className="size-3.5 text-muted-foreground" />
           </button>
@@ -134,7 +134,7 @@ export function AppShell({
         <nav className="flex-1 overflow-y-auto px-2 pb-4 pt-2 space-y-1">
           {NAV_GROUPS.map((group) => (
             <div key={group.label}>
-              <div className="hidden lg:block px-2 py-1.5 text-[10px] font-semibold tracking-wider text-muted-foreground/60 uppercase">
+              <div className="hidden lg:block px-2 py-1.5 text-3xs font-semibold tracking-wider text-muted-foreground/60 uppercase">
                 {group.label}
               </div>
               {group.items.map((item) => {
@@ -146,7 +146,7 @@ export function AppShell({
                     to={item.to as never}
                     title={item.label}
                     className={cn(
-                      "flex items-center gap-2.5 px-2.5 py-2 rounded-md text-[13px] transition-colors justify-center lg:justify-start",
+                      "flex items-center gap-2.5 px-2.5 py-2 rounded-md text-sm-minus transition-colors justify-center lg:justify-start",
                       active
                         ? "bg-primary/10 text-primary font-medium"
                         : "text-sidebar-foreground/85 hover:bg-sidebar-accent hover:text-sidebar-foreground",
@@ -163,14 +163,14 @@ export function AppShell({
           {/* Admin-only section */}
           {data?.profile?.role === "admin" && (
             <div>
-              <div className="hidden lg:block px-2 py-1.5 text-[10px] font-semibold tracking-wider text-muted-foreground/60 uppercase">
+              <div className="hidden lg:block px-2 py-1.5 text-3xs font-semibold tracking-wider text-muted-foreground/60 uppercase">
                 Admin
               </div>
               <Link
                 to="/app/admin/cs-queue"
                 title="CS Queue"
                 className={cn(
-                  "flex items-center gap-2.5 px-2.5 py-2 rounded-md text-[13px] transition-colors justify-center lg:justify-start",
+                  "flex items-center gap-2.5 px-2.5 py-2 rounded-md text-sm-minus transition-colors justify-center lg:justify-start",
                   pathname.startsWith("/app/admin")
                     ? "bg-primary/10 text-primary font-medium"
                     : "text-sidebar-foreground/85 hover:bg-sidebar-accent hover:text-sidebar-foreground",
@@ -186,13 +186,13 @@ export function AppShell({
           <div className="flex items-center gap-2.5 flex-col lg:flex-row">
             <div
               title={userName}
-              className="size-8 rounded-full bg-gradient-to-br from-primary to-chart-2 flex items-center justify-center text-primary-foreground text-[11px] font-semibold"
+              className="size-8 rounded-full bg-gradient-to-br from-primary to-chart-2 flex items-center justify-center text-primary-foreground text-2xs font-semibold"
             >
               {userInitials}
             </div>
             <div className="flex-1 min-w-0 hidden lg:block">
-              <div className="text-[12px] font-medium truncate">{userName}</div>
-              <div className="text-[11px] text-muted-foreground truncate">{user?.email}</div>
+              <div className="text-xs font-medium truncate">{userName}</div>
+              <div className="text-2xs text-muted-foreground truncate">{user?.email}</div>
             </div>
             <button
               onClick={handleLogout}
@@ -204,7 +204,7 @@ export function AppShell({
           </div>
           <Link
             to="/app/configuracoes"
-            className="mt-2 hidden lg:block text-[11px] text-muted-foreground hover:text-primary"
+            className="mt-2 hidden lg:block text-2xs text-muted-foreground hover:text-primary"
           >
             Gerenciar agenda Google →
           </Link>
@@ -227,7 +227,7 @@ export function AppShell({
               </h1>
             )}
             {subtitle && (
-              <p className="text-[12px] text-muted-foreground truncate" title={subtitle}>
+              <p className="text-xs text-muted-foreground truncate" title={subtitle}>
                 {subtitle}
               </p>
             )}
@@ -249,7 +249,7 @@ export function AppShell({
                     new KeyboardEvent("keydown", { key: "k", metaKey: true, bubbles: true }),
                   )
                 }
-                className="h-8 w-56 rounded-md border border-input bg-surface pl-8 pr-3 text-[12px] placeholder:text-muted-foreground/70 cursor-pointer focus:outline-none focus:ring-2 focus:ring-ring"
+                className="h-8 w-56 rounded-md border border-input bg-surface pl-8 pr-3 text-xs placeholder:text-muted-foreground/70 cursor-pointer focus:outline-none focus:ring-2 focus:ring-ring"
               />
             </div>
             <PeriodSelector />
@@ -320,7 +320,7 @@ function MobileBottomNav() {
         )}
       >
         <div className="flex items-center justify-between px-5 py-3 border-b border-border">
-          <span className="text-[13px] font-semibold tracking-tight">Mais opções</span>
+          <span className="text-sm-minus font-semibold tracking-tight">Mais opções</span>
           <button
             onClick={() => setOpen(false)}
             className="size-7 rounded-md hover:bg-muted flex items-center justify-center text-muted-foreground"
@@ -338,7 +338,7 @@ function MobileBottomNav() {
                 to={item.to as never}
                 onClick={() => setOpen(false)}
                 className={cn(
-                  "flex flex-col items-center gap-1.5 rounded-xl p-3 text-[11px] font-medium transition-colors",
+                  "flex flex-col items-center gap-1.5 rounded-xl p-3 text-2xs font-medium transition-colors",
                   active
                     ? "bg-primary/10 text-primary"
                     : "text-muted-foreground hover:bg-muted hover:text-foreground",
@@ -363,7 +363,7 @@ function MobileBottomNav() {
               key={tab.to}
               to={tab.to as never}
               className={cn(
-                "flex-1 flex flex-col items-center justify-center gap-0.5 text-[10.5px] font-medium transition-colors",
+                "flex-1 flex flex-col items-center justify-center gap-0.5 text-3xs font-medium transition-colors",
                 active ? "text-primary" : "text-muted-foreground",
               )}
             >
@@ -376,7 +376,7 @@ function MobileBottomNav() {
         <button
           onClick={() => setOpen((v) => !v)}
           className={cn(
-            "flex-1 flex flex-col items-center justify-center gap-0.5 text-[10.5px] font-medium transition-colors",
+            "flex-1 flex flex-col items-center justify-center gap-0.5 text-3xs font-medium transition-colors",
             open ? "text-primary" : "text-muted-foreground",
           )}
         >
@@ -395,7 +395,7 @@ function EmptyModeToggle() {
       onClick={toggleEmptyMode}
       title={live ? "Mostrar dados de exemplo (mocks)" : "Mostrar dados reais da sua clínica"}
       className={cn(
-        "h-8 px-2.5 rounded-md border text-[11.5px] font-medium inline-flex items-center gap-1.5 transition-colors",
+        "h-8 px-2.5 rounded-md border text-2xs font-medium inline-flex items-center gap-1.5 transition-colors",
         live
           ? "border-success bg-success/10 text-success"
           : "border-input bg-surface text-muted-foreground hover:bg-muted hover:text-foreground",
@@ -418,7 +418,7 @@ function PeriodSelector() {
           key={key}
           onClick={() => setPeriod(key)}
           className={cn(
-            "px-2.5 text-[11.5px] font-medium border-r border-input last:border-r-0 transition-colors",
+            "px-2.5 text-2xs font-medium border-r border-input last:border-r-0 transition-colors",
             current === key
               ? "bg-primary/10 text-primary"
               : "text-muted-foreground hover:text-foreground hover:bg-muted",

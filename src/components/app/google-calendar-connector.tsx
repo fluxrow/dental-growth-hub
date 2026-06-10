@@ -175,17 +175,17 @@ export function GoogleCalendarConnector({
 
   if (loadingStatus && !status.connected) {
     return (
-      <div className="inline-flex items-center gap-2 text-[12.5px] text-muted-foreground">
+      <div className="inline-flex items-center gap-2 text-xs-plus text-muted-foreground">
         <Loader2 className="size-3.5 animate-spin" /> Verificando conexão…
       </div>
     );
   }
 
   return (
-    <div className={cn("space-y-3", compact && "text-[12.5px]")}>
+    <div className={cn("space-y-3", compact && "text-xs-plus")}>
       {status.connected ? (
         <>
-          <div className="inline-flex items-center gap-2 h-10 px-4 rounded-md bg-success/10 text-success border border-success/30 text-[13px] font-medium">
+          <div className="inline-flex items-center gap-2 h-10 px-4 rounded-md bg-success/10 text-success border border-success/30 text-sm-minus font-medium">
             <Check className="size-4" />
             Conectado{status.accountEmail ? ` · ${status.accountEmail}` : ""}
           </div>
@@ -194,7 +194,7 @@ export function GoogleCalendarConnector({
               type="button"
               onClick={() => runConnect({ switchAccount: true })}
               disabled={busy}
-              className="inline-flex items-center gap-1.5 h-9 px-3 rounded-md border border-input bg-background text-[12.5px] font-medium hover:bg-muted disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 h-9 px-3 rounded-md border border-input bg-background text-xs-plus font-medium hover:bg-muted disabled:opacity-50"
             >
               {busy ? (
                 <Loader2 className="size-3.5 animate-spin" />
@@ -207,7 +207,7 @@ export function GoogleCalendarConnector({
               type="button"
               onClick={handleDisconnect}
               disabled={busy}
-              className="inline-flex items-center gap-1.5 h-9 px-3 rounded-md text-[12.5px] font-medium text-muted-foreground hover:text-destructive hover:bg-destructive/5 disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 h-9 px-3 rounded-md text-xs-plus font-medium text-muted-foreground hover:text-destructive hover:bg-destructive/5 disabled:opacity-50"
             >
               <Unplug className="size-3.5" />
               Desconectar
@@ -220,7 +220,7 @@ export function GoogleCalendarConnector({
             type="button"
             onClick={() => runConnect()}
             disabled={busy}
-            className="inline-flex items-center gap-2 h-10 px-4 rounded-md bg-primary text-primary-foreground text-[13px] font-medium hover:opacity-90 disabled:opacity-60"
+            className="inline-flex items-center gap-2 h-10 px-4 rounded-md bg-primary text-primary-foreground text-sm-minus font-medium hover:opacity-90 disabled:opacity-60"
           >
             {busy ? (
               <Loader2 className="size-4 animate-spin" />
@@ -230,7 +230,7 @@ export function GoogleCalendarConnector({
             {lastError ? "Tentar conectar novamente" : "Conectar com Google"}
           </button>
           {lastError && (
-            <div className="rounded-md border border-warning/40 bg-warning/5 p-3 text-[12px] flex items-start gap-2">
+            <div className="rounded-md border border-warning/40 bg-warning/5 p-3 text-xs flex items-start gap-2">
               <AlertTriangle className="size-3.5 text-warning mt-0.5 shrink-0" />
               <div>
                 <div className="font-medium text-foreground">{lastError.title}</div>

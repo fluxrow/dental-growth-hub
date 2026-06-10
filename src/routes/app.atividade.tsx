@@ -129,11 +129,11 @@ function AtividadePage() {
         <button
           onClick={() => markAllRead()}
           disabled={unread === 0}
-          className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md border border-input bg-surface text-[12px] font-medium hover:bg-muted disabled:opacity-40"
+          className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md border border-input bg-surface text-xs font-medium hover:bg-muted disabled:opacity-40"
         >
           <CheckCheck className="size-3.5" /> Marcar todas como lidas
           {unread > 0 && (
-            <span className="ml-1 rounded-full bg-primary text-primary-foreground text-[10px] px-1.5 py-0.5 tabular-nums">
+            <span className="ml-1 rounded-full bg-primary text-primary-foreground text-3xs px-1.5 py-0.5 tabular-nums">
               {unread}
             </span>
           )}
@@ -166,7 +166,7 @@ function AtividadePage() {
               key={c.id}
               onClick={() => setFilter(c.id)}
               className={cn(
-                "h-7 px-2.5 rounded-full text-[11.5px] font-medium border transition-colors inline-flex items-center gap-1.5",
+                "h-7 px-2.5 rounded-full text-2xs font-medium border transition-colors inline-flex items-center gap-1.5",
                 active
                   ? "bg-primary text-primary-foreground border-primary"
                   : "border-border bg-surface text-foreground/70 hover:bg-muted",
@@ -175,7 +175,7 @@ function AtividadePage() {
               {c.label}
               <span
                 className={cn(
-                  "tabular-nums text-[10px]",
+                  "tabular-nums text-3xs",
                   active ? "opacity-80" : "text-muted-foreground",
                 )}
               >
@@ -188,7 +188,7 @@ function AtividadePage() {
         <button
           onClick={() => setOnlyUnread((v) => !v)}
           className={cn(
-            "h-7 px-2.5 rounded-full text-[11.5px] font-medium border transition-colors inline-flex items-center gap-1.5",
+            "h-7 px-2.5 rounded-full text-2xs font-medium border transition-colors inline-flex items-center gap-1.5",
             onlyUnread
               ? "bg-foreground text-background border-foreground"
               : "border-border bg-surface text-foreground/70 hover:bg-muted",
@@ -200,13 +200,13 @@ function AtividadePage() {
 
       <div className="rounded-xl border border-border bg-surface overflow-hidden">
         {grouped.length === 0 && (
-          <div className="px-5 py-12 text-center text-[13px] text-muted-foreground">
+          <div className="px-5 py-12 text-center text-sm-minus text-muted-foreground">
             Nenhuma atividade nesta categoria.
           </div>
         )}
         {grouped.map(([day, list]) => (
           <div key={day}>
-            <div className="px-4 py-2 bg-muted/40 border-b border-border text-[10.5px] font-semibold uppercase tracking-wider text-muted-foreground">
+            <div className="px-4 py-2 bg-muted/40 border-b border-border text-3xs font-semibold uppercase tracking-wider text-muted-foreground">
               {day}
             </div>
             <ul className="divide-y divide-border">

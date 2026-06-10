@@ -35,7 +35,7 @@ export function KpiCard({ k, large = false }: { k: Kpi; large?: boolean }) {
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
-          <div className="text-[11.5px] font-medium text-muted-foreground tracking-tight truncate">
+          <div className="text-2xs font-medium text-muted-foreground tracking-tight truncate">
             {k.label}
           </div>
           <div
@@ -50,7 +50,7 @@ export function KpiCard({ k, large = false }: { k: Kpi; large?: boolean }) {
         </div>
         <div
           className={cn(
-            "shrink-0 inline-flex items-center gap-0.5 rounded-full px-1.5 py-0.5 text-[10.5px] font-medium",
+            "shrink-0 inline-flex items-center gap-0.5 rounded-full px-1.5 py-0.5 text-3xs font-medium",
             positive ? "bg-success/10 text-success" : "bg-destructive/10 text-destructive",
           )}
         >

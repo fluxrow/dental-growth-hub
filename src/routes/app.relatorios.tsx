@@ -65,7 +65,7 @@ function Relatorios() {
           </div>
           <ul className="mt-2 space-y-1.5">
             {SOURCE_BREAKDOWN.map((s) => (
-              <li key={s.name} className="flex items-center justify-between text-[12px]">
+              <li key={s.name} className="flex items-center justify-between text-xs">
                 <span className="inline-flex items-center gap-2">
                   <span className="size-2.5 rounded-sm" style={{ background: s.color }} />
                   {s.name}
@@ -221,8 +221,8 @@ function Card({
   return (
     <section className="rounded-xl border border-border bg-surface p-5">
       <div className="mb-3">
-        <h3 className="text-[14px] font-semibold tracking-tight">{title}</h3>
-        {subtitle && <p className="text-[12px] text-muted-foreground">{subtitle}</p>}
+        <h3 className="text-sm font-semibold tracking-tight">{title}</h3>
+        {subtitle && <p className="text-xs text-muted-foreground">{subtitle}</p>}
       </div>
       {children}
     </section>

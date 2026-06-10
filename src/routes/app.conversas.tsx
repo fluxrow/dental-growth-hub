@@ -68,10 +68,10 @@ function Conversas() {
               <Search className="size-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
               <input
                 placeholder="Buscar conversa…"
-                className="h-8 w-full rounded-md border border-input bg-background pl-8 pr-3 text-[12px] focus:outline-none focus:ring-2 focus:ring-ring"
+                className="h-8 w-full rounded-md border border-input bg-background pl-8 pr-3 text-xs focus:outline-none focus:ring-2 focus:ring-ring"
               />
             </div>
-            <div className="flex gap-1 mt-2 text-[11px]">
+            <div className="flex gap-1 mt-2 text-2xs">
               {["Todas", "Não lidas", "Aguardando"].map((f, i) => (
                 <button
                   key={f}
@@ -102,7 +102,7 @@ function Conversas() {
                     activeId === c.id && "bg-primary/5",
                   )}
                 >
-                  <div className="size-9 rounded-full bg-gradient-to-br from-muted to-accent flex items-center justify-center text-[11px] font-semibold shrink-0">
+                  <div className="size-9 rounded-full bg-gradient-to-br from-muted to-accent flex items-center justify-center text-2xs font-semibold shrink-0">
                     {c.patientName
                       .split(" ")
                       .map((n) => n[0])
@@ -111,25 +111,25 @@ function Conversas() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-baseline justify-between gap-2">
-                      <span className="text-[13px] font-medium truncate">{c.patientName}</span>
-                      <span className="text-[10.5px] text-muted-foreground shrink-0 tabular-nums">
+                      <span className="text-sm-minus font-medium truncate">{c.patientName}</span>
+                      <span className="text-3xs text-muted-foreground shrink-0 tabular-nums">
                         {c.lastTime}
                       </span>
                     </div>
-                    <div className="text-[12px] text-muted-foreground truncate">
+                    <div className="text-xs text-muted-foreground truncate">
                       {c.lastMessage}
                     </div>
                     <div className="mt-1 flex items-center gap-1.5">
                       <span
                         className={cn(
-                          "inline-flex rounded-full px-1.5 py-0.5 text-[11px] font-medium",
+                          "inline-flex rounded-full px-1.5 py-0.5 text-2xs font-medium",
                           s.tone,
                         )}
                       >
                         {s.label}
                       </span>
                       {c.unread > 0 && (
-                        <span className="ml-auto size-5 rounded-full bg-primary text-primary-foreground text-[10.5px] font-semibold flex items-center justify-center tabular-nums">
+                        <span className="ml-auto size-5 rounded-full bg-primary text-primary-foreground text-3xs font-semibold flex items-center justify-center tabular-nums">
                           {c.unread}
                         </span>
                       )}
@@ -160,7 +160,7 @@ function Conversas() {
               <ArrowLeft className="size-4 text-muted-foreground" />
             </button>
             <div className="flex items-center gap-3 min-w-0 flex-1">
-              <div className="size-9 rounded-full bg-gradient-to-br from-muted to-accent flex items-center justify-center text-[11px] font-semibold">
+              <div className="size-9 rounded-full bg-gradient-to-br from-muted to-accent flex items-center justify-center text-2xs font-semibold">
                 {active.patientName
                   .split(" ")
                   .map((n) => n[0])
@@ -168,8 +168,8 @@ function Conversas() {
                   .join("")}
               </div>
               <div className="min-w-0">
-                <div className="text-[13.5px] font-semibold truncate">{active.patientName}</div>
-                <div className="text-[11.5px] text-muted-foreground truncate">
+                <div className="text-sm-minus font-semibold truncate">{active.patientName}</div>
+                <div className="text-2xs text-muted-foreground truncate">
                   {active.phone} · {active.source}
                 </div>
               </div>
@@ -193,7 +193,7 @@ function Conversas() {
           </div>
 
           <div className="flex-1 overflow-y-auto px-6 py-6 space-y-3">
-            <div className="text-center text-[10.5px] text-muted-foreground py-1">Hoje</div>
+            <div className="text-center text-3xs text-muted-foreground py-1">Hoje</div>
             {active.messages.map((m) => (
               <div
                 key={m.id}
@@ -201,7 +201,7 @@ function Conversas() {
               >
                 <div
                   className={cn(
-                    "max-w-[70%] rounded-2xl px-3.5 py-2 text-[13.5px] leading-snug",
+                    "max-w-[70%] rounded-2xl px-3.5 py-2 text-sm-minus leading-snug",
                     m.from === "patient"
                       ? "bg-surface border border-border rounded-tl-sm"
                       : "bg-primary text-primary-foreground rounded-tr-sm",
@@ -210,7 +210,7 @@ function Conversas() {
                   {m.text}
                   <div
                     className={cn(
-                      "text-[10px] mt-0.5 text-right tabular-nums",
+                      "text-3xs mt-0.5 text-right tabular-nums",
                       m.from === "patient" ? "text-muted-foreground" : "text-primary-foreground/70",
                     )}
                   >
@@ -226,7 +226,7 @@ function Conversas() {
               {["Olá! 😊", "Confirmar consulta", "Enviar orçamento", "Reagendar"].map((t) => (
                 <button
                   key={t}
-                  className="text-[11px] px-2 py-1 rounded-md border border-input bg-background hover:bg-muted"
+                  className="text-2xs px-2 py-1 rounded-md border border-input bg-background hover:bg-muted"
                 >
                   {t}
                 </button>
@@ -245,13 +245,13 @@ function Conversas() {
                     el.style.height = "auto";
                     el.style.height = `${Math.min(el.scrollHeight, 120)}px`;
                   }}
-                  className="w-full resize-none bg-transparent text-[13.5px] focus:outline-none max-h-[120px]"
+                  className="w-full resize-none bg-transparent text-sm-minus focus:outline-none max-h-[120px]"
                 />
               </div>
               <button className="size-9 rounded-md hover:bg-muted flex items-center justify-center">
                 <Smile className="size-4 text-muted-foreground" />
               </button>
-              <button className="h-9 px-3 rounded-md bg-primary text-primary-foreground inline-flex items-center gap-1.5 text-[12.5px] font-medium hover:opacity-90">
+              <button className="h-9 px-3 rounded-md bg-primary text-primary-foreground inline-flex items-center gap-1.5 text-xs-plus font-medium hover:opacity-90">
                 <Send className="size-3.5" /> Enviar
               </button>
             </div>
@@ -275,7 +275,7 @@ function Conversas() {
           )}
         >
           <div className="h-14 border-b border-border flex items-center justify-between px-4">
-            <span className="text-[12px] font-semibold uppercase tracking-wider text-muted-foreground">
+            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Contexto do paciente
             </span>
             <button
@@ -287,22 +287,22 @@ function Conversas() {
           </div>
           <div className="flex-1 overflow-y-auto p-4 space-y-5">
             <div>
-              <div className="text-[11px] text-muted-foreground mb-1">Etapa do funil</div>
-              <div className="text-[13px] font-medium">{stageLabel}</div>
+              <div className="text-2xs text-muted-foreground mb-1">Etapa do funil</div>
+              <div className="text-sm-minus font-medium">{stageLabel}</div>
             </div>
             <div>
-              <div className="text-[11px] text-muted-foreground mb-1">Oportunidade vinculada</div>
-              <div className="text-[13px] font-medium tabular-nums">
+              <div className="text-2xs text-muted-foreground mb-1">Oportunidade vinculada</div>
+              <div className="text-sm-minus font-medium tabular-nums">
                 R$ {active.estValue.toLocaleString("pt-BR")}
               </div>
             </div>
             <div>
-              <div className="text-[11px] text-muted-foreground mb-1.5">Tags</div>
+              <div className="text-2xs text-muted-foreground mb-1.5">Tags</div>
               <div className="flex flex-wrap gap-1">
                 {active.tags.map((t) => (
                   <span
                     key={t}
-                    className="inline-flex items-center gap-1 rounded-md bg-accent text-accent-foreground px-1.5 py-0.5 text-[10.5px]"
+                    className="inline-flex items-center gap-1 rounded-md bg-accent text-accent-foreground px-1.5 py-0.5 text-3xs"
                   >
                     <Tag className="size-2.5" /> {t}
                   </span>
@@ -310,15 +310,15 @@ function Conversas() {
               </div>
             </div>
             <div>
-              <div className="text-[11px] text-muted-foreground mb-1">Origem</div>
-              <div className="text-[13px]">{active.source}</div>
+              <div className="text-2xs text-muted-foreground mb-1">Origem</div>
+              <div className="text-sm-minus">{active.source}</div>
             </div>
             <div className="rounded-lg border border-primary/30 bg-primary/5 p-3">
-              <div className="flex items-center gap-1.5 text-[11px] font-semibold text-primary mb-1">
+              <div className="flex items-center gap-1.5 text-2xs font-semibold text-primary mb-1">
                 <Sparkles className="size-3.5" /> Próxima ação sugerida
               </div>
-              <div className="text-[13px] text-foreground/85">{active.nextAction}</div>
-              <button className="mt-2.5 w-full h-8 rounded-md bg-primary text-primary-foreground text-[12px] font-medium hover:opacity-90">
+              <div className="text-sm-minus text-foreground/85">{active.nextAction}</div>
+              <button className="mt-2.5 w-full h-8 rounded-md bg-primary text-primary-foreground text-xs font-medium hover:opacity-90">
                 Aplicar agora
               </button>
             </div>

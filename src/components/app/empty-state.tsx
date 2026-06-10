@@ -50,7 +50,7 @@ export function EmptyState({
               <Icon className="size-5" />
             </div>
             {eyebrow && (
-              <span className="text-[10.5px] uppercase tracking-wider font-semibold text-primary/90">
+              <span className="text-3xs uppercase tracking-wider font-semibold text-primary/90">
                 {eyebrow}
               </span>
             )}
@@ -59,7 +59,7 @@ export function EmptyState({
           <h2 className="font-display text-[22px] sm:text-[26px] leading-tight font-semibold tracking-tight">
             {title}
           </h2>
-          <p className="mt-2 text-[13.5px] text-muted-foreground max-w-md leading-relaxed">
+          <p className="mt-2 text-sm-minus text-muted-foreground max-w-md leading-relaxed">
             {description}
           </p>
 
@@ -69,7 +69,7 @@ export function EmptyState({
           </div>
 
           {tip && (
-            <div className="mt-5 inline-flex items-start gap-2 rounded-lg border border-border bg-background/60 px-3 py-2 text-[12px] text-muted-foreground max-w-md">
+            <div className="mt-5 inline-flex items-start gap-2 rounded-lg border border-border bg-background/60 px-3 py-2 text-xs text-muted-foreground max-w-md">
               <Sparkles className="size-3.5 mt-0.5 text-primary shrink-0" />
               <span>{tip}</span>
             </div>
@@ -78,19 +78,19 @@ export function EmptyState({
 
         {/* Right: numbered steps */}
         <div className="border-t lg:border-t-0 lg:border-l border-border bg-gradient-to-b from-accent/40 to-transparent p-8 lg:p-10">
-          <div className="text-[10.5px] uppercase tracking-wider font-semibold text-muted-foreground mb-4">
+          <div className="text-3xs uppercase tracking-wider font-semibold text-muted-foreground mb-4">
             Próximos passos
           </div>
           <ol className="space-y-3.5">
             {steps.map((s, i) => (
               <li key={i} className="flex gap-3">
-                <div className="size-7 rounded-full bg-background border border-border text-[12px] font-semibold flex items-center justify-center shrink-0 tabular-nums text-primary">
+                <div className="size-7 rounded-full bg-background border border-border text-xs font-semibold flex items-center justify-center shrink-0 tabular-nums text-primary">
                   {i + 1}
                 </div>
                 <div className="flex-1 pt-0.5">
-                  <div className="text-[13px] font-medium leading-snug">{s.title}</div>
+                  <div className="text-sm-minus font-medium leading-snug">{s.title}</div>
                   {s.description && (
-                    <div className="text-[12px] text-muted-foreground mt-0.5 leading-relaxed">
+                    <div className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
                       {s.description}
                     </div>
                   )}
@@ -121,7 +121,7 @@ function CTAButton({
       ? "h-10 px-4 bg-primary text-primary-foreground hover:opacity-90 shadow-sm"
       : "h-10 px-4 border border-input bg-background text-foreground/80 hover:bg-muted";
   const content = (
-    <span className="inline-flex items-center gap-1.5 text-[13px] font-medium">
+    <span className="inline-flex items-center gap-1.5 text-sm-minus font-medium">
       {label} <ArrowRight className="size-3.5" />
     </span>
   );

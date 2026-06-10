@@ -324,7 +324,7 @@ export function CancelFlowModal({ clinicId, onClose }: CancelFlowModalProps) {
           {/* ── Step 1: Survey ── */}
           {step === "survey" && (
             <>
-              <p className="text-[13px] text-muted-foreground">
+              <p className="text-sm-minus text-muted-foreground">
                 Sua resposta nos ajuda a melhorar. Selecione o principal motivo:
               </p>
               <ul className="space-y-2">
@@ -333,7 +333,7 @@ export function CancelFlowModal({ clinicId, onClose }: CancelFlowModalProps) {
                     <button
                       onClick={() => setSelectedReason(reason)}
                       className={cn(
-                        "w-full text-left px-3.5 py-2.5 rounded-lg border text-[13px] transition-colors",
+                        "w-full text-left px-3.5 py-2.5 rounded-lg border text-sm-minus transition-colors",
                         selectedReason?.id === reason.id
                           ? "border-primary bg-primary/5 text-primary font-medium"
                           : "border-border hover:border-primary/40 hover:bg-muted",
@@ -347,7 +347,7 @@ export function CancelFlowModal({ clinicId, onClose }: CancelFlowModalProps) {
               <div className="flex gap-2 pt-1">
                 <button
                   onClick={onClose}
-                  className="flex-1 h-9 rounded-lg border border-input text-[13px] font-medium hover:bg-muted"
+                  className="flex-1 h-9 rounded-lg border border-input text-sm-minus font-medium hover:bg-muted"
                 >
                   Manter assinatura
                 </button>
@@ -356,7 +356,7 @@ export function CancelFlowModal({ clinicId, onClose }: CancelFlowModalProps) {
                   onClick={() =>
                     setStep(selectedReason?.offer.type === "none" ? "confirm" : "offer")
                   }
-                  className="flex-1 h-9 rounded-lg bg-destructive/10 text-destructive text-[13px] font-medium hover:bg-destructive/20 disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="flex-1 h-9 rounded-lg bg-destructive/10 text-destructive text-sm-minus font-medium hover:bg-destructive/20 disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   Continuar
                 </button>
@@ -368,14 +368,14 @@ export function CancelFlowModal({ clinicId, onClose }: CancelFlowModalProps) {
           {step === "offer" && offer && offer.type !== "none" && (
             <>
               <div className="rounded-xl border border-primary/30 bg-primary/5 p-4 space-y-2">
-                <p className="text-[14px] font-semibold">{offer.title}</p>
-                <p className="text-[13px] text-muted-foreground leading-relaxed">
+                <p className="text-sm font-semibold">{offer.title}</p>
+                <p className="text-sm-minus text-muted-foreground leading-relaxed">
                   {offer.description}
                 </p>
                 <button
                   disabled={loading}
                   onClick={handleAcceptOffer}
-                  className="w-full mt-2 h-9 rounded-lg bg-primary text-primary-foreground text-[13px] font-medium hover:opacity-90 disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="w-full mt-2 h-9 rounded-lg bg-primary text-primary-foreground text-sm-minus font-medium hover:opacity-90 disabled:opacity-50 flex items-center justify-center gap-2"
                 >
                   {loading && <Loader2 className="size-3.5 animate-spin" />}
                   {offer.cta}
@@ -404,7 +404,7 @@ export function CancelFlowModal({ clinicId, onClose }: CancelFlowModalProps) {
                         window.open("https://dentalflux.com.br/roadmap", "_blank");
                       }
                     }}
-                    className="w-full h-8 rounded-lg border border-input text-[12.5px] text-muted-foreground hover:bg-muted disabled:opacity-50"
+                    className="w-full h-8 rounded-lg border border-input text-xs-plus text-muted-foreground hover:bg-muted disabled:opacity-50"
                   >
                     {offer.ctaSecondary}
                   </button>
@@ -412,7 +412,7 @@ export function CancelFlowModal({ clinicId, onClose }: CancelFlowModalProps) {
               </div>
 
               {error && (
-                <p className="text-[12px] text-destructive flex items-center gap-1.5">
+                <p className="text-xs text-destructive flex items-center gap-1.5">
                   <AlertTriangle className="size-3.5 shrink-0" />
                   {error}
                 </p>
@@ -420,7 +420,7 @@ export function CancelFlowModal({ clinicId, onClose }: CancelFlowModalProps) {
 
               <button
                 onClick={() => setStep("confirm")}
-                className="w-full text-[12px] text-muted-foreground hover:text-destructive underline-offset-2 hover:underline"
+                className="w-full text-xs text-muted-foreground hover:text-destructive underline-offset-2 hover:underline"
               >
                 Não, quero cancelar mesmo assim
               </button>
@@ -433,10 +433,10 @@ export function CancelFlowModal({ clinicId, onClose }: CancelFlowModalProps) {
               <div className="flex items-start gap-3 rounded-xl border border-destructive/30 bg-destructive/5 p-4">
                 <AlertTriangle className="size-4 text-destructive mt-0.5 shrink-0" />
                 <div className="space-y-1">
-                  <p className="text-[13px] font-medium text-destructive">
+                  <p className="text-sm-minus font-medium text-destructive">
                     Tem certeza que quer cancelar?
                   </p>
-                  <p className="text-[12.5px] text-muted-foreground leading-relaxed">
+                  <p className="text-xs-plus text-muted-foreground leading-relaxed">
                     Seu acesso ficará ativo até o final do período atual. Após isso, todos os dados,
                     automações e histórico serão desativados.
                   </p>
@@ -444,7 +444,7 @@ export function CancelFlowModal({ clinicId, onClose }: CancelFlowModalProps) {
               </div>
 
               {error && (
-                <p className="text-[12px] text-destructive flex items-center gap-1.5">
+                <p className="text-xs text-destructive flex items-center gap-1.5">
                   <AlertTriangle className="size-3.5 shrink-0" />
                   {error}
                 </p>
@@ -453,14 +453,14 @@ export function CancelFlowModal({ clinicId, onClose }: CancelFlowModalProps) {
               <div className="flex gap-2">
                 <button
                   onClick={() => setStep("survey")}
-                  className="flex-1 h-9 rounded-lg border border-input text-[13px] font-medium hover:bg-muted"
+                  className="flex-1 h-9 rounded-lg border border-input text-sm-minus font-medium hover:bg-muted"
                 >
                   Voltar
                 </button>
                 <button
                   disabled={loading}
                   onClick={handleConfirmCancel}
-                  className="flex-1 h-9 rounded-lg bg-destructive text-destructive-foreground text-[13px] font-medium hover:opacity-90 disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="flex-1 h-9 rounded-lg bg-destructive text-destructive-foreground text-sm-minus font-medium hover:opacity-90 disabled:opacity-50 flex items-center justify-center gap-2"
                 >
                   {loading && <Loader2 className="size-3.5 animate-spin" />}
                   Confirmar cancelamento
@@ -473,12 +473,12 @@ export function CancelFlowModal({ clinicId, onClose }: CancelFlowModalProps) {
           {step === "done" && (
             <div className="flex flex-col items-center gap-3 py-4 text-center">
               <CheckCircle2 className="size-10 text-success" />
-              <p className="text-[14px] font-semibold">
+              <p className="text-sm font-semibold">
                 {selectedReason?.offer.type === "discount" || selectedReason?.offer.type === "pause"
                   ? "Oferta aplicada com sucesso!"
                   : "Cancelamento registrado"}
               </p>
-              <p className="text-[13px] text-muted-foreground leading-relaxed max-w-xs">
+              <p className="text-sm-minus text-muted-foreground leading-relaxed max-w-xs">
                 {selectedReason?.offer.type === "discount"
                   ? "O desconto já está ativo na sua próxima fatura. Obrigado por continuar com o DrFlux!"
                   : selectedReason?.offer.type === "pause"
@@ -487,7 +487,7 @@ export function CancelFlowModal({ clinicId, onClose }: CancelFlowModalProps) {
               </p>
               <button
                 onClick={onClose}
-                className="mt-2 h-9 px-5 rounded-lg bg-primary text-primary-foreground text-[13px] font-medium hover:opacity-90"
+                className="mt-2 h-9 px-5 rounded-lg bg-primary text-primary-foreground text-sm-minus font-medium hover:opacity-90"
               >
                 Fechar
               </button>

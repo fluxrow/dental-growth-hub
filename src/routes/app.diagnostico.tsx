@@ -154,10 +154,10 @@ function DiagnosticoPage() {
                 <Star className="size-5" />
               </div>
               <div className="flex-1">
-                <p className="text-[14px] font-semibold">
+                <p className="text-sm font-semibold">
                   {diag.review_eligible_count} pacientes elegíveis para avaliação Google
                 </p>
-                <p className="text-[12px] text-muted-foreground">
+                <p className="text-xs text-muted-foreground">
                   {diag.current_avg_rating != null
                     ? `Nota atual: ${diag.current_avg_rating}★ · `
                     : ""}
@@ -177,8 +177,8 @@ function DiagnosticoPage() {
             <div className="rounded-xl border border-border bg-surface">
               <div className="px-5 py-4 border-b border-border flex items-center gap-2">
                 <Sparkles className="size-4 text-primary" />
-                <h3 className="text-[14px] font-semibold">Ações recomendadas</h3>
-                <span className="ml-auto text-[11.5px] text-muted-foreground">
+                <h3 className="text-sm font-semibold">Ações recomendadas</h3>
+                <span className="ml-auto text-2xs text-muted-foreground">
                   {actions.length} ações · potencial{" "}
                   {fmt(actions.reduce((s, a) => s + a.estimated_value, 0))}
                 </span>
@@ -207,7 +207,7 @@ function DiagnosticoPage() {
             </div>
           )}
 
-          <div className="text-[11px] text-muted-foreground text-right">
+          <div className="text-2xs text-muted-foreground text-right">
             Diagnóstico gerado em {new Date(diag.snapshot_at).toLocaleString("pt-BR")}
           </div>
         </div>
@@ -225,7 +225,7 @@ function NoDiagnostic({ onRun, running }: { onRun: () => void; running: boolean 
         <Sparkles className="size-7" />
       </div>
       <h3 className="mt-5 text-[17px] font-semibold">Nenhum diagnóstico ainda</h3>
-      <p className="mt-2 text-[13px] text-muted-foreground">
+      <p className="mt-2 text-sm-minus text-muted-foreground">
         Importe sua base de pacientes ou clique abaixo para gerar o primeiro diagnóstico.
       </p>
       <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
@@ -276,7 +276,7 @@ function HealthScoreCard({ score }: { score: number }) {
 
   return (
     <div className="rounded-xl border border-border bg-surface p-6 flex flex-col items-center justify-center gap-0">
-      <h3 className="text-[13px] font-semibold text-muted-foreground mb-4">Clinic Health Score</h3>
+      <h3 className="text-sm-minus font-semibold text-muted-foreground mb-4">Clinic Health Score</h3>
       <div className="relative size-36">
         <svg className="size-full -rotate-90" viewBox="0 0 120 120">
           <circle
@@ -303,7 +303,7 @@ function HealthScoreCard({ score }: { score: number }) {
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <span className="text-[36px] font-bold tabular-nums leading-none">{score}</span>
-          <span className="text-[11px] text-muted-foreground mt-0.5">/ 100</span>
+          <span className="text-2xs text-muted-foreground mt-0.5">/ 100</span>
         </div>
       </div>
       <Badge variant="outline" className={cn("mt-4 border", color.badge)}>
@@ -319,13 +319,13 @@ function RecoverableCard({ total }: { total: number }) {
       <div className="size-10 rounded-full bg-primary/10 text-primary flex items-center justify-center">
         <TrendingUp className="size-5" />
       </div>
-      <h3 className="mt-4 text-[13px] font-semibold text-muted-foreground">
+      <h3 className="mt-4 text-sm-minus font-semibold text-muted-foreground">
         Potencial total recuperável
       </h3>
       <div className="mt-2 text-[42px] font-bold tabular-nums tracking-tight text-primary leading-none">
         {fmt(Number(total ?? 0))}
       </div>
-      <p className="mt-3 text-[12px] text-muted-foreground text-center max-w-xs">
+      <p className="mt-3 text-xs text-muted-foreground text-center max-w-xs">
         Estimativa conservadora baseada em inativos, cobranças e oportunidades paradas
       </p>
       <Link to="/app/pacientes" className="mt-4">
@@ -360,9 +360,9 @@ function BreakdownCard({
       <div className="mt-4 text-[28px] font-bold tabular-nums leading-none">
         {count.toLocaleString("pt-BR")}
       </div>
-      <div className="mt-1 text-[13px] font-semibold">{label}</div>
+      <div className="mt-1 text-sm-minus font-semibold">{label}</div>
       <div className="mt-1 text-[22px] font-semibold tabular-nums text-primary">{fmt(value)}</div>
-      <div className="mt-1 text-[11.5px] text-muted-foreground">{desc}</div>
+      <div className="mt-1 text-2xs text-muted-foreground">{desc}</div>
     </div>
   );
 }
@@ -379,7 +379,7 @@ function ScoreBreakdown({ diag }: { diag: DiagnosticSnapshot }) {
   return (
     <div className="rounded-xl border border-border bg-surface">
       <div className="px-5 py-3 border-b border-border">
-        <h3 className="text-[13px] font-semibold">Componentes do score</h3>
+        <h3 className="text-sm-minus font-semibold">Componentes do score</h3>
       </div>
       <div className="divide-y divide-border">
         {components.map((c) => {
@@ -395,8 +395,8 @@ function ScoreBreakdown({ diag }: { diag: DiagnosticSnapshot }) {
           return (
             <div key={c.label} className="px-5 py-3 flex items-center gap-4">
               <div className="w-40 shrink-0">
-                <div className="text-[12px] font-medium">{c.label}</div>
-                <div className="text-[10.5px] text-muted-foreground">Peso {c.weight}</div>
+                <div className="text-xs font-medium">{c.label}</div>
+                <div className="text-3xs text-muted-foreground">Peso {c.weight}</div>
               </div>
               <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
                 <div
@@ -404,7 +404,7 @@ function ScoreBreakdown({ diag }: { diag: DiagnosticSnapshot }) {
                   style={{ width: `${pct}%` }}
                 />
               </div>
-              <div className="w-10 text-right text-[12px] font-semibold tabular-nums">
+              <div className="w-10 text-right text-xs font-semibold tabular-nums">
                 {c.value != null ? Math.round(c.value) : "—"}
               </div>
             </div>
@@ -430,7 +430,7 @@ function ActionGroup({
     <div className="px-5 py-4">
       <div
         className={cn(
-          "flex items-center gap-1.5 mb-3 text-[12px] font-semibold uppercase tracking-wide",
+          "flex items-center gap-1.5 mb-3 text-xs font-semibold uppercase tracking-wide",
           cls,
         )}
       >
@@ -443,12 +443,12 @@ function ActionGroup({
             <div className="flex items-center gap-2">
               <CheckCircle2 className="size-4 text-muted-foreground/40 shrink-0" />
               <div>
-                <div className="text-[13px] font-medium">{a.title}</div>
-                <div className="text-[11.5px] text-muted-foreground">{a.category}</div>
+                <div className="text-sm-minus font-medium">{a.title}</div>
+                <div className="text-2xs text-muted-foreground">{a.category}</div>
               </div>
             </div>
             {a.estimated_value > 0 && (
-              <span className="text-[12px] font-semibold tabular-nums text-primary shrink-0">
+              <span className="text-xs font-semibold tabular-nums text-primary shrink-0">
                 {fmt(a.estimated_value)}
               </span>
             )}

@@ -155,10 +155,10 @@ export function OnboardingChecklist() {
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <span className="text-[13px] font-semibold tracking-tight">
+            <span className="text-sm-minus font-semibold tracking-tight">
               Configure sua clínica
             </span>
-            <span className="text-[11px] text-muted-foreground tabular-nums">
+            <span className="text-2xs text-muted-foreground tabular-nums">
               {completedCount}/{total}
             </span>
           </div>
@@ -214,18 +214,18 @@ export function OnboardingChecklist() {
                 <div className="flex-1 min-w-0">
                   <div
                     className={cn(
-                      "text-[13px] font-medium",
+                      "text-sm-minus font-medium",
                       isDone && "line-through text-muted-foreground",
                     )}
                   >
                     {step.label}
                   </div>
-                  <div className="text-[11px] text-muted-foreground truncate">{step.desc}</div>
+                  <div className="text-2xs text-muted-foreground truncate">{step.desc}</div>
                 </div>
                 {step.href && !isDone && (
                   <Link
                     to={step.href as never}
-                    className="shrink-0 inline-flex items-center gap-1 text-[11.5px] text-primary font-medium hover:underline"
+                    className="shrink-0 inline-flex items-center gap-1 text-2xs text-primary font-medium hover:underline"
                   >
                     Ir <ExternalLink className="size-3" />
                   </Link>

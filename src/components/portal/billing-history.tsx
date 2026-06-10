@@ -20,8 +20,8 @@ export function BillingHistory({ items }: { items: PortalChargeHistory[] }) {
   return (
     <section className="rounded-2xl border border-border bg-surface">
       <header className="px-5 h-12 flex items-center justify-between border-b border-border">
-        <h2 className="text-[14px] font-semibold tracking-tight">Histórico de cobranças</h2>
-        <span className="text-[11px] text-muted-foreground">{items.length} registros</span>
+        <h2 className="text-sm font-semibold tracking-tight">Histórico de cobranças</h2>
+        <span className="text-2xs text-muted-foreground">{items.length} registros</span>
       </header>
       <ul className="divide-y divide-border">
         {items.map((h) => {
@@ -34,17 +34,17 @@ export function BillingHistory({ items }: { items: PortalChargeHistory[] }) {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between gap-2">
-                  <div className="text-[12.5px] font-medium truncate">{h.message}</div>
+                  <div className="text-xs-plus font-medium truncate">{h.message}</div>
                   <span
                     className={cn(
-                      "shrink-0 rounded-full px-2 py-0.5 text-[10.5px] font-medium",
+                      "shrink-0 rounded-full px-2 py-0.5 text-3xs font-medium",
                       meta.cls,
                     )}
                   >
                     {meta.label}
                   </span>
                 </div>
-                <div className="mt-1 flex items-center gap-2 text-[11px] text-muted-foreground">
+                <div className="mt-1 flex items-center gap-2 text-2xs text-muted-foreground">
                   <span>{h.date}</span>
                   <span>·</span>
                   <span>{h.channel}</span>

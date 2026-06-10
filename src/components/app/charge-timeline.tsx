@@ -203,11 +203,11 @@ export function ChargeTimeline({ cobrancaId, dueDate, className }: ChargeTimelin
                 >
                   {stage.label}
                 </span>
-                <span className="text-[10px] text-zinc-400 text-center leading-tight">
+                <span className="text-3xs text-zinc-400 text-center leading-tight">
                   {stage.description}
                 </span>
                 {tentativa && (
-                  <span className="text-[10px] text-zinc-500 mt-0.5 flex items-center gap-0.5">
+                  <span className="text-3xs text-zinc-500 mt-0.5 flex items-center gap-0.5">
                     <StatusIcon status={tentativa.status} />
                     {statusLabel(tentativa.status)}
                   </span>

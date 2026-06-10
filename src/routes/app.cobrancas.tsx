@@ -85,7 +85,7 @@ function Cobrancas() {
       title="Cobranças"
       subtitle="Régua D-3 → D+10 · cobrança automática por WhatsApp"
       actions={
-        <button className="hidden md:inline-flex items-center gap-1.5 h-8 px-3 rounded-lg bg-primary text-primary-foreground text-[12.5px] font-medium hover:opacity-90 transition-opacity">
+        <button className="hidden md:inline-flex items-center gap-1.5 h-8 px-3 rounded-lg bg-primary text-primary-foreground text-xs-plus font-medium hover:opacity-90 transition-opacity">
           <Plus className="size-3.5" /> Nova cobrança
         </button>
       }
@@ -144,7 +144,7 @@ function Cobrancas() {
                   key={s}
                   onClick={() => setFilterStatus(s)}
                   className={cn(
-                    "px-2.5 h-7 rounded-md text-[12px] whitespace-nowrap",
+                    "px-2.5 h-7 rounded-md text-xs whitespace-nowrap",
                     filterStatus === s
                       ? "bg-primary/10 text-primary font-medium"
                       : "text-muted-foreground hover:bg-muted",
@@ -192,15 +192,15 @@ function Cobrancas() {
                           {/* Mobile: stack layout */}
                           <div className="flex items-start justify-between gap-2 md:hidden">
                             <div className="min-w-0">
-                              <div className="text-[13px] font-medium text-foreground truncate">
+                              <div className="text-sm-minus font-medium text-foreground truncate">
                                 {c.paciente?.name ?? "—"}
                               </div>
-                              <div className="text-[11.5px] text-muted-foreground truncate mt-0.5">
+                              <div className="text-2xs text-muted-foreground truncate mt-0.5">
                                 {c.description}
                               </div>
                             </div>
                             <div className="shrink-0 text-right">
-                              <div className="text-[13px] font-semibold tabular-nums">
+                              <div className="text-sm-minus font-semibold tabular-nums">
                                 {new Intl.NumberFormat("pt-BR", {
                                   style: "currency",
                                   currency: "BRL",
@@ -208,7 +208,7 @@ function Cobrancas() {
                               </div>
                               <span
                                 className={cn(
-                                  "inline-flex rounded-full px-2 py-0.5 text-[10.5px] font-semibold mt-0.5",
+                                  "inline-flex rounded-full px-2 py-0.5 text-3xs font-semibold mt-0.5",
                                   sc.tone,
                                 )}
                               >
@@ -216,7 +216,7 @@ function Cobrancas() {
                               </span>
                             </div>
                           </div>
-                          <div className="flex items-center gap-2 mt-1 md:hidden text-[11px] text-muted-foreground">
+                          <div className="flex items-center gap-2 mt-1 md:hidden text-2xs text-muted-foreground">
                             {new Date(c.due_date + "T12:00:00").toLocaleDateString("pt-BR")}
                             {daysLate > 0 && (
                               <span className="text-destructive font-medium">
@@ -250,7 +250,7 @@ function Cobrancas() {
                             <div className="col-span-1 flex justify-end">
                               <span
                                 className={cn(
-                                  "inline-flex rounded-full px-2 py-0.5 text-[10.5px] font-semibold",
+                                  "inline-flex rounded-full px-2 py-0.5 text-3xs font-semibold",
                                   sc.tone,
                                 )}
                               >

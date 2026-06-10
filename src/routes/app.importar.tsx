@@ -89,7 +89,7 @@ function ImportarPage() {
           <h3 className="mt-4 text-[15px] font-semibold">
             Arraste seu arquivo ou clique para selecionar
           </h3>
-          <p className="mt-1 text-[12px] text-muted-foreground">CSV, XLSX ou XLS — até 50MB</p>
+          <p className="mt-1 text-xs text-muted-foreground">CSV, XLSX ou XLS — até 50MB</p>
           <input
             ref={inputRef}
             type="file"
@@ -108,8 +108,8 @@ function ImportarPage() {
               <FileSpreadsheet className="size-5" />
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-[13px] font-medium truncate">{file.name}</div>
-              <div className="text-[11px] text-muted-foreground">
+              <div className="text-sm-minus font-medium truncate">{file.name}</div>
+              <div className="text-2xs text-muted-foreground">
                 {(file.size / 1024).toFixed(1)} KB
               </div>
             </div>
@@ -137,12 +137,12 @@ function ImportarPage() {
         <div className="rounded-xl border border-border bg-surface">
           <div className="flex items-center gap-2 px-5 py-3 border-b border-border">
             <History className="size-4 text-muted-foreground" />
-            <h3 className="text-[13px] font-semibold">Importações recentes</h3>
+            <h3 className="text-sm-minus font-semibold">Importações recentes</h3>
           </div>
           {jobsQuery.isLoading ? (
-            <p className="px-5 py-6 text-[12px] text-muted-foreground">Carregando…</p>
+            <p className="px-5 py-6 text-xs text-muted-foreground">Carregando…</p>
           ) : !jobsQuery.data || jobsQuery.data.length === 0 ? (
-            <p className="px-5 py-6 text-[12px] text-muted-foreground">
+            <p className="px-5 py-6 text-xs text-muted-foreground">
               Nenhuma importação anterior
             </p>
           ) : (
@@ -169,7 +169,7 @@ function ImportarPage() {
                     <TableCell className="text-right tabular-nums">
                       {j.imported_rows ?? 0}
                     </TableCell>
-                    <TableCell className="text-right text-muted-foreground text-[12px]">
+                    <TableCell className="text-right text-muted-foreground text-xs">
                       {new Date(j.created_at).toLocaleDateString("pt-BR")}
                     </TableCell>
                   </TableRow>
@@ -193,7 +193,7 @@ function StatusBadge({ status }: { status: string }) {
   };
   const v = map[status] ?? { label: status, cls: "bg-muted text-muted-foreground border-border" };
   return (
-    <Badge variant="outline" className={cn("text-[10.5px] border", v.cls)}>
+    <Badge variant="outline" className={cn("text-3xs border", v.cls)}>
       {v.label}
     </Badge>
   );

@@ -52,12 +52,12 @@ export function NotificationsPopover() {
       </PopoverTrigger>
       <PopoverContent align="end" className="w-[400px] p-0 overflow-hidden">
         <div className="px-4 h-12 flex items-center justify-between border-b border-border">
-          <div className="text-[13px] font-semibold">Notificações</div>
+          <div className="text-sm-minus font-semibold">Notificações</div>
           <div className="flex items-center gap-3">
-            <span className="text-[11px] text-muted-foreground">{unread} não lidas</span>
+            <span className="text-2xs text-muted-foreground">{unread} não lidas</span>
             <button
               onClick={() => markAllRead()}
-              className="inline-flex items-center gap-1 text-[11px] font-medium text-primary hover:underline disabled:opacity-40"
+              className="inline-flex items-center gap-1 text-2xs font-medium text-primary hover:underline disabled:opacity-40"
               disabled={unread === 0}
             >
               <CheckCheck className="size-3" /> Marcar todas
@@ -73,7 +73,7 @@ export function NotificationsPopover() {
           <Link
             to="/app/atividade"
             onClick={() => setOpen(false)}
-            className="block text-center text-[12.5px] font-medium text-primary py-1.5 rounded hover:bg-primary/5"
+            className="block text-center text-xs-plus font-medium text-primary py-1.5 rounded hover:bg-primary/5"
           >
             Ver toda a atividade
           </Link>
@@ -117,10 +117,10 @@ export function NotificationRow({
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between gap-2">
-          <div className="text-[12.5px] font-medium leading-snug truncate">{a.title}</div>
-          <span className="text-[10.5px] text-muted-foreground shrink-0">{a.time}</span>
+          <div className="text-xs-plus font-medium leading-snug truncate">{a.title}</div>
+          <span className="text-3xs text-muted-foreground shrink-0">{a.time}</span>
         </div>
-        <div className="text-[11.5px] text-muted-foreground truncate">
+        <div className="text-2xs text-muted-foreground truncate">
           {a.patient ? <span className="text-foreground/80 font-medium">{a.patient}</span> : null}
           {a.patient && a.detail ? " · " : ""}
           {a.detail}
@@ -133,7 +133,7 @@ export function NotificationRow({
             <Link
               to={a.patientHref as never}
               onClick={handleClick}
-              className="inline-flex items-center gap-1 text-[11.5px] font-medium text-primary hover:underline"
+              className="inline-flex items-center gap-1 text-2xs font-medium text-primary hover:underline"
             >
               <User className="size-3" /> Ver paciente
             </Link>
@@ -142,7 +142,7 @@ export function NotificationRow({
             <Link
               to={a.billingHref as never}
               onClick={handleClick}
-              className="inline-flex items-center gap-1 text-[11.5px] font-medium text-primary hover:underline"
+              className="inline-flex items-center gap-1 text-2xs font-medium text-primary hover:underline"
             >
               <Receipt className="size-3" /> Histórico
             </Link>
@@ -153,14 +153,14 @@ export function NotificationRow({
               <Link
                 to={a.action.href as never}
                 onClick={handleClick}
-                className="text-[11.5px] font-medium text-primary hover:underline"
+                className="text-2xs font-medium text-primary hover:underline"
               >
                 {a.action.label} →
               </Link>
             ) : (
               <button
                 onClick={handleClick}
-                className="text-[11.5px] font-medium text-primary hover:underline"
+                className="text-2xs font-medium text-primary hover:underline"
               >
                 {a.action.label}
               </button>
@@ -168,7 +168,7 @@ export function NotificationRow({
           {isUnread && (
             <button
               onClick={() => markRead(a.id)}
-              className="ml-auto text-[10.5px] text-muted-foreground hover:text-foreground"
+              className="ml-auto text-3xs text-muted-foreground hover:text-foreground"
             >
               Marcar como lida
             </button>

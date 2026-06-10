@@ -57,10 +57,10 @@ function PatientPortal() {
         <div className="max-w-2xl mx-auto px-4 sm:px-6 h-16 flex items-center gap-3">
           <Logo />
           <div className="flex-1 min-w-0">
-            <div className="text-[13px] font-semibold truncate">{data.clinic.name}</div>
-            <div className="text-[11px] text-muted-foreground truncate">{data.clinic.city}</div>
+            <div className="text-sm-minus font-semibold truncate">{data.clinic.name}</div>
+            <div className="text-2xs text-muted-foreground truncate">{data.clinic.city}</div>
           </div>
-          <span className="text-[11px] rounded-full bg-primary/10 text-primary px-2.5 py-1 font-medium">
+          <span className="text-2xs rounded-full bg-primary/10 text-primary px-2.5 py-1 font-medium">
             Portal do paciente
           </span>
         </div>
@@ -69,11 +69,11 @@ function PatientPortal() {
       <main className="max-w-2xl mx-auto px-4 sm:px-6 py-6 space-y-5 pb-16">
         {/* Greeting */}
         <div>
-          <div className="text-[12px] text-muted-foreground">Olá,</div>
+          <div className="text-xs text-muted-foreground">Olá,</div>
           <h1 className="font-display text-2xl sm:text-3xl font-semibold tracking-tight">
             {data.patient.name}
           </h1>
-          <p className="mt-1 text-[13px] text-muted-foreground">
+          <p className="mt-1 text-sm-minus text-muted-foreground">
             Acompanhe seu tratamento, próximas consultas e pagamentos em um só lugar.
           </p>
         </div>
@@ -83,13 +83,13 @@ function PatientPortal() {
           <div className="p-5">
             <div className="flex items-center justify-between gap-3 flex-wrap">
               <div>
-                <div className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">
+                <div className="text-2xs uppercase tracking-wider text-muted-foreground font-medium">
                   Etapa atual
                 </div>
                 <div className="mt-1 text-[15px] font-semibold">{currentStage?.label}</div>
               </div>
               <div className="text-right">
-                <div className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">
+                <div className="text-2xs uppercase tracking-wider text-muted-foreground font-medium">
                   Progresso
                 </div>
                 <div className="mt-1 text-[15px] font-semibold tabular-nums">
@@ -129,10 +129,10 @@ function PatientPortal() {
 
           {data.treatment.nextAppointment && (
             <div className="border-t border-border bg-accent/50 px-5 py-4">
-              <div className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">
+              <div className="text-2xs uppercase tracking-wider text-muted-foreground font-medium">
                 Próxima consulta
               </div>
-              <div className="mt-1.5 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-[13px]">
+              <div className="mt-1.5 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-sm-minus">
                 <span className="inline-flex items-center gap-1.5">
                   <Calendar className="size-3.5 text-primary" />
                   {data.treatment.nextAppointment.date}
@@ -146,7 +146,7 @@ function PatientPortal() {
                   {data.treatment.nextAppointment.room}
                 </span>
               </div>
-              <div className="mt-1 text-[12px] text-muted-foreground">
+              <div className="mt-1 text-xs text-muted-foreground">
                 com {data.treatment.nextAppointment.dentist}
               </div>
             </div>
@@ -162,7 +162,7 @@ function PatientPortal() {
         {/* Timeline */}
         <section className="rounded-2xl border border-border bg-surface">
           <header className="px-5 h-12 flex items-center border-b border-border">
-            <h2 className="text-[14px] font-semibold tracking-tight">Linha do tempo</h2>
+            <h2 className="text-sm font-semibold tracking-tight">Linha do tempo</h2>
           </header>
           <ol className="p-5 space-y-4">
             {data.timeline.map((e) => {
@@ -173,11 +173,11 @@ function PatientPortal() {
                     <Icon className="size-4" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-[13px] font-medium">{e.title}</div>
+                    <div className="text-sm-minus font-medium">{e.title}</div>
                     {e.description && (
-                      <div className="text-[12px] text-muted-foreground">{e.description}</div>
+                      <div className="text-xs text-muted-foreground">{e.description}</div>
                     )}
-                    <div className="text-[11px] text-muted-foreground mt-0.5">{e.date}</div>
+                    <div className="text-2xs text-muted-foreground mt-0.5">{e.date}</div>
                   </div>
                 </li>
               );
@@ -191,7 +191,7 @@ function PatientPortal() {
         {/* Documents */}
         <section className="rounded-2xl border border-border bg-surface">
           <header className="px-5 h-12 flex items-center justify-between border-b border-border">
-            <h2 className="text-[14px] font-semibold tracking-tight">Documentos & orçamentos</h2>
+            <h2 className="text-sm font-semibold tracking-tight">Documentos & orçamentos</h2>
           </header>
           <ul className="divide-y divide-border">
             {data.documents.map((d) => (
@@ -200,12 +200,12 @@ function PatientPortal() {
                   <FileText className="size-4" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-[13px] font-medium truncate">{d.name}</div>
-                  <div className="text-[11.5px] text-muted-foreground">
+                  <div className="text-sm-minus font-medium truncate">{d.name}</div>
+                  <div className="text-2xs text-muted-foreground">
                     {d.type} · {d.date}
                   </div>
                 </div>
-                <button className="text-[12px] font-medium text-primary hover:underline">
+                <button className="text-xs font-medium text-primary hover:underline">
                   Baixar
                 </button>
               </li>
@@ -213,7 +213,7 @@ function PatientPortal() {
           </ul>
         </section>
 
-        <footer className="pt-4 text-center text-[11px] text-muted-foreground">
+        <footer className="pt-4 text-center text-2xs text-muted-foreground">
           <p>
             Este portal segue a LGPD. Seus dados são tratados com sigilo pela {data.clinic.name}.
           </p>
@@ -236,12 +236,12 @@ function ReviewCard() {
       <section className="rounded-2xl border border-success/30 bg-success/5 p-6 text-center">
         <CheckCircle2 className="size-8 text-success mx-auto" />
         <h3 className="mt-2 text-[15px] font-semibold">Obrigada pelo seu feedback! 💜</h3>
-        <p className="mt-1 text-[12.5px] text-muted-foreground">
+        <p className="mt-1 text-xs-plus text-muted-foreground">
           Seu apoio ajuda outras pessoas a encontrarem nossa clínica.
         </p>
         <a
           href="#"
-          className="mt-4 inline-flex h-9 px-4 items-center rounded-md bg-primary text-primary-foreground text-[12.5px] font-medium"
+          className="mt-4 inline-flex h-9 px-4 items-center rounded-md bg-primary text-primary-foreground text-xs-plus font-medium"
         >
           Avaliar no Google
         </a>
@@ -253,9 +253,9 @@ function ReviewCard() {
     <section className="rounded-2xl border border-border bg-surface p-5">
       <div className="flex items-center gap-2">
         <Star className="size-4 text-primary" />
-        <h2 className="text-[14px] font-semibold tracking-tight">Como foi sua experiência?</h2>
+        <h2 className="text-sm font-semibold tracking-tight">Como foi sua experiência?</h2>
       </div>
-      <p className="mt-1 text-[12.5px] text-muted-foreground">
+      <p className="mt-1 text-xs-plus text-muted-foreground">
         Sua opinião nos ajuda a melhorar continuamente.
       </p>
 
@@ -286,13 +286,13 @@ function ReviewCard() {
         onChange={(e) => setText(e.target.value)}
         rows={3}
         placeholder="Conte um pouco sobre o atendimento (opcional)"
-        className="mt-3 w-full rounded-md border border-input bg-background px-3 py-2 text-[13px] placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-ring resize-none"
+        className="mt-3 w-full rounded-md border border-input bg-background px-3 py-2 text-sm-minus placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-ring resize-none"
       />
 
       <button
         disabled={rating === 0}
         onClick={() => setSent(true)}
-        className="mt-3 w-full h-10 rounded-md bg-primary text-primary-foreground text-[13px] font-medium hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed"
+        className="mt-3 w-full h-10 rounded-md bg-primary text-primary-foreground text-sm-minus font-medium hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed"
       >
         Enviar avaliação
       </button>

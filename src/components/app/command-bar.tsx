@@ -134,9 +134,9 @@ export function CommandBar() {
             onChange={(e) => { setQuery(e.target.value); setSel(0); }}
             onKeyDown={handleKey}
             placeholder="Buscar página ou ação…"
-            className="flex-1 bg-transparent text-[14px] placeholder:text-muted-foreground/60 outline-none"
+            className="flex-1 bg-transparent text-sm placeholder:text-muted-foreground/60 outline-none"
           />
-          <kbd className="hidden sm:inline-flex h-5 items-center rounded border border-input bg-muted px-1.5 text-[10px] text-muted-foreground font-mono">
+          <kbd className="hidden sm:inline-flex h-5 items-center rounded border border-input bg-muted px-1.5 text-3xs text-muted-foreground font-mono">
             ESC
           </kbd>
         </div>
@@ -144,13 +144,13 @@ export function CommandBar() {
         {/* Results */}
         <div className="max-h-80 overflow-y-auto py-2">
           {flatOrdered.length === 0 ? (
-            <p className="text-[12px] text-muted-foreground text-center py-8">
+            <p className="text-xs text-muted-foreground text-center py-8">
               Nenhum resultado para "{query}"
             </p>
           ) : (
             groups.map(([groupName, items]) => (
               <div key={groupName}>
-                <div className="px-4 py-1.5 text-[10px] font-semibold tracking-wider text-muted-foreground/60 uppercase">
+                <div className="px-4 py-1.5 text-3xs font-semibold tracking-wider text-muted-foreground/60 uppercase">
                   {groupName}
                 </div>
                 {items.map((cmd) => {
@@ -170,7 +170,7 @@ export function CommandBar() {
                       )}
                     >
                       <Icon className="size-4 shrink-0 opacity-70" />
-                      <span className="flex-1 text-[13px] font-medium">{cmd.label}</span>
+                      <span className="flex-1 text-sm-minus font-medium">{cmd.label}</span>
                       {isSelected && (
                         <ArrowRight className="size-3.5 text-primary" />
                       )}
@@ -183,7 +183,7 @@ export function CommandBar() {
         </div>
 
         {/* Footer hint */}
-        <div className="border-t border-border px-4 py-2 flex items-center gap-3 text-[10.5px] text-muted-foreground">
+        <div className="border-t border-border px-4 py-2 flex items-center gap-3 text-3xs text-muted-foreground">
           <span><kbd className="font-mono">↑↓</kbd> navegar</span>
           <span><kbd className="font-mono">↵</kbd> abrir</span>
           <span><kbd className="font-mono">Esc</kbd> fechar</span>

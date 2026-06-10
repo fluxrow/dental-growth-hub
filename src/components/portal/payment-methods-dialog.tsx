@@ -94,10 +94,10 @@ export function PaymentMethodsDialog({
       >
         <div className="flex items-center justify-between px-5 h-14 border-b border-border">
           <div>
-            <div className="text-[14px] font-semibold">
+            <div className="text-sm font-semibold">
               {stage === "done" ? "Tudo certo!" : "Formas de pagamento"}
             </div>
-            <div className="text-[11.5px] text-muted-foreground">
+            <div className="text-2xs text-muted-foreground">
               Total:{" "}
               <span className="font-medium text-foreground">
                 R$ {amount.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
@@ -132,11 +132,11 @@ export function PaymentMethodsDialog({
                       <Icon className="size-4" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="text-[13.5px] font-medium">{m.title}</div>
-                      <div className="text-[11.5px] text-muted-foreground truncate">{m.desc}</div>
+                      <div className="text-sm-minus font-medium">{m.title}</div>
+                      <div className="text-2xs text-muted-foreground truncate">{m.desc}</div>
                     </div>
                     {m.highlight && (
-                      <span className="text-[10.5px] font-medium rounded-full bg-success/10 text-success px-2 py-0.5">
+                      <span className="text-3xs font-medium rounded-full bg-success/10 text-success px-2 py-0.5">
                         {m.highlight}
                       </span>
                     )}
@@ -148,11 +148,11 @@ export function PaymentMethodsDialog({
               <button
                 disabled={!selected}
                 onClick={handleConfirm}
-                className="w-full h-10 rounded-md bg-primary text-primary-foreground text-[13px] font-medium hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center justify-center gap-1.5"
+                className="w-full h-10 rounded-md bg-primary text-primary-foreground text-sm-minus font-medium hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center justify-center gap-1.5"
               >
                 <Check className="size-3.5" /> Confirmar pagamento
               </button>
-              <p className="mt-2 text-center text-[11px] text-muted-foreground">
+              <p className="mt-2 text-center text-2xs text-muted-foreground">
                 Demonstração — nenhum pagamento real é processado.
               </p>
             </div>
@@ -162,8 +162,8 @@ export function PaymentMethodsDialog({
         {stage === "processing" && (
           <div className="p-10 flex flex-col items-center justify-center text-center">
             <Loader2 className="size-8 text-primary animate-spin" />
-            <div className="mt-4 text-[14px] font-semibold">Processando seu pagamento</div>
-            <p className="mt-1 text-[12px] text-muted-foreground max-w-xs">
+            <div className="mt-4 text-sm font-semibold">Processando seu pagamento</div>
+            <p className="mt-1 text-xs text-muted-foreground max-w-xs">
               Estamos confirmando com sua operadora. Isso leva só alguns segundos…
             </p>
           </div>
@@ -175,14 +175,14 @@ export function PaymentMethodsDialog({
               <CheckCircle2 className="size-7" />
             </div>
             <div className="mt-4 text-[15px] font-semibold">Pagamento confirmado</div>
-            <p className="mt-1 text-[12.5px] text-muted-foreground max-w-xs">
+            <p className="mt-1 text-xs-plus text-muted-foreground max-w-xs">
               Obrigada pelo pagamento de R${" "}
               {amount.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}. O comprovante foi
               enviado pelo WhatsApp.
             </p>
             <button
               onClick={close}
-              className="mt-5 w-full h-10 rounded-md bg-primary text-primary-foreground text-[13px] font-medium hover:opacity-90"
+              className="mt-5 w-full h-10 rounded-md bg-primary text-primary-foreground text-sm-minus font-medium hover:opacity-90"
             >
               Concluir
             </button>
