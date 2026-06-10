@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { TrendingUp, TrendingDown, Shield, ArrowRight, Loader2, Sparkles } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
@@ -114,6 +115,9 @@ export function RevenueLeakBanner() {
         </Link>
       </div>
 
+      {/* Live pulse ticker */}
+      {total > 0 && <PulseTicker monthlyLeak={total} />}
+
       {/* Metrics row */}
       <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-primary/10">
         <Metric
@@ -145,6 +149,60 @@ export function RevenueLeakBanner() {
           value={fmt(charges)}
           sub={`${diag.pending_charges_count ?? 0} cobranças em aberto`}
         />
+      </div>
+    </div>
+  );
+}
+
+// ─── Revenue Pulse ticker ──────────────────────────────────────────────────────
+
+function PulseTicker({ monthlyLeak }: { monthlyLeak: number }) {
+  // R$/second lost based on 30-day month
+  const perSecond = monthlyLeak / (30 * 24 * 3600);
+  const [elapsed, setElapsed] = useState(0); // seconds since mount
+
+  useEffect(() => {
+    const id = setInterval(() => setElapsed((s) => s + 1), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  const lostNow = perSecond * elapsed;
+
+  const fmtLive = (n: number) =>
+    n.toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+
+  const fmtRate = (n: number) =>
+    n.toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+      minimumFractionDigits: 4,
+      maximumFractionDigits: 4,
+    });
+
+  return (
+    <div className="px-5 py-2.5 border-b border-primary/15 flex items-center justify-between gap-4 bg-destructive/5">
+      <div className="flex items-center gap-2.5 min-w-0">
+        {/* Pulsing dot */}
+        <span className="relative flex size-2.5 shrink-0">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive opacity-60" />
+          <span className="relative inline-flex rounded-full size-2.5 bg-destructive" />
+        </span>
+        <span className="text-[12px] text-destructive font-medium truncate">
+          Perdido nessa sessão
+        </span>
+      </div>
+      <div className="flex items-center gap-4 shrink-0">
+        <span className="font-display text-[20px] font-bold tabular-nums text-destructive tracking-tight">
+          {fmtLive(lostNow)}
+        </span>
+        <span className="text-[10.5px] text-muted-foreground tabular-nums hidden sm:block">
+          {fmtRate(perSecond)}/s
+        </span>
       </div>
     </div>
   );
