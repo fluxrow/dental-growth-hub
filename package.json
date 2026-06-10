@@ -4,6 +4,9 @@
   "sideEffects": false,
   "type": "module",
   "scripts": {
+    "gen:routes": "node scripts/gen-routes.mjs",
+    "predev": "node scripts/gen-routes.mjs",
+    "prebuild": "node scripts/gen-routes.mjs",
     "dev": "vite dev",
     "build": "vite build",
     "build:dev": "vite build --mode development",
