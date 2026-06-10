@@ -10,6 +10,8 @@ import {
   Sparkles,
   Tag,
   ArrowLeft,
+  Info,
+  X,
 } from "lucide-react";
 import { AppShell } from "@/components/app/app-shell";
 import { EmptyState } from "@/components/app/empty-state";
@@ -35,6 +37,8 @@ function Conversas() {
   const [activeId, setActiveId] = useState(CONVERSATIONS[0].id);
   // Mobile: toggle between list and thread panels
   const [showThread, setShowThread] = useState(false);
+  // Mobile/tablet: context panel as slide-over (static column only at lg+)
+  const [showContext, setShowContext] = useState(false);
   if (__empty) {
     return (
       <AppShell title="Conversas" subtitle="Inbox unificado">
@@ -174,6 +178,14 @@ function Conversas() {
               <button className="size-8 rounded-md hover:bg-muted flex items-center justify-center">
                 <Phone className="size-4 text-muted-foreground" />
               </button>
+              {/* Context panel toggle — mobile/tablet only (lg+ shows static column) */}
+              <button
+                className="lg:hidden size-8 rounded-md hover:bg-muted flex items-center justify-center"
+                onClick={() => setShowContext(true)}
+                title="Contexto do paciente"
+              >
+                <Info className="size-4 text-muted-foreground" />
+              </button>
               <button className="size-8 rounded-md hover:bg-muted flex items-center justify-center">
                 <MoreVertical className="size-4 text-muted-foreground" />
               </button>
@@ -241,12 +253,32 @@ function Conversas() {
           </div>
         </section>
 
-        {/* Context */}
-        <aside className="hidden lg:flex col-span-3 flex-col border-l border-border bg-surface min-w-0">
+        {/* Context — static column at lg+, slide-over below */}
+        {showContext && (
+          <div
+            className="lg:hidden fixed inset-0 z-30 bg-black/40 backdrop-blur-sm"
+            onClick={() => setShowContext(false)}
+          />
+        )}
+        <aside
+          className={cn(
+            "flex-col border-l border-border bg-surface min-w-0",
+            "lg:flex lg:static lg:col-span-3 lg:z-auto lg:w-auto lg:max-w-none lg:shadow-none",
+            showContext
+              ? "flex fixed inset-y-0 right-0 z-40 w-[320px] max-w-[85vw] shadow-xl"
+              : "hidden",
+          )}
+        >
           <div className="h-14 border-b border-border flex items-center justify-between px-4">
             <span className="text-[12px] font-semibold uppercase tracking-wider text-muted-foreground">
               Contexto do paciente
             </span>
+            <button
+              className="lg:hidden size-7 rounded-md hover:bg-muted flex items-center justify-center"
+              onClick={() => setShowContext(false)}
+            >
+              <X className="size-4 text-muted-foreground" />
+            </button>
           </div>
           <div className="flex-1 overflow-y-auto p-4 space-y-5">
             <div>
