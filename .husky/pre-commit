@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+# Pre-commit hook — garante que src/routeTree.gen.ts esteja atualizado
+# antes do commit. Regenera o arquivo e, se houve mudança, faz stage
+# automático para entrar no mesmo commit.
+
+echo "[pre-commit] Regenerando src/routeTree.gen.ts..."
+node scripts/gen-routes.mjs || {
+  echo "[pre-commit] Falha ao gerar routeTree.gen.ts. Abortando commit."
+  exit 1
+}
+
+# Se o arquivo gerado mudou, adiciona ao stage do commit atual.
+if ! git diff --quiet -- src/routeTree.gen.ts; then
+  echo "[pre-commit] routeTree.gen.ts foi atualizado — adicionando ao commit."
+  git add src/routeTree.gen.ts
+fi
+
+exit 0
