@@ -131,7 +131,58 @@ function Pacientes() {
             {filtered.length} resultado{filtered.length !== 1 ? "s" : ""}
           </div>
         </div>
-        <div className="overflow-x-auto">
+        {/* Mobile: lista em cards */}
+        <div className="md:hidden divide-y divide-border">
+          {filtered.map((p) => {
+            const s = STATUS_LABEL[p.status];
+            return (
+              <button
+                key={p.id}
+                onClick={() => setOpen(p)}
+                className="w-full text-left px-4 py-3 hover:bg-muted/40 active:bg-muted/60"
+              >
+                <div className="flex items-center gap-2.5">
+                  <div className="size-9 shrink-0 rounded-full bg-gradient-to-br from-muted to-accent flex items-center justify-center text-3xs font-semibold">
+                    {p.name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .slice(0, 2)
+                      .join("")}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-baseline justify-between gap-2">
+                      <span className="text-sm-minus font-medium truncate">{p.name}</span>
+                      <span className="text-sm-minus font-medium tabular-nums shrink-0">
+                        R$ {p.ltv.toLocaleString("pt-BR")}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between gap-2 mt-0.5">
+                      <span className="text-2xs text-muted-foreground tabular-nums truncate">
+                        {p.phone} · {p.lastVisit}
+                      </span>
+                      <span
+                        className={cn(
+                          "inline-flex shrink-0 rounded-full px-2 py-0.5 text-2xs font-medium",
+                          s.tone,
+                        )}
+                      >
+                        {s.label}
+                      </span>
+                    </div>
+                    {p.nextAction && (
+                      <div className="text-2xs text-foreground/70 truncate mt-0.5">
+                        {p.nextAction}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Desktop: tabela completa */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-sm-minus">
             <thead className="text-2xs uppercase tracking-wider text-muted-foreground bg-surface-muted/40">
               <tr>

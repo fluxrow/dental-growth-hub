@@ -156,8 +156,8 @@ function Oportunidades() {
         </div>
       </div>
 
-      <div className="overflow-x-auto">
-        {/* Colunas fixas com scroll horizontal; em telas largas (2xl) esticam para preencher */}
+      <div className="overflow-x-auto snap-x snap-mandatory md:snap-none">
+        {/* Colunas fixas com scroll horizontal (snap por coluna no mobile); em 2xl esticam */}
         <div className="flex gap-3 p-4 lg:p-6 min-w-max 2xl:min-w-0">
           {OPP_STAGES.map((stage) => {
             const stageItems = byStage.get(stage.id) ?? [];
@@ -165,7 +165,7 @@ function Oportunidades() {
             return (
               <div
                 key={stage.id}
-                className="w-[280px] shrink-0 2xl:w-auto 2xl:flex-1 2xl:min-w-[260px]"
+                className="w-[280px] shrink-0 snap-start md:snap-align-none 2xl:w-auto 2xl:flex-1 2xl:min-w-[260px]"
               >
                 <div className="flex items-center justify-between mb-2 px-1">
                   <div className="flex items-center gap-2 min-w-0">
