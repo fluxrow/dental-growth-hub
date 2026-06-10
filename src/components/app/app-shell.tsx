@@ -23,6 +23,7 @@ import {
   Crosshair,
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
+import { CommandBar } from "./command-bar";
 import { cn } from "@/lib/utils";
 import { NotificationsPopover } from "./notifications-popover";
 import { useEmptyMode, toggleEmptyMode } from "@/hooks/use-empty-mode";
@@ -198,8 +199,10 @@ export function AppShell({
             <div className="relative">
               <Search className="size-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
               <input
-                placeholder="Buscar paciente, oportunidade…"
-                className="h-8 w-64 rounded-md border border-input bg-surface pl-8 pr-3 text-[12px] placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-ring"
+                placeholder="Buscar… (⌘K)"
+                readOnly
+                onClick={() => window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true, bubbles: true }))}
+                className="h-8 w-56 rounded-md border border-input bg-surface pl-8 pr-3 text-[12px] placeholder:text-muted-foreground/70 cursor-pointer focus:outline-none focus:ring-2 focus:ring-ring"
               />
             </div>
             <PeriodSelector />
@@ -215,6 +218,9 @@ export function AppShell({
 
       {/* Mobile bottom nav */}
       <MobileBottomNav />
+
+      {/* Global command bar (⌘K) */}
+      <CommandBar />
     </div>
   );
 }
