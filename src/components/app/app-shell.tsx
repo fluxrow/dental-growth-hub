@@ -18,8 +18,10 @@ import {
   EyeOff,
   LogOut,
   Stethoscope,
+  MoreHorizontal,
+  X,
 } from "lucide-react";
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { NotificationsPopover } from "./notifications-popover";
 import { useEmptyMode, toggleEmptyMode } from "@/hooks/use-empty-mode";
@@ -204,9 +206,124 @@ export function AppShell({
             {actions}
           </div>
         </header>
-        <main className={cn(flush ? "" : "p-4 lg:p-6", "flex-1 min-w-0")}>{children}</main>
+        <main className={cn(flush ? "pb-16 lg:pb-0" : "p-4 pb-20 lg:p-6 lg:pb-6", "flex-1 min-w-0")}>
+          {children}
+        </main>
       </div>
+
+      {/* Mobile bottom nav */}
+      <MobileBottomNav />
     </div>
+  );
+}
+
+// ─── Mobile Bottom Nav ────────────────────────────────────────────────────────
+
+const BOTTOM_TABS = [
+  { to: "/app/oportunidades", label: "Pipeline", icon: Target },
+  { to: "/app/conversas", label: "Conversas", icon: MessagesSquare },
+  { to: "/app/pacientes", label: "Pacientes", icon: Users },
+];
+
+const MORE_ITEMS = [
+  { to: "/app", label: "Dashboard", icon: LayoutDashboard, exact: true },
+  { to: "/app/diagnostico", label: "Diagnóstico", icon: Stethoscope },
+  { to: "/app/automacoes", label: "Automações", icon: Zap },
+  { to: "/app/campanhas", label: "Campanhas", icon: Megaphone },
+  { to: "/app/avaliacoes", label: "Avaliações", icon: Star },
+  { to: "/app/cobrancas", label: "Cobranças", icon: Wallet },
+  { to: "/app/relatorios", label: "Relatórios", icon: BarChart3 },
+  { to: "/app/importar", label: "Importar", icon: Upload },
+  { to: "/app/configuracoes", label: "Configurações", icon: Settings },
+];
+
+function MobileBottomNav() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      {/* Overlay */}
+      {open && (
+        <div
+          className="lg:hidden fixed inset-0 z-30 bg-black/40 backdrop-blur-sm"
+          onClick={() => setOpen(false)}
+        />
+      )}
+
+      {/* "Mais" drawer slide-up */}
+      <div
+        className={cn(
+          "lg:hidden fixed bottom-16 inset-x-0 z-40 bg-background border-t border-border rounded-t-2xl transition-transform duration-300",
+          open ? "translate-y-0" : "translate-y-full pointer-events-none",
+        )}
+      >
+        <div className="flex items-center justify-between px-5 py-3 border-b border-border">
+          <span className="text-[13px] font-semibold tracking-tight">Mais opções</span>
+          <button
+            onClick={() => setOpen(false)}
+            className="size-7 rounded-md hover:bg-muted flex items-center justify-center text-muted-foreground"
+          >
+            <X className="size-4" />
+          </button>
+        </div>
+        <div className="grid grid-cols-3 gap-1 p-3">
+          {MORE_ITEMS.map((item) => {
+            const active = item.exact ? pathname === item.to : pathname.startsWith(item.to);
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.to}
+                to={item.to as never}
+                onClick={() => setOpen(false)}
+                className={cn(
+                  "flex flex-col items-center gap-1.5 rounded-xl p-3 text-[11px] font-medium transition-colors",
+                  active
+                    ? "bg-primary/10 text-primary"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                )}
+              >
+                <Icon className="size-5" />
+                <span>{item.label}</span>
+              </Link>
+            );
+          })}
+        </div>
+        <div className="h-safe-area-bottom" />
+      </div>
+
+      {/* Bottom tab bar */}
+      <nav className="lg:hidden fixed bottom-0 inset-x-0 z-30 h-16 bg-background/90 backdrop-blur border-t border-border flex items-stretch">
+        {BOTTOM_TABS.map((tab) => {
+          const active = pathname.startsWith(tab.to);
+          const Icon = tab.icon;
+          return (
+            <Link
+              key={tab.to}
+              to={tab.to as never}
+              className={cn(
+                "flex-1 flex flex-col items-center justify-center gap-0.5 text-[10.5px] font-medium transition-colors",
+                active ? "text-primary" : "text-muted-foreground",
+              )}
+            >
+              <Icon className={cn("size-5 transition-transform", active && "scale-110")} />
+              <span>{tab.label}</span>
+            </Link>
+          );
+        })}
+        {/* Mais button */}
+        <button
+          onClick={() => setOpen((v) => !v)}
+          className={cn(
+            "flex-1 flex flex-col items-center justify-center gap-0.5 text-[10.5px] font-medium transition-colors",
+            open ? "text-primary" : "text-muted-foreground",
+          )}
+        >
+          <MoreHorizontal className={cn("size-5 transition-transform", open && "scale-110")} />
+          <span>Mais</span>
+        </button>
+      </nav>
+    </>
   );
 }
 
