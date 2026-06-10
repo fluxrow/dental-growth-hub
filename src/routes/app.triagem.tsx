@@ -21,7 +21,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { advanceOportunidade, loseOportunidade } from "@/lib/oportunidades.functions";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/app/triagem" as never)({
+export const Route = createFileRoute("/app/triagem")({
   head: () => ({ meta: [{ title: "Triagem · DentalFlux" }] }),
   component: Triagem,
 });
