@@ -37,6 +37,11 @@ import { Route as ApiWebhooksZapiConnectRouteImport } from './routes/api/webhook
 import { Route as ApiWebhooksMetaMessagesRouteImport } from './routes/api/webhooks/meta-messages'
 import { Route as ApiWebhooksMetaCommentsRouteImport } from './routes/api/webhooks/meta-comments'
 import { Route as ApiCronCsTouchpointsRouteImport } from './routes/api/cron/cs-touchpoints'
+import { Route as ApiCronAf02ConfirmacaoRouteImport } from './routes/api/cron/af-02-confirmacao'
+import { Route as ApiCronAf03LeadFrioRouteImport } from './routes/api/cron/af-03-lead-frio'
+import { Route as ApiCronAf04ReativacaoRouteImport } from './routes/api/cron/af-04-reativacao'
+import { Route as ApiCronAf06PosConsultaRouteImport } from './routes/api/cron/af-06-pos-consulta'
+import { Route as ApiCronAf07AvaliacaoRouteImport } from './routes/api/cron/af-07-avaliacao'
 import { Route as AppAdminRouteImport } from './routes/app.admin'
 import { Route as AppAdminCsQueueRouteImport } from './routes/app.admin.cs-queue'
 
@@ -180,6 +185,31 @@ const ApiCronCsTouchpointsRoute = ApiCronCsTouchpointsRouteImport.update({
   path: '/api/cron/cs-touchpoints',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiCronAf02ConfirmacaoRoute = ApiCronAf02ConfirmacaoRouteImport.update({
+  id: '/api/cron/af-02-confirmacao',
+  path: '/api/cron/af-02-confirmacao',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCronAf03LeadFrioRoute = ApiCronAf03LeadFrioRouteImport.update({
+  id: '/api/cron/af-03-lead-frio',
+  path: '/api/cron/af-03-lead-frio',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCronAf04ReativacaoRoute = ApiCronAf04ReativacaoRouteImport.update({
+  id: '/api/cron/af-04-reativacao',
+  path: '/api/cron/af-04-reativacao',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCronAf06PosConsultaRoute = ApiCronAf06PosConsultaRouteImport.update({
+  id: '/api/cron/af-06-pos-consulta',
+  path: '/api/cron/af-06-pos-consulta',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCronAf07AvaliacaoRoute = ApiCronAf07AvaliacaoRouteImport.update({
+  id: '/api/cron/af-07-avaliacao',
+  path: '/api/cron/af-07-avaliacao',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppAdminRoute = AppAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -220,6 +250,11 @@ export interface FileRoutesByFullPath {
   '/api/webhooks/meta-messages': typeof ApiWebhooksMetaMessagesRoute
   '/api/webhooks/meta-comments': typeof ApiWebhooksMetaCommentsRoute
   '/api/cron/cs-touchpoints': typeof ApiCronCsTouchpointsRoute
+  '/api/cron/af-02-confirmacao': typeof ApiCronAf02ConfirmacaoRoute
+  '/api/cron/af-03-lead-frio': typeof ApiCronAf03LeadFrioRoute
+  '/api/cron/af-04-reativacao': typeof ApiCronAf04ReativacaoRoute
+  '/api/cron/af-06-pos-consulta': typeof ApiCronAf06PosConsultaRoute
+  '/api/cron/af-07-avaliacao': typeof ApiCronAf07AvaliacaoRoute
   '/app/admin': typeof AppAdminRouteWithChildren
   '/app/admin/cs-queue': typeof AppAdminCsQueueRoute
 }
@@ -251,6 +286,11 @@ export interface FileRoutesByTo {
   '/api/webhooks/meta-messages': typeof ApiWebhooksMetaMessagesRoute
   '/api/webhooks/meta-comments': typeof ApiWebhooksMetaCommentsRoute
   '/api/cron/cs-touchpoints': typeof ApiCronCsTouchpointsRoute
+  '/api/cron/af-02-confirmacao': typeof ApiCronAf02ConfirmacaoRoute
+  '/api/cron/af-03-lead-frio': typeof ApiCronAf03LeadFrioRoute
+  '/api/cron/af-04-reativacao': typeof ApiCronAf04ReativacaoRoute
+  '/api/cron/af-06-pos-consulta': typeof ApiCronAf06PosConsultaRoute
+  '/api/cron/af-07-avaliacao': typeof ApiCronAf07AvaliacaoRoute
   '/app/admin': typeof AppAdminRouteWithChildren
   '/app/admin/cs-queue': typeof AppAdminCsQueueRoute
 }
@@ -284,6 +324,11 @@ export interface FileRoutesById {
   '/api/webhooks/meta-messages': typeof ApiWebhooksMetaMessagesRoute
   '/api/webhooks/meta-comments': typeof ApiWebhooksMetaCommentsRoute
   '/api/cron/cs-touchpoints': typeof ApiCronCsTouchpointsRoute
+  '/api/cron/af-02-confirmacao': typeof ApiCronAf02ConfirmacaoRoute
+  '/api/cron/af-03-lead-frio': typeof ApiCronAf03LeadFrioRoute
+  '/api/cron/af-04-reativacao': typeof ApiCronAf04ReativacaoRoute
+  '/api/cron/af-06-pos-consulta': typeof ApiCronAf06PosConsultaRoute
+  '/api/cron/af-07-avaliacao': typeof ApiCronAf07AvaliacaoRoute
   '/app/admin': typeof AppAdminRouteWithChildren
   '/app/admin/cs-queue': typeof AppAdminCsQueueRoute
 }
@@ -318,6 +363,11 @@ export interface FileRouteTypes {
     | '/api/webhooks/meta-messages'
     | '/api/webhooks/meta-comments'
     | '/api/cron/cs-touchpoints'
+    | '/api/cron/af-02-confirmacao'
+    | '/api/cron/af-03-lead-frio'
+    | '/api/cron/af-04-reativacao'
+    | '/api/cron/af-06-pos-consulta'
+    | '/api/cron/af-07-avaliacao'
     | '/app/admin'
     | '/app/admin/cs-queue'
   fileRoutesByTo: FileRoutesByTo
@@ -349,6 +399,11 @@ export interface FileRouteTypes {
     | '/api/webhooks/meta-messages'
     | '/api/webhooks/meta-comments'
     | '/api/cron/cs-touchpoints'
+    | '/api/cron/af-02-confirmacao'
+    | '/api/cron/af-03-lead-frio'
+    | '/api/cron/af-04-reativacao'
+    | '/api/cron/af-06-pos-consulta'
+    | '/api/cron/af-07-avaliacao'
     | '/app/admin'
     | '/app/admin/cs-queue'
   id:
@@ -381,6 +436,11 @@ export interface FileRouteTypes {
     | '/api/webhooks/meta-messages'
     | '/api/webhooks/meta-comments'
     | '/api/cron/cs-touchpoints'
+    | '/api/cron/af-02-confirmacao'
+    | '/api/cron/af-03-lead-frio'
+    | '/api/cron/af-04-reativacao'
+    | '/api/cron/af-06-pos-consulta'
+    | '/api/cron/af-07-avaliacao'
     | '/app/admin'
     | '/app/admin/cs-queue'
   fileRoutesById: FileRoutesById
@@ -401,7 +461,36 @@ export interface RootRouteChildren {
   ApiWebhooksMetaMessagesRoute: typeof ApiWebhooksMetaMessagesRoute
   ApiWebhooksMetaCommentsRoute: typeof ApiWebhooksMetaCommentsRoute
   ApiCronCsTouchpointsRoute: typeof ApiCronCsTouchpointsRoute
+  ApiCronAf02ConfirmacaoRoute: typeof ApiCronAf02ConfirmacaoRoute
+  ApiCronAf03LeadFrioRoute: typeof ApiCronAf03LeadFrioRoute
+  ApiCronAf04ReativacaoRoute: typeof ApiCronAf04ReativacaoRoute
+  ApiCronAf06PosConsultaRoute: typeof ApiCronAf06PosConsultaRoute
+  ApiCronAf07AvaliacaoRoute: typeof ApiCronAf07AvaliacaoRoute
 }
+
+const rootRouteChildrenFull: RootRouteChildren = {
+  IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
+  AuthRoute: AuthRoute,
+  OnboardingRoute: OnboardingRoute,
+  PTokenRoute: PTokenRoute,
+  ApiPublicGoogleCallbackRoute: ApiPublicGoogleCallbackRoute,
+  ApiWebhooksMetaLeadsRoute: ApiWebhooksMetaLeadsRoute,
+  ApiWebhooksStripeRoute: ApiWebhooksStripeRoute,
+  ApiWebhooksZapiReceiveRoute: ApiWebhooksZapiReceiveRoute,
+  ApiWebhooksZapiStatusRoute: ApiWebhooksZapiStatusRoute,
+  ApiWebhooksZapiDisconnectRoute: ApiWebhooksZapiDisconnectRoute,
+  ApiWebhooksZapiConnectRoute: ApiWebhooksZapiConnectRoute,
+  ApiWebhooksMetaMessagesRoute: ApiWebhooksMetaMessagesRoute,
+  ApiWebhooksMetaCommentsRoute: ApiWebhooksMetaCommentsRoute,
+  ApiCronCsTouchpointsRoute: ApiCronCsTouchpointsRoute,
+  ApiCronAf02ConfirmacaoRoute: ApiCronAf02ConfirmacaoRoute,
+  ApiCronAf03LeadFrioRoute: ApiCronAf03LeadFrioRoute,
+  ApiCronAf04ReativacaoRoute: ApiCronAf04ReativacaoRoute,
+  ApiCronAf06PosConsultaRoute: ApiCronAf06PosConsultaRoute,
+  ApiCronAf07AvaliacaoRoute: ApiCronAf07AvaliacaoRoute,
+}
+void rootRouteChildrenFull // used below
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
@@ -601,6 +690,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiCronCsTouchpointsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/cron/af-02-confirmacao': {
+      id: '/api/cron/af-02-confirmacao'
+      path: '/api/cron/af-02-confirmacao'
+      fullPath: '/api/cron/af-02-confirmacao'
+      preLoaderRoute: typeof ApiCronAf02ConfirmacaoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/cron/af-03-lead-frio': {
+      id: '/api/cron/af-03-lead-frio'
+      path: '/api/cron/af-03-lead-frio'
+      fullPath: '/api/cron/af-03-lead-frio'
+      preLoaderRoute: typeof ApiCronAf03LeadFrioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/cron/af-04-reativacao': {
+      id: '/api/cron/af-04-reativacao'
+      path: '/api/cron/af-04-reativacao'
+      fullPath: '/api/cron/af-04-reativacao'
+      preLoaderRoute: typeof ApiCronAf04ReativacaoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/cron/af-06-pos-consulta': {
+      id: '/api/cron/af-06-pos-consulta'
+      path: '/api/cron/af-06-pos-consulta'
+      fullPath: '/api/cron/af-06-pos-consulta'
+      preLoaderRoute: typeof ApiCronAf06PosConsultaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/cron/af-07-avaliacao': {
+      id: '/api/cron/af-07-avaliacao'
+      path: '/api/cron/af-07-avaliacao'
+      fullPath: '/api/cron/af-07-avaliacao'
+      preLoaderRoute: typeof ApiCronAf07AvaliacaoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/app/admin': {
       id: '/admin'
       path: '/admin'
@@ -680,6 +804,11 @@ const rootRouteChildren: RootRouteChildren = {
   ApiWebhooksMetaMessagesRoute: ApiWebhooksMetaMessagesRoute,
   ApiWebhooksMetaCommentsRoute: ApiWebhooksMetaCommentsRoute,
   ApiCronCsTouchpointsRoute: ApiCronCsTouchpointsRoute,
+  ApiCronAf02ConfirmacaoRoute: ApiCronAf02ConfirmacaoRoute,
+  ApiCronAf03LeadFrioRoute: ApiCronAf03LeadFrioRoute,
+  ApiCronAf04ReativacaoRoute: ApiCronAf04ReativacaoRoute,
+  ApiCronAf06PosConsultaRoute: ApiCronAf06PosConsultaRoute,
+  ApiCronAf07AvaliacaoRoute: ApiCronAf07AvaliacaoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

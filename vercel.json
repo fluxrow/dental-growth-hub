@@ -2,7 +2,33 @@
   "crons": [
     {
       "path": "/api/cron/cs-touchpoints",
-      "schedule": "0 * * * *"
+      "schedule": "0 * * * *",
+      "_comment": "CS régua: D+0/D+7/D+30/D+90 — a cada hora"
+    },
+    {
+      "path": "/api/cron/af-02-confirmacao",
+      "schedule": "0 12 * * *",
+      "_comment": "AF-02 confirmação D-1 — 9h BRT (12h UTC)"
+    },
+    {
+      "path": "/api/cron/af-03-lead-frio",
+      "schedule": "0 13 * * *",
+      "_comment": "AF-03 lead frio — 10h BRT (13h UTC)"
+    },
+    {
+      "path": "/api/cron/af-04-reativacao",
+      "schedule": "0 11 * * 1",
+      "_comment": "AF-04 reativação — 8h BRT segundas (11h UTC)"
+    },
+    {
+      "path": "/api/cron/af-06-pos-consulta",
+      "schedule": "0 17 * * *",
+      "_comment": "AF-06 pós-consulta — 14h BRT (17h UTC)"
+    },
+    {
+      "path": "/api/cron/af-07-avaliacao",
+      "schedule": "0 18 * * *",
+      "_comment": "AF-07 avaliação Google D+7 — 15h BRT (18h UTC)"
     }
   ]
 }
