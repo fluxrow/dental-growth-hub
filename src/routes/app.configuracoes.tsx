@@ -213,9 +213,7 @@ function ClinicTab() {
 
       {/* Logo placeholder */}
       <div className="md:col-span-2">
-        <div className="text-2xs uppercase tracking-wider text-muted-foreground mb-2">
-          Logo
-        </div>
+        <div className="text-2xs uppercase tracking-wider text-muted-foreground mb-2">Logo</div>
         <div className="flex items-center gap-4">
           <div className="size-16 rounded-xl bg-gradient-to-br from-primary to-chart-2 flex items-center justify-center text-primary-foreground font-display text-xl font-semibold">
             {initials || "—"}
@@ -267,9 +265,7 @@ function Field({
 }) {
   return (
     <div className={cn(full && "md:col-span-2")}>
-      <div className="text-2xs uppercase tracking-wider text-muted-foreground mb-1.5">
-        {label}
-      </div>
+      <div className="text-2xs uppercase tracking-wider text-muted-foreground mb-1.5">{label}</div>
       <input
         value={value}
         onChange={onChange ? (e) => onChange(e.target.value) : undefined}
@@ -399,7 +395,7 @@ function PlansTab() {
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl">
         {PLANS.map((p) => (
           <div
             key={p.id}
@@ -427,16 +423,24 @@ function PlansTab() {
                 </li>
               ))}
             </ul>
-            <button
-              className={cn(
-                "mt-5 h-9 rounded-md text-xs-plus font-medium",
-                p.highlighted
-                  ? "bg-primary text-primary-foreground hover:opacity-90"
-                  : "border border-input bg-background hover:bg-muted",
-              )}
-            >
-              {p.highlighted ? "Plano atual" : "Trocar plano"}
-            </button>
+            {/* Troca de plano é conduzida pelo consultor (venda em call) */}
+            {p.highlighted ? (
+              <button
+                disabled
+                className="mt-5 h-9 rounded-md text-xs-plus font-medium bg-primary text-primary-foreground opacity-90 cursor-default"
+              >
+                Plano atual
+              </button>
+            ) : (
+              <a
+                href="https://wa.me/5511999999999?text=Quero%20saber%20mais%20sobre%20o%20plano%20DrFlux%20Anual"
+                target="_blank"
+                rel="noreferrer"
+                className="mt-5 h-9 rounded-md text-xs-plus font-medium border border-input bg-background hover:bg-muted flex items-center justify-center"
+              >
+                Falar com consultor
+              </a>
+            )}
           </div>
         ))}
       </div>
