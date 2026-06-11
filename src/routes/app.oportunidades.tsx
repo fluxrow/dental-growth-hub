@@ -65,6 +65,8 @@ function Oportunidades() {
   const moveTo = (id: string, target: OppStage): void => {
     const opp = items.find((o) => o.id === id);
     if (!opp || opp.stage === target) return;
+    const prevStage = opp.stage;
+    const prevDays = opp.daysInStage;
 
     // Optimistic local update
     setItems((curr) =>
@@ -75,9 +77,13 @@ function Oportunidades() {
 
     advanceOportunidade({ data: { id, nextStage: target } })
       .then(() => queryClient.invalidateQueries({ queryKey: ["oportunidades"] }))
-      .catch((err: unknown) =>
-        toast.error(err instanceof Error ? err.message : "Erro ao mover oportunidade"),
-      );
+      .catch((err: unknown) => {
+        // Reverte o optimistic update — o card não pode ficar na coluna errada
+        setItems((curr) =>
+          curr.map((o) => (o.id === id ? { ...o, stage: prevStage, daysInStage: prevDays } : o)),
+        );
+        toast.error(err instanceof Error ? err.message : "Erro ao mover oportunidade");
+      });
   };
 
   const advance = (id: string): void => {
@@ -204,7 +210,7 @@ function Oportunidades() {
                   setDragOverStage(null);
                 }}
                 className={cn(
-                  "w-[280px] shrink-0 snap-start md:snap-align-none 2xl:w-auto 2xl:flex-1 2xl:min-w-[260px] rounded-lg transition-colors",
+                  "w-[280px] shrink-0 snap-start 2xl:w-auto 2xl:flex-1 2xl:min-w-[260px] rounded-lg transition-colors",
                   dragOverStage === stage.id && dragId && "bg-primary/5 ring-2 ring-primary/30",
                 )}
               >

@@ -30,8 +30,9 @@ export function OpportunityCardActions({
   const idx = OPP_STAGES.findIndex((s) => s.id === opp.stage);
   const next: { id: OppStage; label: string } | undefined = OPP_STAGES[idx + 1];
 
+  // Touch não tem hover: ações sempre visíveis abaixo de md
   return (
-    <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+    <div className="flex items-center gap-0.5 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
       {next && (
         <button
           onClick={(e) => {
