@@ -40,7 +40,8 @@ export const Route = createFileRoute("/api/cron/af-07-avaliacao")({
       GET: async ({ request }) => {
         const secret = process.env.CRON_SECRET;
         const auth = request.headers.get("authorization") ?? "";
-        if (secret && auth !== `Bearer ${secret}`) {
+        if (!secret) return new Response("Service unavailable", { status: 503 });
+        if (auth !== `Bearer ${secret}`) {
           return new Response("Unauthorized", { status: 401 });
         }
 
