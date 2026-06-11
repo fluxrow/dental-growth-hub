@@ -58,6 +58,28 @@ function Oportunidades() {
     setItems(live ? (liveData ?? []) : OPPORTUNITIES);
   }, [live, liveData]);
 
+  // Drag-and-drop entre colunas (HTML5 DnD — desktop/tablet com mouse ou trackpad)
+  const [dragId, setDragId] = useState<string | null>(null);
+  const [dragOverStage, setDragOverStage] = useState<OppStage | null>(null);
+
+  const moveTo = (id: string, target: OppStage): void => {
+    const opp = items.find((o) => o.id === id);
+    if (!opp || opp.stage === target) return;
+
+    // Optimistic local update
+    setItems((curr) =>
+      curr.map((o) => (o.id === id ? { ...o, stage: target, daysInStage: 0 } : o)),
+    );
+
+    if (!live) return;
+
+    advanceOportunidade({ data: { id, nextStage: target } })
+      .then(() => queryClient.invalidateQueries({ queryKey: ["oportunidades"] }))
+      .catch((err: unknown) =>
+        toast.error(err instanceof Error ? err.message : "Erro ao mover oportunidade"),
+      );
+  };
+
   const advance = (id: string): void => {
     // Find next stage before optimistic update (reads current items state)
     const opp = items.find((o) => o.id === id);
@@ -165,7 +187,26 @@ function Oportunidades() {
             return (
               <div
                 key={stage.id}
-                className="w-[280px] shrink-0 snap-start md:snap-align-none 2xl:w-auto 2xl:flex-1 2xl:min-w-[260px]"
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  e.dataTransfer.dropEffect = "move";
+                  setDragOverStage(stage.id);
+                }}
+                onDragLeave={(e) => {
+                  // Só limpa quando sai da coluna de fato (não ao passar por filhos)
+                  if (!e.currentTarget.contains(e.relatedTarget as Node)) setDragOverStage(null);
+                }}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  const id = e.dataTransfer.getData("text/plain") || dragId;
+                  if (id) moveTo(id, stage.id);
+                  setDragId(null);
+                  setDragOverStage(null);
+                }}
+                className={cn(
+                  "w-[280px] shrink-0 snap-start md:snap-align-none 2xl:w-auto 2xl:flex-1 2xl:min-w-[260px] rounded-lg transition-colors",
+                  dragOverStage === stage.id && dragId && "bg-primary/5 ring-2 ring-primary/30",
+                )}
               >
                 <div className="flex items-center justify-between mb-2 px-1">
                   <div className="flex items-center gap-2 min-w-0">
@@ -210,8 +251,19 @@ function Oportunidades() {
                     return (
                       <div
                         key={o.id}
+                        draggable
+                        onDragStart={(e) => {
+                          e.dataTransfer.setData("text/plain", o.id);
+                          e.dataTransfer.effectAllowed = "move";
+                          setDragId(o.id);
+                        }}
+                        onDragEnd={() => {
+                          setDragId(null);
+                          setDragOverStage(null);
+                        }}
                         className={cn(
-                          "group rounded-lg border bg-surface p-3 hover:shadow-[0_4px_12px_-6px_oklch(0.55_0.2_275/0.15)] transition-shadow cursor-pointer",
+                          "group rounded-lg border bg-surface p-3 hover:shadow-[0_4px_12px_-6px_oklch(0.55_0.2_275/0.15)] transition-shadow cursor-grab active:cursor-grabbing",
+                          dragId === o.id && "opacity-50",
                           urgencyBorder,
                         )}
                       >
