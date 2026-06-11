@@ -471,3 +471,55 @@ function PlansTab() {
     </>
   );
 }
+
+function AppearanceTab() {
+  const { theme, setTheme } = useTheme();
+
+  const options: { value: Theme; label: string; desc: string; icon: typeof Sun }[] = [
+    { value: "light", label: "Claro", desc: "Fundo branco, ideal para ambientes iluminados.", icon: Sun },
+    { value: "dark", label: "Escuro", desc: "Reduz brilho e cansaço visual à noite.", icon: Moon },
+  ];
+
+  return (
+    <div className="max-w-2xl space-y-4">
+      <div>
+        <h3 className="text-sm font-semibold">Tema da interface</h3>
+        <p className="mt-1 text-xs-plus text-muted-foreground">
+          Escolha entre o tema claro ou escuro. A preferência fica salva neste navegador.
+        </p>
+      </div>
+      <div className="grid sm:grid-cols-2 gap-3">
+        {options.map((opt) => {
+          const Icon = opt.icon;
+          const active = theme === opt.value;
+          return (
+            <button
+              key={opt.value}
+              onClick={() => setTheme(opt.value)}
+              className={cn(
+                "text-left rounded-xl border p-4 transition-colors",
+                active
+                  ? "border-primary bg-primary/5 ring-1 ring-primary/30"
+                  : "border-border bg-surface hover:bg-muted/50",
+              )}
+            >
+              <div className="flex items-center gap-2">
+                <div
+                  className={cn(
+                    "size-8 rounded-lg flex items-center justify-center",
+                    active ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground",
+                  )}
+                >
+                  <Icon className="size-4" />
+                </div>
+                <div className="text-sm font-medium">{opt.label}</div>
+                {active && <Check className="size-4 text-primary ml-auto" />}
+              </div>
+              <p className="mt-2 text-xs-plus text-muted-foreground">{opt.desc}</p>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
