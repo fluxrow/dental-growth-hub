@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Calendar, Check, Loader2, Plus } from "lucide-react";
+import { Calendar, Check, Loader2, Plus, Sun, Moon } from "lucide-react";
 import { AppShell } from "@/components/app/app-shell";
 import { INTEGRATIONS, PLANS, TEAM } from "@/lib/mock";
 import { cn } from "@/lib/utils";
@@ -12,13 +12,14 @@ import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 import { CancelFlowModal } from "@/components/app/cancel-flow-modal";
+import { useTheme, type Theme } from "@/hooks/use-theme";
 
 export const Route = createFileRoute("/app/configuracoes")({
   head: () => ({ meta: [{ title: "Configurações · Dr. Flux" }] }),
   component: Configuracoes,
 });
 
-const TABS = ["Clínica", "Agenda", "Usuários", "WhatsApp", "Integrações", "Planos"] as const;
+const TABS = ["Clínica", "Agenda", "Usuários", "WhatsApp", "Integrações", "Aparência", "Planos"] as const;
 
 function Configuracoes() {
   const [tab, setTab] = useState<(typeof TABS)[number]>("Clínica");
@@ -48,6 +49,7 @@ function Configuracoes() {
           {tab === "Usuários" && <UsersTab />}
           {tab === "WhatsApp" && <WhatsTab />}
           {tab === "Integrações" && <IntegrationsTab />}
+          {tab === "Aparência" && <AppearanceTab />}
           {tab === "Planos" && <PlansTab />}
         </div>
       </div>
@@ -467,5 +469,57 @@ function PlansTab() {
         <CancelFlowModal clinicId={clinicId} onClose={() => setShowCancelModal(false)} />
       )}
     </>
+  );
+}
+
+function AppearanceTab() {
+  const { theme, setTheme } = useTheme();
+
+  const options: { value: Theme; label: string; desc: string; icon: typeof Sun }[] = [
+    { value: "light", label: "Claro", desc: "Fundo branco, ideal para ambientes iluminados.", icon: Sun },
+    { value: "dark", label: "Escuro", desc: "Reduz brilho e cansaço visual à noite.", icon: Moon },
+  ];
+
+  return (
+    <div className="max-w-2xl space-y-4">
+      <div>
+        <h3 className="text-sm font-semibold">Tema da interface</h3>
+        <p className="mt-1 text-xs-plus text-muted-foreground">
+          Escolha entre o tema claro ou escuro. A preferência fica salva neste navegador.
+        </p>
+      </div>
+      <div className="grid sm:grid-cols-2 gap-3">
+        {options.map((opt) => {
+          const Icon = opt.icon;
+          const active = theme === opt.value;
+          return (
+            <button
+              key={opt.value}
+              onClick={() => setTheme(opt.value)}
+              className={cn(
+                "text-left rounded-xl border p-4 transition-colors",
+                active
+                  ? "border-primary bg-primary/5 ring-1 ring-primary/30"
+                  : "border-border bg-surface hover:bg-muted/50",
+              )}
+            >
+              <div className="flex items-center gap-2">
+                <div
+                  className={cn(
+                    "size-8 rounded-lg flex items-center justify-center",
+                    active ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground",
+                  )}
+                >
+                  <Icon className="size-4" />
+                </div>
+                <div className="text-sm font-medium">{opt.label}</div>
+                {active && <Check className="size-4 text-primary ml-auto" />}
+              </div>
+              <p className="mt-2 text-xs-plus text-muted-foreground">{opt.desc}</p>
+            </button>
+          );
+        })}
+      </div>
+    </div>
   );
 }
