@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Calendar, Check, Loader2, Plus } from "lucide-react";
+import { Calendar, Check, Loader2, Plus, Sun, Moon } from "lucide-react";
 import { AppShell } from "@/components/app/app-shell";
 import { INTEGRATIONS, PLANS, TEAM } from "@/lib/mock";
 import { cn } from "@/lib/utils";
@@ -12,13 +12,14 @@ import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 import { CancelFlowModal } from "@/components/app/cancel-flow-modal";
+import { useTheme, type Theme } from "@/hooks/use-theme";
 
 export const Route = createFileRoute("/app/configuracoes")({
   head: () => ({ meta: [{ title: "Configurações · Dr. Flux" }] }),
   component: Configuracoes,
 });
 
-const TABS = ["Clínica", "Agenda", "Usuários", "WhatsApp", "Integrações", "Planos"] as const;
+const TABS = ["Clínica", "Agenda", "Usuários", "WhatsApp", "Integrações", "Aparência", "Planos"] as const;
 
 function Configuracoes() {
   const [tab, setTab] = useState<(typeof TABS)[number]>("Clínica");
@@ -48,6 +49,7 @@ function Configuracoes() {
           {tab === "Usuários" && <UsersTab />}
           {tab === "WhatsApp" && <WhatsTab />}
           {tab === "Integrações" && <IntegrationsTab />}
+          {tab === "Aparência" && <AppearanceTab />}
           {tab === "Planos" && <PlansTab />}
         </div>
       </div>

@@ -32,6 +32,7 @@ import { useEmptyMode, toggleEmptyMode } from "@/hooks/use-empty-mode";
 import { useAuth, signOut } from "@/hooks/use-auth";
 import { useProfile } from "@/hooks/use-profile";
 import { useNavigate } from "@tanstack/react-router";
+import { useThemeBootstrap } from "@/hooks/use-theme";
 
 type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean };
 type NavGroup = { label: string; items: NavItem[] };
@@ -81,6 +82,7 @@ export function AppShell({
   children: ReactNode;
   flush?: boolean;
 }) {
+  useThemeBootstrap();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { user } = useAuth();
   const { data } = useProfile(user?.id);
