@@ -24,7 +24,7 @@ import { FunnelChart } from "@/components/app/funnel";
 import { ATTENDANCE_RATE, MONTHLY_EVOLUTION, SOURCE_BREAKDOWN } from "@/lib/mock";
 
 export const Route = createFileRoute("/app/relatorios")({
-  head: () => ({ meta: [{ title: "Relatórios · DentalFlux" }] }),
+  head: () => ({ meta: [{ title: "Relatórios · Dr. Flux" }] }),
   component: Relatorios,
 });
 

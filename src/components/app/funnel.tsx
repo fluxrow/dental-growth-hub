@@ -7,7 +7,7 @@ export function FunnelChart() {
     <div className="rounded-xl border border-border bg-surface p-5">
       <div className="flex items-baseline justify-between mb-4">
         <div>
-          <h3 className="text-sm font-semibold tracking-tight">Funil DentalFlux</h3>
+          <h3 className="text-sm font-semibold tracking-tight">Funil Dr. Flux</h3>
           <p className="text-xs text-muted-foreground">Jornada do paciente — últimos 30 dias</p>
         </div>
         <div className="text-xs text-muted-foreground">

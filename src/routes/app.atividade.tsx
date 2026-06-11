@@ -20,7 +20,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/app/atividade")({
-  head: () => ({ meta: [{ title: "Atividade · DentalFlux" }] }),
+  head: () => ({ meta: [{ title: "Atividade · Dr. Flux" }] }),
   component: AtividadePage,
 });
 

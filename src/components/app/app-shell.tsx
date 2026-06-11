@@ -119,7 +119,7 @@ export function AppShell({
               <Logo />
             </div>
             <span className="font-display font-semibold tracking-tight whitespace-nowrap opacity-0 group-hover/sb:opacity-100 group-focus-within/sb:opacity-100 transition-opacity duration-150">
-              DentalFlux
+              Dr. Flux
             </span>
           </Link>
           <div className="px-3 py-2">
@@ -225,7 +225,7 @@ export function AppShell({
           <div className="md:hidden">
             <Link to="/" className="flex items-center gap-2">
               <Logo />
-              <span className="font-display font-semibold">DentalFlux</span>
+              <span className="font-display font-semibold">Dr. Flux</span>
             </Link>
           </div>
           <div className="flex-1 min-w-0">

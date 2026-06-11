@@ -12,7 +12,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { OnboardingChecklist } from "@/components/app/onboarding-checklist";
 
 export const Route = createFileRoute("/app/")({
-  head: () => ({ meta: [{ title: "Dashboard · DentalFlux" }] }),
+  head: () => ({ meta: [{ title: "Dashboard · Dr. Flux" }] }),
   component: Dashboard,
 });
 

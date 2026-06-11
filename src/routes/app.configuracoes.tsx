@@ -14,7 +14,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { CancelFlowModal } from "@/components/app/cancel-flow-modal";
 
 export const Route = createFileRoute("/app/configuracoes")({
-  head: () => ({ meta: [{ title: "Configurações · DentalFlux" }] }),
+  head: () => ({ meta: [{ title: "Configurações · Dr. Flux" }] }),
   component: Configuracoes,
 });
 

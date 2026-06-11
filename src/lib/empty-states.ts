@@ -41,7 +41,7 @@ export const EMPTY_STATES = {
 
   oportunidades: {
     icon: Target,
-    eyebrow: "Funil DentalFlux",
+    eyebrow: "Funil Dr. Flux",
     title: "Nenhuma oportunidade no seu funil ainda",
     description:
       "Toda pessoa que mostra interesse pela sua clínica deveria virar uma oportunidade. Conecte suas fontes e capture leads automaticamente.",
@@ -219,7 +219,7 @@ export const EMPTY_STATES = {
     eyebrow: "Decisões com dados",
     title: "Seus relatórios estão prontos para ganhar vida",
     description:
-      "Em poucos dias de uso, o DentalFlux mostra exatamente onde sua clínica perde dinheiro — e quanto está recuperando.",
+      "Em poucos dias de uso, o Dr. Flux mostra exatamente onde sua clínica perde dinheiro — e quanto está recuperando.",
     steps: [
       {
         title: "Conectar canais e fontes",

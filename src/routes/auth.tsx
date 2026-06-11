@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 
 export const Route = createFileRoute("/auth")({
-  head: () => ({ meta: [{ title: "Entrar · DentalFlux" }] }),
+  head: () => ({ meta: [{ title: "Entrar · Dr. Flux" }] }),
   component: AuthPage,
 });
 
@@ -82,7 +82,7 @@ function AuthPage() {
       <div className="hidden lg:flex flex-col justify-between p-10 bg-gradient-to-br from-primary/10 via-accent to-background border-r border-border">
         <Link to="/" className="flex items-center gap-2">
           <Logo />
-          <span className="font-display font-semibold tracking-tight">DentalFlux</span>
+          <span className="font-display font-semibold tracking-tight">Dr. Flux</span>
         </Link>
         <div>
           <h2 className="font-display text-3xl font-semibold tracking-tight leading-tight">
@@ -96,14 +96,14 @@ function AuthPage() {
             Centralize WhatsApp, follow-up, confirmações, cobranças e avaliações em um único lugar.
           </p>
         </div>
-        <p className="text-2xs text-muted-foreground">© DentalFlux · LGPD compliant</p>
+        <p className="text-2xs text-muted-foreground">© Dr. Flux · LGPD compliant</p>
       </div>
 
       <main className="flex items-center justify-center p-6">
         <div className="w-full max-w-sm">
           <div className="lg:hidden mb-6 flex items-center gap-2 justify-center">
             <Logo />
-            <span className="font-display font-semibold">DentalFlux</span>
+            <span className="font-display font-semibold">Dr. Flux</span>
           </div>
 
           <div className="inline-flex rounded-lg border border-border bg-surface p-0.5 mb-6">
@@ -201,7 +201,7 @@ function AuthPage() {
           </form>
 
           <p className="mt-5 text-center text-xs text-muted-foreground">
-            {mode === "login" ? "Novo no DentalFlux? " : "Já tem conta? "}
+            {mode === "login" ? "Novo no Dr. Flux? " : "Já tem conta? "}
             <button
               onClick={() => setMode(mode === "login" ? "signup" : "login")}
               className="text-primary hover:underline font-medium"

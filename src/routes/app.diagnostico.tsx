@@ -27,7 +27,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/app/diagnostico")({
-  head: () => ({ meta: [{ title: "Diagnóstico · DentalFlux" }] }),
+  head: () => ({ meta: [{ title: "Diagnóstico · Dr. Flux" }] }),
   component: DiagnosticoPage,
 });
 

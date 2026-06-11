@@ -1,4 +1,4 @@
-// Mock data realista para DentalFlux MVP. Estrutura preparada para Supabase.
+// Mock data realista para Dr. Flux MVP. Estrutura preparada para Supabase.
 // Toda entidade carrega clinicId (multi-tenant ready).
 
 export const CLINIC = {
@@ -113,7 +113,7 @@ export const FINANCIAL_KPIS: Kpi[] = [
   },
 ];
 
-// ─── Funil DentalFlux ──────────────────────────────────────────────────────
+// ─── Funil Dr. Flux ──────────────────────────────────────────────────────
 export const FUNNEL = [
   { stage: "Lead", count: 248 },
   { stage: "Primeiro Contato", count: 231 },

@@ -8,7 +8,7 @@ import { CAMPAIGNS, type CampaignType } from "@/lib/mock";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/app/campanhas")({
-  head: () => ({ meta: [{ title: "Campanhas · DentalFlux" }] }),
+  head: () => ({ meta: [{ title: "Campanhas · Dr. Flux" }] }),
   component: Campanhas,
 });
 

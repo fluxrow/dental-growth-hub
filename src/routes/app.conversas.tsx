@@ -21,7 +21,7 @@ import { CONVERSATIONS, OPP_STAGES } from "@/lib/mock";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/app/conversas")({
-  head: () => ({ meta: [{ title: "Conversas · DentalFlux" }] }),
+  head: () => ({ meta: [{ title: "Conversas · Dr. Flux" }] }),
   component: Conversas,
 });
 

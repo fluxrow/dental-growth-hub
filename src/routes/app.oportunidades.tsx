@@ -15,7 +15,7 @@ import { advanceOportunidade, loseOportunidade } from "@/lib/oportunidades.funct
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/app/oportunidades")({
-  head: () => ({ meta: [{ title: "Oportunidades · DentalFlux" }] }),
+  head: () => ({ meta: [{ title: "Oportunidades · Dr. Flux" }] }),
   component: Oportunidades,
 });
 

@@ -77,14 +77,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
-      { title: "DentalFlux — Pare de perder pacientes" },
+      { title: "Dr. Flux — Pare de perder pacientes" },
       {
         name: "description",
         content:
           "Plataforma de crescimento, relacionamento e recuperação de pacientes para clínicas odontológicas. Centralize WhatsApp, follow-up, confirmações, reativações, cobranças e avaliações.",
       },
-      { name: "author", content: "DentalFlux" },
-      { property: "og:title", content: "DentalFlux — Pare de perder pacientes" },
+      { name: "author", content: "Dr. Flux" },
+      { property: "og:title", content: "Dr. Flux — Pare de perder pacientes" },
       {
         property: "og:description",
         content:
