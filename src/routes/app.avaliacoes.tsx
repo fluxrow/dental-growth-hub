@@ -9,7 +9,7 @@ import { ELIGIBLE_FOR_REVIEW, REVIEWS, REVIEW_KPIS } from "@/lib/mock";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/app/avaliacoes")({
-  head: () => ({ meta: [{ title: "Avaliações · DentalFlux" }] }),
+  head: () => ({ meta: [{ title: "Avaliações · Dr. Flux" }] }),
   component: Avaliacoes,
 });
 

@@ -17,13 +17,13 @@ import { Logo } from "@/components/app/app-shell";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "DentalFlux — Pare de perder pacientes" },
+      { title: "Dr. Flux — Pare de perder pacientes" },
       {
         name: "description",
         content:
           "Plataforma de crescimento e relacionamento para clínicas odontológicas. Centralize WhatsApp, follow-up, confirmações, reativações, cobranças e avaliações.",
       },
-      { property: "og:title", content: "DentalFlux — Pare de perder pacientes" },
+      { property: "og:title", content: "Dr. Flux — Pare de perder pacientes" },
       {
         property: "og:description",
         content:
@@ -58,7 +58,7 @@ function SiteHeader() {
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
           <Logo />
-          <span className="font-display font-semibold tracking-tight text-[15px]">DentalFlux</span>
+          <span className="font-display font-semibold tracking-tight text-[15px]">Dr. Flux</span>
         </Link>
         <nav className="hidden md:flex items-center gap-7 text-sm-minus text-muted-foreground">
           <a href="#problema" className="hover:text-foreground">
@@ -161,7 +161,7 @@ function DashboardMockup() {
           <div className="col-span-3 border-r border-border bg-sidebar p-4 hidden md:block">
             <div className="flex items-center gap-2 mb-5">
               <Logo />
-              <span className="font-display font-semibold text-sm-minus">DentalFlux</span>
+              <span className="font-display font-semibold text-sm-minus">Dr. Flux</span>
             </div>
             {[
               "Dashboard",
@@ -217,7 +217,7 @@ function DashboardMockup() {
               ))}
             </div>
             <div className="rounded-lg border border-border bg-surface p-4">
-              <div className="text-xs font-semibold mb-3">Funil DentalFlux</div>
+              <div className="text-xs font-semibold mb-3">Funil Dr. Flux</div>
               {[
                 ["Lead", 248, 100],
                 ["Primeiro Contato", 231, 93],
@@ -253,7 +253,7 @@ function SocialProof() {
   return (
     <section className="border-y border-border bg-surface-muted">
       <div className="max-w-6xl mx-auto px-6 py-8 flex flex-wrap items-center justify-center gap-x-10 gap-y-3 text-muted-foreground text-xs">
-        <span className="text-foreground/60 font-medium">Clínicas que usam DentalFlux:</span>
+        <span className="text-foreground/60 font-medium">Clínicas que usam Dr. Flux:</span>
         <span className="font-display tracking-tight text-[15px]">Sorriso Pleno</span>
         <span className="font-display tracking-tight text-[15px]">OdontoVita</span>
         <span className="font-display tracking-tight text-[15px]">Clínica Ipanema</span>
@@ -386,7 +386,7 @@ function FunnelSection() {
     <section id="funil" className="py-20 lg:py-28">
       <div className="max-w-6xl mx-auto px-6">
         <div className="text-center max-w-2xl mx-auto mb-14">
-          <div className="text-xs font-medium text-primary mb-3">O Funil DentalFlux</div>
+          <div className="text-xs font-medium text-primary mb-3">O Funil Dr. Flux</div>
           <h2 className="font-display text-3xl lg:text-4xl font-semibold tracking-tight">
             Da primeira mensagem à indicação
           </h2>
@@ -611,7 +611,7 @@ function SiteFooter() {
         <div className="max-w-xs">
           <div className="flex items-center gap-2 mb-3">
             <Logo />
-            <span className="font-display font-semibold tracking-tight">DentalFlux</span>
+            <span className="font-display font-semibold tracking-tight">Dr. Flux</span>
           </div>
           <p className="text-xs-plus text-muted-foreground leading-relaxed">
             Plataforma de crescimento, relacionamento e recuperação de pacientes para clínicas
@@ -665,7 +665,7 @@ function SiteFooter() {
       </div>
       <div className="border-t border-border">
         <div className="max-w-6xl mx-auto px-6 py-5 text-xs text-muted-foreground flex flex-wrap justify-between gap-3">
-          <div>© 2026 DentalFlux. Todos os direitos reservados.</div>
+          <div>© 2026 Dr. Flux. Todos os direitos reservados.</div>
           <div>Feito no Brasil 🇧🇷</div>
         </div>
       </div>

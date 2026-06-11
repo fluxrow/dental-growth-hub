@@ -19,7 +19,7 @@ import { listAutomacoes, toggleAutomacao, type AutomacaoRow } from "@/lib/automa
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/app/automacoes")({
-  head: () => ({ meta: [{ title: "Automações · DentalFlux" }] }),
+  head: () => ({ meta: [{ title: "Automações · Dr. Flux" }] }),
   component: Automacoes,
 });
 

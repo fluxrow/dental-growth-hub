@@ -21,7 +21,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/p/$token")({
-  head: () => ({ meta: [{ title: "Portal do Paciente · DentalFlux" }] }),
+  head: () => ({ meta: [{ title: "Portal do Paciente · Dr. Flux" }] }),
   loader: ({ params }) => {
     const data = getPortalData(params.token);
     if (!data) throw notFound();
@@ -217,7 +217,7 @@ function PatientPortal() {
           <p>
             Este portal segue a LGPD. Seus dados são tratados com sigilo pela {data.clinic.name}.
           </p>
-          <p className="mt-1">Powered by DentalFlux</p>
+          <p className="mt-1">Powered by Dr. Flux</p>
         </footer>
       </main>
       <Toaster position="top-right" />

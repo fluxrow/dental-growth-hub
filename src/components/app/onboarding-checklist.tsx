@@ -26,7 +26,7 @@ const STEPS: Step[] = [
   {
     id: "account",
     label: "Conta criada",
-    desc: "Bem-vindo ao DentalFlux!",
+    desc: "Bem-vindo ao Dr. Flux!",
     emoji: "🎉",
   },
   {

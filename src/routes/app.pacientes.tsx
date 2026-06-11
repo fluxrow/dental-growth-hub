@@ -25,7 +25,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useProfile } from "@/hooks/use-profile";
 
 export const Route = createFileRoute("/app/pacientes")({
-  head: () => ({ meta: [{ title: "Pacientes · DentalFlux" }] }),
+  head: () => ({ meta: [{ title: "Pacientes · Dr. Flux" }] }),
   component: Pacientes,
 });
 

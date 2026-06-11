@@ -30,7 +30,7 @@ import { GoogleCalendarConnector } from "@/components/app/google-calendar-connec
 import { completeOnboarding, setClinicLogoUrl } from "@/lib/onboarding.functions";
 
 export const Route = createFileRoute("/onboarding")({
-  head: () => ({ meta: [{ title: "Configurar clínica · DentalFlux" }] }),
+  head: () => ({ meta: [{ title: "Configurar clínica · Dr. Flux" }] }),
   component: OnboardingWizard,
 });
 
@@ -643,7 +643,7 @@ function StepAgenda({
             <div className="text-sm font-semibold">Google Calendar da clínica</div>
             <p className="mt-1 text-xs-plus text-muted-foreground">
               Sem a agenda conectada, as funcionalidades abaixo ficam pausadas. É o coração da
-              automação do DentalFlux.
+              automação do Dr. Flux.
             </p>
             <ul className="mt-3 space-y-1.5">
               {benefits.map((b) => (
