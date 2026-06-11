@@ -22,7 +22,7 @@
  */
 
 import { createFileRoute } from "@tanstack/react-router";
-import { supabaseAdmin }   from "@/integrations/supabase/client.server";
+import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = () => supabaseAdmin as any;
@@ -30,17 +30,14 @@ const db = () => supabaseAdmin as any;
 // ─── Templates de mensagem por touchpoint ─────────────────────────────────────
 
 interface TouchpointContext {
-  clinicName:      string;
-  ownerName:       string;
+  clinicName: string;
+  ownerName: string;
   recoveredValue?: number; // R$ recuperado (para D+30 e D+90)
-  leakValue?:      number; // Revenue Leak atual
-  drFluxCost?:     number; // Custo mensal do DrFlux (para ROI)
+  leakValue?: number; // Revenue Leak atual
+  drFluxCost?: number; // Custo mensal do DrFlux (para ROI)
 }
 
-function buildTouchpointMessage(
-  touchpoint: string,
-  ctx: TouchpointContext,
-): string {
+function buildTouchpointMessage(touchpoint: string, ctx: TouchpointContext): string {
   const formatBRL = (v: number) =>
     new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(v);
 
@@ -95,7 +92,11 @@ function buildTouchpointMessage(
 
 // ─── Z-API send helper ────────────────────────────────────────────────────────
 
-async function sendZAPIMessage(clinicId: string, phone: string, message: string): Promise<string | null> {
+async function sendZAPIMessage(
+  clinicId: string,
+  phone: string,
+  message: string,
+): Promise<string | null> {
   const { data: integration } = await db()
     .from("clinic_integrations")
     .select("credentials, status")
@@ -181,10 +182,14 @@ export const Route = createFileRoute("/api/cron/cs-touchpoints")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        // Verificar segredo do cron
+        // Segredo do cron é OBRIGATÓRIO — sem ele o endpoint dispararia
+        // WhatsApp em massa para qualquer chamador anônimo.
+        if (!process.env.CRON_SECRET) {
+          console.error("[cron/cs-touchpoints] CRON_SECRET não configurado — endpoint bloqueado");
+          return new Response("Service unavailable", { status: 503 });
+        }
         const authHeader = request.headers.get("authorization");
-        const expected   = `Bearer ${process.env.CRON_SECRET}`;
-        if (process.env.CRON_SECRET && authHeader !== expected) {
+        if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
           return new Response("Unauthorized", { status: 401 });
         }
 
@@ -202,7 +207,8 @@ async function executeCSTouchpoints() {
   // Buscar todos os touchpoints pendentes que já passaram do scheduled_at
   const { data: pending, error } = await db()
     .from("cs_touchpoints")
-    .select(`
+    .select(
+      `
       id,
       clinic_id,
       touchpoint,
@@ -217,7 +223,8 @@ async function executeCSTouchpoints() {
           phone
         )
       )
-    `)
+    `,
+    )
     .eq("status", "pending")
     .lte("scheduled_at", now.toISOString())
     .order("scheduled_at", { ascending: true })
@@ -239,19 +246,22 @@ async function executeCSTouchpoints() {
     stats.processed++;
 
     try {
-      const clinicId   = tp.clinic_id;
+      const clinicId = tp.clinic_id;
       const clinicName = tp.clinic?.name ?? "Clínica";
-      const owner      = tp.clinic?.owner;
-      const ownerName  = owner?.full_name?.split(" ")[0] ?? "Dr(a)";
+      const owner = tp.clinic?.owner;
+      const ownerName = owner?.full_name?.split(" ")[0] ?? "Dr(a)";
       const ownerPhone = owner?.phone;
 
       if (!ownerPhone) {
         console.warn(`[cs-cron] touchpoint ${tp.id}: owner phone missing, skipping`);
-        await db().from("cs_touchpoints").update({
-          status:     "skipped",
-          notes:      "Telefone do responsável não cadastrado",
-          updated_at: now.toISOString(),
-        }).eq("id", tp.id);
+        await db()
+          .from("cs_touchpoints")
+          .update({
+            status: "skipped",
+            notes: "Telefone do responsável não cadastrado",
+            updated_at: now.toISOString(),
+          })
+          .eq("id", tp.id);
         stats.skipped++;
         continue;
       }
@@ -279,12 +289,15 @@ async function executeCSTouchpoints() {
       }
 
       // Atualizar status do touchpoint
-      await db().from("cs_touchpoints").update({
-        status:       sent ? "sent" : "failed",
-        executed_at:  now.toISOString(),
-        message_sent: messageSent.substring(0, 500),
-        updated_at:   now.toISOString(),
-      }).eq("id", tp.id);
+      await db()
+        .from("cs_touchpoints")
+        .update({
+          status: sent ? "sent" : "failed",
+          executed_at: now.toISOString(),
+          message_sent: messageSent.substring(0, 500),
+          updated_at: now.toISOString(),
+        })
+        .eq("id", tp.id);
 
       if (sent) {
         stats.sent++;
@@ -297,11 +310,15 @@ async function executeCSTouchpoints() {
       stats.failed++;
       console.error(`[cs-cron] error processing touchpoint ${tp.id}`, err);
 
-      await db().from("cs_touchpoints").update({
-        status:     "failed",
-        notes:      String(err).substring(0, 500),
-        updated_at: now.toISOString(),
-      }).eq("id", tp.id).catch(() => null);
+      await db()
+        .from("cs_touchpoints")
+        .update({
+          status: "failed",
+          notes: String(err).substring(0, 500),
+          updated_at: now.toISOString(),
+        })
+        .eq("id", tp.id)
+        .catch(() => null);
     }
   }
 

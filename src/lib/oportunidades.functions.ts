@@ -16,13 +16,22 @@ export const advanceOportunidade = createServerFn({ method: "POST" })
     return input;
   })
   .handler(async ({ data, context }) => {
+    // Defense in depth: além da RLS, restringe o update à clínica do usuário
+    const { data: profile } = await context.supabase
+      .from("profiles")
+      .select("clinic_id")
+      .eq("id", context.userId)
+      .maybeSingle();
+    if (!profile?.clinic_id) throw new Error("Usuário sem clínica vinculada");
+
     const { error } = await context.supabase
       .from("oportunidades")
       .update({
         stage: data.nextStage,
         stage_changed_at: new Date().toISOString(),
       })
-      .eq("id", data.id);
+      .eq("id", data.id)
+      .eq("clinic_id", profile.clinic_id);
     if (error) throw new Error(error.message);
     return { success: true };
   });
@@ -38,6 +47,14 @@ export const loseOportunidade = createServerFn({ method: "POST" })
     return input;
   })
   .handler(async ({ data, context }) => {
+    // Defense in depth: além da RLS, restringe o update à clínica do usuário
+    const { data: profile } = await context.supabase
+      .from("profiles")
+      .select("clinic_id")
+      .eq("id", context.userId)
+      .maybeSingle();
+    if (!profile?.clinic_id) throw new Error("Usuário sem clínica vinculada");
+
     const { error } = await context.supabase
       .from("oportunidades")
       .update({
@@ -46,7 +63,8 @@ export const loseOportunidade = createServerFn({ method: "POST" })
         lost_at: new Date().toISOString(),
         lost_reason: data.lostReason ?? null,
       })
-      .eq("id", data.id);
+      .eq("id", data.id)
+      .eq("clinic_id", profile.clinic_id);
     if (error) throw new Error(error.message);
     return { success: true };
   });

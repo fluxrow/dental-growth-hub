@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { createServerFn } from "@tanstack/react-start";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 // ─── Server Fns ───────────────────────────────────────────────────────────────
@@ -36,60 +37,86 @@ import { supabaseAdmin } from "@/integrations/supabase/client.server";
 type AnyAdmin = any;
 const db = () => supabaseAdmin as AnyAdmin;
 
-export const adminListCsTouchpoints = createServerFn({ method: "GET" }).handler(async () => {
+/**
+ * Autorização server-side: exige role 'admin' em user_roles.
+ * O guard de app.admin.tsx é só UX — estas fns usam service role e
+ * seriam acessíveis por qualquer um sem esta checagem.
+ */
+async function assertAdmin(userId: string): Promise<void> {
   const { data, error } = await db()
-    .from("cs_touchpoints")
-    .select(
-      `
+    .from("user_roles")
+    .select("role")
+    .eq("user_id", userId)
+    .eq("role", "admin")
+    .limit(1);
+  if (error || !data?.length) throw new Error("Acesso negado: requer role admin");
+}
+
+export const adminListCsTouchpoints = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertAdmin(context.userId);
+    const { data, error } = await db()
+      .from("cs_touchpoints")
+      .select(
+        `
         id, clinic_id, touchpoint, scheduled_at, status, sent_at, channel, error_msg,
         clinica:clinicas(id, name)
       `,
-    )
-    .in("status", ["pending", "failed"])
-    .lte("scheduled_at", new Date(Date.now() + 7 * 86400000).toISOString()) // próximos 7 dias
-    .order("scheduled_at", { ascending: true })
-    .limit(200);
+      )
+      .in("status", ["pending", "failed"])
+      .lte("scheduled_at", new Date(Date.now() + 7 * 86400000).toISOString()) // próximos 7 dias
+      .order("scheduled_at", { ascending: true })
+      .limit(200);
 
-  if (error) throw error;
-  return data ?? [];
-});
-
-export const adminGetCsStats = createServerFn({ method: "GET" }).handler(async () => {
-  const { data } = await db()
-    .from("cs_touchpoints")
-    .select("status, touchpoint")
-    .gte("scheduled_at", new Date(Date.now() - 90 * 86400000).toISOString());
-
-  const rows = data ?? [];
-  const total = rows.length;
-  const sent = rows.filter((r: { status: string }) => r.status === "sent").length;
-  const pending = rows.filter((r: { status: string }) => r.status === "pending").length;
-  const failed = rows.filter((r: { status: string }) => r.status === "failed").length;
-  const byTouchpoint: Record<string, number> = {};
-  rows.forEach((r: { touchpoint: string }) => {
-    byTouchpoint[r.touchpoint] = (byTouchpoint[r.touchpoint] ?? 0) + 1;
+    if (error) throw error;
+    return data ?? [];
   });
 
-  return { total, sent, pending, failed, byTouchpoint };
-});
+export const adminGetCsStats = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertAdmin(context.userId);
+    const { data } = await db()
+      .from("cs_touchpoints")
+      .select("status, touchpoint")
+      .gte("scheduled_at", new Date(Date.now() - 90 * 86400000).toISOString());
+
+    const rows = data ?? [];
+    const total = rows.length;
+    const sent = rows.filter((r: { status: string }) => r.status === "sent").length;
+    const pending = rows.filter((r: { status: string }) => r.status === "pending").length;
+    const failed = rows.filter((r: { status: string }) => r.status === "failed").length;
+    const byTouchpoint: Record<string, number> = {};
+    rows.forEach((r: { touchpoint: string }) => {
+      byTouchpoint[r.touchpoint] = (byTouchpoint[r.touchpoint] ?? 0) + 1;
+    });
+
+    return { total, sent, pending, failed, byTouchpoint };
+  });
 
 // Health scores de todas as clínicas (Sprint 5)
-export const adminGetHealthScores = createServerFn({ method: "GET" }).handler(async () => {
-  const { data, error } = await db()
-    .from("clinic_health_scores")
-    .select("*")
-    .order("score", { ascending: true }); // mais crítico primeiro
+export const adminGetHealthScores = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertAdmin(context.userId);
+    const { data, error } = await db()
+      .from("clinic_health_scores")
+      .select("*")
+      .order("score", { ascending: true }); // mais crítico primeiro
 
-  if (error) throw error;
-  return (data ?? []) as HealthScore[];
-});
+    if (error) throw error;
+    return (data ?? []) as HealthScore[];
+  });
 
 export const adminTriggerTouchpoint = createServerFn({ method: "POST" })
   .inputValidator((input: { touchpointId: string }) => {
     if (!input?.touchpointId) throw new Error("touchpointId obrigatório");
     return input;
   })
-  .handler(async ({ data }) => {
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context.userId);
     // Forçar execução imediata marcando scheduled_at = agora - 1 min
     const { error } = await db()
       .from("cs_touchpoints")
@@ -106,7 +133,7 @@ export const adminTriggerTouchpoint = createServerFn({ method: "POST" })
     const cronSecret = process.env.CRON_SECRET ?? "";
     const baseUrl = process.env.APP_BASE_URL ?? "http://localhost:3000";
     const res = await fetch(`${baseUrl}/api/cron/cs-touchpoints`, {
-      method: "GET",
+      method: "POST",
       headers: { Authorization: `Bearer ${cronSecret}` },
     });
 
