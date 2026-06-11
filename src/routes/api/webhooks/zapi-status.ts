@@ -45,7 +45,8 @@ export const Route = createFileRoute("/api/webhooks/zapi-status")({
       POST: async ({ request }) => {
         const clientToken = request.headers.get("client-token");
         const expectedToken = process.env.ZAPI_CLIENT_TOKEN;
-        if (expectedToken && clientToken !== expectedToken) {
+        if (!expectedToken) return new Response("Service unavailable", { status: 503 });
+        if (clientToken !== expectedToken) {
           return new Response("Unauthorized", { status: 401 });
         }
 
