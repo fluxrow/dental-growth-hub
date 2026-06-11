@@ -44,6 +44,18 @@ export const startGoogleCalendarConnect = createServerFn({ method: "POST" })
     return input;
   })
   .handler(async ({ data, context }) => {
+    // Verify the authenticated caller actually belongs to the supplied clinic.
+    // Without this, any user could overwrite another clinic's Google tokens.
+    const { data: profile, error: profileError } = await context.supabase
+      .from("profiles")
+      .select("clinic_id")
+      .eq("id", context.userId)
+      .maybeSingle();
+    if (profileError) throw new Error("Falha ao validar clínica do usuário");
+    if (!profile?.clinic_id || profile.clinic_id !== data.clinicId) {
+      throw new Error("Acesso negado: clínica inválida");
+    }
+
     const { createHmac } = await import("crypto");
     const clientId = requireEnv("GOOGLE_OAUTH_CLIENT_ID");
     const clientSecret = requireEnv("GOOGLE_OAUTH_CLIENT_SECRET");

@@ -121,7 +121,7 @@ function buildDunningMessage(ctx: DunningContext): string {
  */
 export const sendWhatsAppText = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: { phone: string; message: string; clinicId?: string }) => {
+  .inputValidator((input: { phone: string; message: string }) => {
     if (!input?.phone) throw new Error("phone obrigatório");
     if (!input?.message) throw new Error("message obrigatório");
     return input;
@@ -129,14 +129,16 @@ export const sendWhatsAppText = createServerFn({ method: "POST" })
   .handler(async ({ data, context }): Promise<{ messageId: string }> => {
     const supabase = context.supabase as AnySupabase;
 
-    // Resolver clinic_id: ou da entrada ou do perfil do usuário
+    // Always derive clinic_id from the authenticated user — never trust a
+    // client-supplied clinicId, which would allow cross-clinic WhatsApp
+    // impersonation through the service-role credential lookup.
     const { data: profile } = await supabase
       .from("profiles")
       .select("clinic_id")
       .eq("id", context.userId)
       .maybeSingle();
 
-    const clinicId = data.clinicId ?? profile?.clinic_id;
+    const clinicId = profile?.clinic_id;
     if (!clinicId) throw new Error("clinic_id não encontrado");
 
     const creds = await getZAPICredentials(clinicId);

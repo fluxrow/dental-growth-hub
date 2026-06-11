@@ -15,6 +15,7 @@ import { useState } from "react";
 import { X, AlertTriangle, Loader2, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { createServerFn } from "@tanstack/react-start";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import Stripe from "stripe";
 
@@ -25,10 +26,23 @@ import Stripe from "stripe";
 const getStripe = () =>
   new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2025-02-24.acacia" });
 
+/** Ensures the authenticated caller belongs to the supplied clinic. */
+async function assertClinicMember(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  supabase: any,
+  clinicId: string,
+): Promise<void> {
+  const { data, error } = await supabase.rpc("current_clinic_id");
+  if (error) throw new Error("Não foi possível verificar a clínica do usuário");
+  if (!data || data !== clinicId) throw new Error("Acesso negado: clínica inválida");
+}
+
 /** Aplica cupom de desconto à subscription ativa do clinic */
 export const applyCancelSaveOffer = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => d as { clinicId: string; couponId: string; reason: string })
-  .handler(async ({ data }) => {
+  .handler(async ({ data, context }) => {
+    await assertClinicMember(context.supabase, data.clinicId);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data: sub } = await (supabaseAdmin as any)
       .from("clinic_subscriptions")
@@ -44,7 +58,6 @@ export const applyCancelSaveOffer = createServerFn({ method: "POST" })
       coupon: data.couponId,
     });
 
-    // Log decision
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     await (supabaseAdmin as any).from("churn_attempts").insert({
       clinic_id: data.clinicId,
@@ -58,8 +71,10 @@ export const applyCancelSaveOffer = createServerFn({ method: "POST" })
 
 /** Pausa a subscription por N meses */
 export const pauseSubscription = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => d as { clinicId: string; months: number; reason: string })
-  .handler(async ({ data }) => {
+  .handler(async ({ data, context }) => {
+    await assertClinicMember(context.supabase, data.clinicId);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data: sub } = await (supabaseAdmin as any)
       .from("clinic_subscriptions")
@@ -95,8 +110,10 @@ export const pauseSubscription = createServerFn({ method: "POST" })
 
 /** Cancela subscription ao final do período */
 export const cancelSubscription = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => d as { clinicId: string; reason: string })
-  .handler(async ({ data }) => {
+  .handler(async ({ data, context }) => {
+    await assertClinicMember(context.supabase, data.clinicId);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data: sub } = await (supabaseAdmin as any)
       .from("clinic_subscriptions")

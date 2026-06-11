@@ -43,15 +43,20 @@ function verifyState(
   }
 }
 
-function htmlResponse(payload: { ok: boolean; email?: string | null; error?: string }) {
+function htmlResponse(
+  payload: { ok: boolean; email?: string | null; error?: string },
+  trustedOrigin?: string,
+) {
   const safe = JSON.stringify(payload).replace(/</g, "\\u003c");
+  const target = JSON.stringify(trustedOrigin ?? "");
   const body = `<!doctype html><html><head><meta charset="utf-8"><title>Google Calendar</title></head>
 <body style="font-family:system-ui;padding:24px;text-align:center;color:#333">
 <p>${payload.ok ? "Conectado! Fechando..." : "Falha ao conectar: " + (payload.error ?? "erro desconhecido")}</p>
 <script>
   (function(){
     var msg = { type: 'google-oauth-result', payload: ${safe} };
-    try { if (window.opener) window.opener.postMessage(msg, '*'); } catch(e) {}
+    var target = ${target};
+    try { if (window.opener && target) window.opener.postMessage(msg, target); } catch(e) {}
     setTimeout(function(){ window.close(); }, 400);
   })();
 </script>
@@ -91,7 +96,8 @@ export const Route = createFileRoute("/api/public/google/callback")({
         // Use the exact origin stored in the signed state (set by startGoogleCalendarConnect).
         // This avoids redirect_uri_mismatch when Cloudflare/Lovable rewrites the request URL
         // and url.origin differs from the public-facing origin used to initiate the flow.
-        const redirectUri = `${stateData.redirectOrigin ?? url.origin}/api/public/google/callback`;
+        const trustedOrigin = stateData.redirectOrigin ?? url.origin;
+        const redirectUri = `${trustedOrigin}/api/public/google/callback`;
 
         const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
           method: "POST",
