@@ -167,6 +167,34 @@ O `conversation_id` retornado pelo Dify é mantido em estado React (`useState`).
 
 ---
 
+## Por que isso é uma melhoria real
+
+### Ganhos concretos para a clínica
+
+**Atendimento fora do horário comercial.** Clínicas odontológicas perdem leads porque perguntas chegam às 22h e o atendente responde só no dia seguinte. Com o assistente, o paciente recebe resposta imediata sobre preços, convênios e disponibilidade — e o atendente humano só entra quando a conversa exige julgamento real (fechar agenda, negociar valor, lidar com queixa).
+
+**Base de conhecimento "viva".** A equipe atualiza um documento no Dify (ex: nova tabela de preços, novo convênio aceito) e a resposta do assistente muda imediatamente — sem deploys, sem alterar código. A clínica passa a ter controle editorial direto sobre o que o assistente diz.
+
+**RAG sem construir motor próprio.** Montar um pipeline de RAG do zero significa: escolher vector store, implementar chunking, embeddings, retrieval, reranking, histórico de conversa, observabilidade. O Dify entrega tudo isso pronto. O DentalFlux ganhou o mesmo resultado em horas de integração, não semanas de engenharia.
+
+**Observabilidade e iteração.** O painel do Dify registra todas as conversas, quais trechos da knowledge base foram recuperados, qual foi a latência e o custo por mensagem. A equipe consegue ver onde o assistente erra, corrigir o documento fonte e medir o impacto — sem instrumentar código.
+
+### Trade-offs honestos
+
+| Trade-off                               | Detalhe                                                                                                                                                                                                     |
+| --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Dependência operacional**             | O assistente só funciona com uma instância Dify rodando e saudável. Sem Dify configurado, o sistema cai para o mock automaticamente — mas o mock não tem RAG real e retorna respostas genéricas.            |
+| **Custo duplo**                         | Há custo de infra para rodar o Dify (Docker/VM/Kubernetes) _mais_ o custo do LLM por token. Numa clínica pequena com baixo volume isso é negligível; em alta escala precisa de sizing adequado.             |
+| **Manutenção da instância**             | Updates de segurança, backups do Weaviate, health checks — alguém tem que fazer. Se não há SRE dedicado, uma opção é usar o [Dify Cloud](https://dify.ai) (SaaS gerenciado), alterando só a `DIFY_API_URL`. |
+| **Qualidade depende da knowledge base** | RAG é "garbage in, garbage out": documentos mal estruturados ou desatualizados geram respostas ruins. O investimento em manter a base de conhecimento é tão importante quanto o código da integração.       |
+| **Sem fallback para humano ainda**      | Hoje o assistente responde, mas não há handoff automático para um atendente quando o assistente não sabe ou o paciente fica insatisfeito. Isso está listado em extensões futuras.                           |
+
+### Quando _não_ usar esta integração
+
+Se a clínica tem volume muito baixo (< 20 perguntas/dia) e já tem atendente humano responsivo, o ROI pode não justificar manter a infra Dify. Neste caso, o mock existente continua funcionando e a rota `/app/assistente` serve como protótipo para demonstrar a funcionalidade antes de ligar o Dify real.
+
+---
+
 ## Extensões futuras (não implementadas)
 
 - **Streaming**: o Dify suporta `response_mode: "streaming"` via SSE. Atualmente usamos `"blocking"` por simplicidade. Para experiência mais responsiva em respostas longas, vale implementar o stream reader no server function.
