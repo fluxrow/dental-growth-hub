@@ -22,6 +22,7 @@ import {
   X,
   Crosshair,
   ShieldCheck,
+  Bot,
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { CommandBar } from "./command-bar";
@@ -51,6 +52,7 @@ const NAV_GROUPS: NavGroup[] = [
     label: "Pacientes",
     items: [
       { to: "/app/pacientes", label: "Pacientes", icon: Users },
+      { to: "/app/assistente", label: "Assistente IA", icon: Bot },
       { to: "/app/campanhas", label: "Campanhas", icon: Megaphone },
       { to: "/app/avaliacoes", label: "Avaliações", icon: Star },
       { to: "/app/cobrancas", label: "Cobranças", icon: Wallet },

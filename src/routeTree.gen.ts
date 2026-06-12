@@ -28,6 +28,7 @@ import { Route as AppCampanhasRouteImport } from './routes/app.campanhas'
 import { Route as AppAvaliacoesRouteImport } from './routes/app.avaliacoes'
 import { Route as AppAutomacoesRouteImport } from './routes/app.automacoes'
 import { Route as AppAtividadeRouteImport } from './routes/app.atividade'
+import { Route as AppAssistenteRouteImport } from './routes/app.assistente'
 import { Route as AppAdminRouteImport } from './routes/app.admin'
 import { Route as AppAdminCsQueueRouteImport } from './routes/app.admin.cs-queue'
 import { Route as ApiWebhooksZapiStatusRouteImport } from './routes/api/webhooks/zapi-status'
@@ -141,6 +142,11 @@ const AppAtividadeRoute = AppAtividadeRouteImport.update({
   path: '/atividade',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAssistenteRoute = AppAssistenteRouteImport.update({
+  id: '/assistente',
+  path: '/assistente',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppAdminRoute = AppAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -234,6 +240,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/onboarding': typeof OnboardingRoute
   '/app/admin': typeof AppAdminRouteWithChildren
+  '/app/assistente': typeof AppAssistenteRoute
   '/app/atividade': typeof AppAtividadeRoute
   '/app/automacoes': typeof AppAutomacoesRoute
   '/app/avaliacoes': typeof AppAvaliacoesRoute
@@ -271,6 +278,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/onboarding': typeof OnboardingRoute
   '/app/admin': typeof AppAdminRouteWithChildren
+  '/app/assistente': typeof AppAssistenteRoute
   '/app/atividade': typeof AppAtividadeRoute
   '/app/automacoes': typeof AppAutomacoesRoute
   '/app/avaliacoes': typeof AppAvaliacoesRoute
@@ -310,6 +318,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/onboarding': typeof OnboardingRoute
   '/app/admin': typeof AppAdminRouteWithChildren
+  '/app/assistente': typeof AppAssistenteRoute
   '/app/atividade': typeof AppAtividadeRoute
   '/app/automacoes': typeof AppAutomacoesRoute
   '/app/avaliacoes': typeof AppAvaliacoesRoute
@@ -350,6 +359,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/onboarding'
     | '/app/admin'
+    | '/app/assistente'
     | '/app/atividade'
     | '/app/automacoes'
     | '/app/avaliacoes'
@@ -387,6 +397,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/onboarding'
     | '/app/admin'
+    | '/app/assistente'
     | '/app/atividade'
     | '/app/automacoes'
     | '/app/avaliacoes'
@@ -425,6 +436,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/onboarding'
     | '/app/admin'
+    | '/app/assistente'
     | '/app/atividade'
     | '/app/automacoes'
     | '/app/avaliacoes'
@@ -616,6 +628,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAtividadeRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/assistente': {
+      id: '/app/assistente'
+      path: '/assistente'
+      fullPath: '/app/assistente'
+      preLoaderRoute: typeof AppAssistenteRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/admin': {
       id: '/app/admin'
       path: '/admin'
@@ -752,6 +771,7 @@ const AppAdminRouteWithChildren = AppAdminRoute._addFileChildren(
 
 interface AppRouteChildren {
   AppAdminRoute: typeof AppAdminRouteWithChildren
+  AppAssistenteRoute: typeof AppAssistenteRoute
   AppAtividadeRoute: typeof AppAtividadeRoute
   AppAutomacoesRoute: typeof AppAutomacoesRoute
   AppAvaliacoesRoute: typeof AppAvaliacoesRoute
@@ -770,6 +790,7 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppAdminRoute: AppAdminRouteWithChildren,
+  AppAssistenteRoute: AppAssistenteRoute,
   AppAtividadeRoute: AppAtividadeRoute,
   AppAutomacoesRoute: AppAutomacoesRoute,
   AppAvaliacoesRoute: AppAvaliacoesRoute,
