@@ -88,8 +88,10 @@ export const completeOnboarding = createServerFn({ method: "POST" })
       .eq("id", userId);
     if (pErr) throw new Error(pErr.message);
 
-    // ── 3. Garante role admin (unique(user_id, role) — ignora duplicata) ──
-    const { error: roleErr } = await context.supabase.from("user_roles").insert({
+    // ── 3. Garante role admin (seed do primeiro admin via service role,
+    //      pois a policy de user_roles não permite auto-concessão) ──
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error: roleErr } = await supabaseAdmin.from("user_roles").insert({
       user_id: userId,
       clinic_id: clinicId,
       role: "admin",
