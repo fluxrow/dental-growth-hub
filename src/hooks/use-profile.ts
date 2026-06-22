@@ -7,6 +7,7 @@ export type Profile = {
   email: string | null;
   name: string | null;
   avatar_url: string | null;
+  role: string | null;
 };
 
 export type Clinic = {
@@ -32,8 +33,15 @@ export function useProfile(userId: string | undefined) {
         .eq("id", userId!)
         .maybeSingle();
       if (error) throw error;
-      const profile = raw as Profile | null;
+      let profile = raw ? ({ ...raw, role: null } as Profile) : null;
       if (!profile?.clinic_id) return { profile, clinic: null };
+      const { data: roleRow } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", userId!)
+        .eq("clinic_id", profile.clinic_id)
+        .maybeSingle();
+      profile = { ...profile, role: roleRow?.role ?? null };
       const { data: clinic } = await supabase
         .from("clinicas")
         .select("id, name, city, slug, onboarded, tone, phone, address")
