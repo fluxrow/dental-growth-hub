@@ -29,16 +29,24 @@ export function useProfile(userId: string | undefined) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data: raw, error } = await (supabase as any)
         .from("profiles")
-        .select("id, clinic_id, email, name, avatar_url, role")
+        .select("id, clinic_id, email, name, avatar_url")
         .eq("id", userId!)
         .maybeSingle();
       if (error) throw error;
-      const profile = raw as Profile | null;
+      let profile = raw ? ({ ...raw, role: null } as Profile) : null;
       if (!profile?.clinic_id) return { profile, clinic: null };
+      const clinicId = profile.clinic_id;
+      const { data: roleRow } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", userId!)
+        .eq("clinic_id", clinicId)
+        .maybeSingle();
+      profile = { ...profile, role: roleRow?.role ?? null };
       const { data: clinic } = await supabase
         .from("clinicas")
         .select("id, name, city, slug, onboarded, tone, phone, address")
-        .eq("id", profile.clinic_id)
+        .eq("id", clinicId)
         .maybeSingle();
       return { profile, clinic: clinic ?? null };
     },
