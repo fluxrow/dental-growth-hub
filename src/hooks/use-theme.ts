@@ -9,7 +9,9 @@ function getInitialTheme(): Theme {
   try {
     const stored = window.localStorage.getItem(STORAGE_KEY) as Theme | null;
     if (stored === "light" || stored === "dark") return stored;
-    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    // Default to light. The system "prefers-color-scheme: dark" is ignored
+    // because the design system is light-first; user can opt-in via Configurações.
+    return "light";
   } catch {
     return "light";
   }
