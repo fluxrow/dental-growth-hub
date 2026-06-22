@@ -35,17 +35,18 @@ export function useProfile(userId: string | undefined) {
       if (error) throw error;
       let profile = raw ? ({ ...raw, role: null } as Profile) : null;
       if (!profile?.clinic_id) return { profile, clinic: null };
+      const clinicId = profile.clinic_id;
       const { data: roleRow } = await supabase
         .from("user_roles")
         .select("role")
         .eq("user_id", userId!)
-        .eq("clinic_id", profile.clinic_id)
+        .eq("clinic_id", clinicId)
         .maybeSingle();
       profile = { ...profile, role: roleRow?.role ?? null };
       const { data: clinic } = await supabase
         .from("clinicas")
         .select("id, name, city, slug, onboarded, tone, phone, address")
-        .eq("id", profile.clinic_id)
+        .eq("id", clinicId)
         .maybeSingle();
       return { profile, clinic: clinic ?? null };
     },
